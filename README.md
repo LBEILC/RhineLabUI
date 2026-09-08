@@ -8,12 +8,12 @@
 
 代码由 GPT-6 Astra 协助完成，模型通过 Blender MCP 制作。界面采用 **TypeScript + Three.js + Vite**，运行时实时渲染三维模型，开场由 DOM / SVG 与场景时间轴驱动。
 
-[快速运行](#快速运行) · [界面与动效](#界面与动效) · [操作说明](#操作说明) · [源码与 Blender 工程下载](https://pan.quark.cn/s/762d9ee9dfc3) · [参考原 PV](https://www.bilibili.com/video/BV1rr4y1b7sz/)
+[快速运行](#快速运行) · [界面与动效](#界面与动效) · [操作说明](#操作说明) · [用演示文档构建站点](#用演示文档构建站点) · [源码与 Blender 工程下载](https://pan.quark.cn/s/762d9ee9dfc3) · [参考原 PV](https://www.bilibili.com/video/BV1rr4y1b7sz/)
 
 ## 可以体验什么
 
 - **终端开场**：从白色画面进入，依次呈现逐字输入、标志绘制、身份接入、权限扫描、欢迎转场与档案阵列展开。
-- **持续循环的档案阵列**：五类、每类八份，共 40 份档案。上下翻阅、左右切列均可循环，切回某列时保留上次选择。
+- **持续循环的档案阵列**：分类和档案来自 Markdown 目录，支持不同分类数量与不等长内容。上下翻阅、左右切列均可循环，切回某列时保留上次选择。
 - **连续的抽取与归位**：档案从阵列中竖直升起，镜头衔接到详情视角；获得净空后可拖动观察，返回时先转正再下降。
 - **快速翻阅反馈**：编号连续滚动；快速切换时，标题闪动并收成黑色横条，停下后恢复最终标题。
 - **可阅读的档案**：概述、研究记录与访问日志，支持关键词检索、分类筛选、收藏，以及导出 UTF-8 文本。
@@ -21,7 +21,7 @@
 
 ## 界面与动效
 
-以下画面均来自项目的实际运行录制。静态图可点击查看大图；动图经过降帧与压缩，便于在 README 中浏览。
+以下画面均来自项目的实际运行录制，展示示例档案；当前运行时的标题、分类与正文由数据目录决定。静态图可点击查看大图；动图经过降帧与压缩，便于在 README 中浏览。
 
 ### 阅读与检索
 
@@ -82,6 +82,70 @@ npm run preview
 
 生产文件输出到 `dist/`，可以交给静态 HTTP 服务托管。请通过服务地址访问，不要直接双击 `dist/index.html`。
 
+## 用演示文档构建站点
+
+站点数据作为独立构建输入，与三维渲染配置分开维护。
+
+UI 代码与站点数据分开维护：本仓库负责界面、模型、字体、阅读器和构建工具；数据目录只需要 Markdown、图片与可选的 `site.json`。新增文章、移动目录或修改站点信息不需要改 UI 代码。
+
+### 直接运行演示文档
+
+默认输入为 [`examples/rhine-lab/`](examples/rhine-lab/)，包含五类、四十份示例档案。`archives/` 提供 UTF-8 文本下载；对应 Markdown 页面包含正文、相关人物与设定参考。上面的 `npm run dev`、`npm run build` 即可使用它：
+
+```sh
+RHINELAB_CONTENT_DIR=examples/rhine-lab npm run build
+npm run preview
+```
+
+[`examples/minimal/`](examples/minimal/) 保留为包含三篇文档的入门模板；可用 `RHINELAB_CONTENT_DIR=examples/minimal npm run build` 构建。下文从这个精简模板创建新站点。
+
+打开预览地址查看三维档案；`/?view=list` 为阅读目录，适合移动端与不支持 WebGL 的环境。构建输出在 `dist/`，中间文件在本仓库的 `.generated/`，不会改写输入文档。
+
+### 从演示文档建立独立数据目录
+
+在 RhineLabUI 仓库中执行（目标 `../site-content` 应尚不存在）：
+
+```sh
+cp -R examples/minimal ../site-content
+RHINELAB_CONTENT_DIR=../site-content npm run dev
+```
+
+PowerShell 对应命令：
+
+```powershell
+Copy-Item -Recurse examples/minimal ../site-content
+$env:RHINELAB_CONTENT_DIR = '../site-content'
+npm run dev
+```
+
+随后只需修改 `../site-content` 中的数据。例如在 `notes/` 下增加 `first-note.md`：
+
+```markdown
+---
+title: 第一篇笔记
+date: 2026-09-09
+tags: [demo]
+---
+
+# 第一篇笔记
+
+这是一篇演示文档。支持 **Markdown**、[同目录链接](welcome.md) 和公式 $E=mc^2$。
+```
+
+目录会自动形成分类与索引。Front matter 可省略；支持 `title`、`order`、`date`、`description`、`category`、`tags`、`permalink`、`draft` 和 `published`。图片可以放在文章旁或 `static/` 中；相对 Markdown 链接会解析到实际页面，设置 `permalink` 可让移动后的文章保持固定地址。
+
+可在文章 front matter 中设置 `order: 1` 调整显示顺序：数值越小越靠前；未设置的文章随后按日期降序、标题升序排列，无需维护标题列表。
+
+复制后的 `site.json` 控制标题、作者、品牌、网址和首页介绍。完整字段与构建约定见 [站点数据说明](docs/SITE-CONTENT.md)。正式构建和预览：
+
+```sh
+npm run check
+RHINELAB_CONTENT_DIR=../site-content npm run build
+npm run preview
+```
+
+PowerShell 保持上面设置的环境变量，然后运行同样的 npm 命令。相对数据路径以执行命令时的工作目录为基准。数据目录可以独立初始化为 Git 仓库；部署时检出数据与固定版本的 UI，在 UI 目录构建并发布其 `dist/` 即可。
+
 ## 操作说明
 
 ### 终端与档案
@@ -125,24 +189,26 @@ npm run preview
 | [`src/boot.ts`](src/boot.ts)、[`src/boot-motion.ts`](src/boot-motion.ts) | 开场界面与逐帧时间轴 |
 | [`src/scene.ts`](src/scene.ts)、[`src/archive-loop.ts`](src/archive-loop.ts) | Three.js 场景、循环阵列、抽取与归位 |
 | [`src/model-viewer.ts`](src/model-viewer.ts) | 独立模型查看器与拆解动画 |
-| [`src/data.ts`](src/data.ts) | 五类、40 份扩展演示档案的数据 |
+| [`src/data.ts`](src/data.ts) | 读取生成的档案数据，提供分类与导航接口 |
 | [`public/assets/`](public/assets/) | 运行所需的 GLB 模型 |
-| [`public/archives/`](public/archives/) | 导出的档案文本；启动和构建前自动生成 |
+| [`examples/rhine-lab/`](examples/rhine-lab/) | 默认示例站点：四十份档案、Markdown 页面与文本下载 |
+| [`examples/minimal/`](examples/minimal/) | 三篇文档的精简站点模板 |
+| `.generated/` | 自动生成的档案数据、阅读页面与目录；不写入内容仓库 |
 | [`art/`](art/) | Blender 源文件、建模与审阅脚本 |
-| [`scripts/`](scripts/) | 档案导出与行为检查 |
+| [`scripts/`](scripts/) | Markdown 构建与自动化检查 |
 | [`reference/`](reference/)、[`verification/`](verification/) | 开发对照工具与分阶段验证记录 |
 | [`docs/media/`](docs/media/) | README 截图与动图 |
 | [`DESIGN.md`](DESIGN.md) | 视觉、相机、材质与运动约束 |
 
-原片时间轴使用 160 个阵列位置；交互模式使用固定的可见窗口与外围卡片补位，让有限的档案内容可以持续循环。
+原片时间轴使用 160 个阵列位置；交互模式使用 288 个位置（9 × 32）的可见窗口与外围卡片补位，让有限的档案内容可以持续循环。分类数量与每类档案数来自数据，不改变原有几何、折射配置、相机或动效。
 
 ### 修改与复核
 
-修改档案内容可从 `src/data.ts` 入手。`npm run dev` 与 `npm run build` 会自动更新 `public/archives/` 中的文本导出。
+修改档案内容只需管理数据目录中的 Markdown、图片与 `site.json`，不需要编辑 `src/data.ts`。`npm run dev` 与 `npm run build` 会自动发现内容并生成页面；开发模式也会监听内容增删、移动与设置变化。
 
 ```sh
 node scripts/check-motion.mjs
-node scripts/check-loop.mjs
+npm run check
 node scripts/check-appearance.mjs
 node scripts/check-assembly.mjs
 ```

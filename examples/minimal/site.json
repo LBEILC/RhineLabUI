@@ -1,0 +1,12 @@
+{
+  "title": "RhineLabUI Example",
+  "brand": "ARCHIVE",
+  "author": "Author",
+  "lang": "en",
+  "sessionName": "VISITOR",
+  "sessionStatus": "PUBLIC ACCESS",
+  "welcomeName": "ARCHIVE",
+  "welcomeMessage": "Welcome to the archive.",
+  "url": "https://example.com",
+  "intro": "A minimal example of the data-driven archive."
+}

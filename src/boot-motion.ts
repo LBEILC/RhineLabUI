@@ -18,7 +18,7 @@ const accessCounts = [
   1, 1, 3, 4, 5, 6, 9, 11, 12, 14, 17, 18, 19, 20, 22, 23, 25, 26,
 ];
 
-export function bootMotion(appTime: number) {
+export function bootMotion(appTime: number, sessionName = "JOYCE MOORE") {
   const t = appTime + 5;
   const f = Math.floor(t * 25 + 0.00001);
   const step =
@@ -34,7 +34,7 @@ export function bootMotion(appTime: number) {
   let auth = "";
   if (f < 363) {
     auth = typed("ID CONFIRMED", f, 282, 295);
-    if (f >= 320) auth += " : " + typed("JOYCE MOORE", f, 321, 339);
+    if (f >= 320) auth += " : " + typed(sessionName, f, 321, 339);
   } else if (f < 421) auth = typed("REQUEST RECEIVED", f, 367, 389);
   else {
     auth = typed("START PROCESSING", f, 423, 440);

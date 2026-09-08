@@ -1,18 +1,18 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="{{site.lang}}">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#e8e5e1" />
-    <meta
-      name="description"
-      content="Rhine Lab — Synthesize Information Analysis OS. 交互式三维研究档案终端。"
-    />
-    <title>RHINE LAB · ANALYSIS OS</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content="{{site.description}}" />
+    <link rel="canonical" href="{{site.url}}/" />
+    <link rel="icon" href="{{site.favicon}}" />
+    <link rel="stylesheet" href="/reader.css" />
+    <title>{{site.title}}</title>
   </head>
-  <body>
-    <main id="viewport"><div id="stage"></div></main>
-    <script type="module" src="/src/main.ts"></script>
+  <body class="catalogue-page">
+    <!-- SITE_CATALOGUE -->
+    <main id="viewport" hidden aria-label="交互式档案"><div id="stage"></div></main>
+    <script type="module" src="/src/entry.ts"></script>
   </body>
 </html>

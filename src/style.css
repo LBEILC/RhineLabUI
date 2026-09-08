@@ -40,6 +40,15 @@ body {
   margin: 0;
   overflow: hidden;
 }
+
+.system-nav a { color: inherit; text-decoration: none; font-size: 13px; letter-spacing: .7px; }
+.entry-link { display: flex; justify-content: space-between; margin: 22px 0 8px; padding: 19px 22px; background: #191d17; color: #f1eee7; font-size: 16px; letter-spacing: 1.2px; text-decoration: none; }
+.entry-link:hover { background: #4b503f; color: #fff; }
+.detail-content { max-height: 600px; overflow-y: auto; padding-right: 18px; scrollbar-width: thin; }
+.file-summary > span:first-child { max-width: 570px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.category-filters { flex-wrap: wrap; max-height: 120px; overflow-y: auto; }
+.file-ticks { max-width: 320px; overflow-x: auto; scrollbar-width: thin; }
+.file-ticks button { flex-shrink: 0; }
 button,
 input {
   font: inherit;

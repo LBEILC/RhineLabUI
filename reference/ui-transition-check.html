@@ -48,8 +48,8 @@
         doc = frame.contentDocument,
         app = win.rhine;
       const q = (selector) => doc.querySelector(selector);
-      previousPrefs = win.localStorage.getItem("rhine-settings");
-      previousSaved = win.localStorage.getItem("rhine-saved");
+      previousPrefs = win.localStorage.getItem("logger-settings-v1");
+      previousSaved = win.localStorage.getItem("logger-saved-v1");
       const key = (element, value) =>
         element.dispatchEvent(
           new win.KeyboardEvent("keydown", { key: value, bubbles: true }),
@@ -240,12 +240,12 @@
       const storage = frame.contentWindow.localStorage;
       if (previousPrefs !== undefined)
         previousPrefs === null
-          ? storage.removeItem("rhine-settings")
-          : storage.setItem("rhine-settings", previousPrefs);
+          ? storage.removeItem("logger-settings-v1")
+          : storage.setItem("logger-settings-v1", previousPrefs);
       if (previousSaved !== undefined)
         previousSaved === null
-          ? storage.removeItem("rhine-saved")
-          : storage.setItem("rhine-saved", previousSaved);
+          ? storage.removeItem("logger-saved-v1")
+          : storage.setItem("logger-saved-v1", previousSaved);
     }
   </script>
 </html>

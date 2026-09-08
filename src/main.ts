@@ -12,6 +12,7 @@ import { BootSequence } from "./boot";
 import { wrap, type ArchiveNavigation } from "./archive-loop";
 import {
   records,
+  site,
   categories,
   archiveColumns,
   columnFiles,
@@ -24,12 +25,14 @@ const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
 import { logo, brandHeading } from "./brand";
 
+const escapeHtml = (value: string) => value.replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]!);
+
 $("#stage").innerHTML = `
   <div id="three-scene" class="three-scene"></div>
   <div class="scene-atmosphere archive-atmosphere"></div>
   <div id="boot-background" class="boot-background"><svg viewBox="0 0 1920 1080" preserveAspectRatio="none"><g fill="none" stroke="#fff" stroke-width="3"><path d="M-210 705C-45 705 182 704 247 567C337 377 99 306 4 435S27 680 169 631C309 584 227 314 279 111S568-113 568-113"/><path d="M1560-80C1374 114 1671 168 1601 323S1371 367 1431 480S1692 666 1559 787S1329 886 1498 1130"/><circle cx="1450" cy="648" r="346"/><circle cx="1450" cy="648" r="348"/></g></svg></div>
   <header class="brand">${brandHeading}</header>
-  <nav class="system-nav" aria-label="系统导航">
+  <nav class="system-nav" aria-label="系统导航"><a href="/?view=list">READING INDEX ↗</a>
     <button data-action="search"><span class="nav-glyph">⌕</span> ARCHIVE INDEX <span class="key">/</span></button>
     <button data-action="saved" aria-label="查看收藏档案" title="收藏档案">＋ SAVED <span id="saved-count">00</span></button>
     <button data-action="settings" aria-label="系统设置" title="系统设置"><span class="settings-glyph">◷</span></button>
@@ -40,17 +43,17 @@ $("#stage").innerHTML = `
     <div class="boot-logo">${logo}</div>
     <div class="auth-status"><span>▪</span> <span id="auth-message"></span><i></i></div>
     <div class="scan"><svg viewBox="0 0 1920 1080" aria-hidden="true"><g fill="none" stroke="#080a08" stroke-width="2" stroke-linecap="round"><path/><path stroke="#fff"/><path/><path/><path/><path/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="scan-core" cx="960" cy="540" r="5" fill="#080a08" stroke="none"/></g></svg><span>PERMISSION AUTHORIZED</span></div>
-    <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>RHINE LAB.LLC.</strong><strong class="welcome-highlight" aria-hidden="true">RHINE LAB.LLC.</strong></div><div class="welcome-database">INTERNAL DATABASE</div><div class="welcome-logo">${logo}</div></div>
+    <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>${escapeHtml(site.welcomeName)}</strong><strong class="welcome-highlight" aria-hidden="true">${escapeHtml(site.welcomeName)}</strong></div><div class="welcome-database">INTERNAL DATABASE</div><div class="welcome-logo">${logo}</div></div>
   </section>
   <div id="cinema-caption" class="cinema-caption"></div>
   <svg id="inspection-marks" viewBox="0 0 1920 1080" aria-hidden="true"><path id="inspection-lines"/><g id="inspection-corners"></g></svg>
   <div id="inspection-text" aria-hidden="true">CONFIDENTIALITY:<strong>GENERAL BUSINESS USE</strong></div>
   <section id="archive-ui" class="archive-ui" aria-label="档案选择">
-    <div class="archive-callout"><div class="eyebrow">INTERNAL DATABASE <span>／</span> <span id="archive-category">机构档案</span></div><button class="file-title" data-action="open">FILE NUMBER: <span id="selected-id">X-<span id="selected-code">001</span></span><span class="file-open">↗</span></button><div class="callout-rule"><i></i></div><div class="file-summary"><span id="selected-title">莱茵生命</span><span id="selected-clearance">BUSINESS AREA</span></div><button class="read-file" data-action="open">ACCESS FILE <span>→</span></button></div>
+    <div class="archive-callout"><div class="eyebrow">INTERNAL DATABASE <span>／</span> <span id="archive-category">${escapeHtml(records[0].category)}</span></div><button class="file-title" data-action="open">FILE NUMBER: <span id="selected-id">X-<span id="selected-code">001</span></span><span class="file-open">↗</span></button><div class="callout-rule"><i></i></div><div class="file-summary"><span id="selected-title">${escapeHtml(records[0].title)}</span><span id="selected-clearance">BUSINESS AREA</span></div><button class="read-file" data-action="open">ACCESS FILE <span>→</span></button></div>
     <div id="hover-label" class="hover-label" hidden>X-<span id="hover-code">001</span><span id="hover-title"></span></div>
     <div class="archive-counter"><span class="tiny-label">ARCHIVE / SELECT</span><div><span id="selected-number">01</span><i>/</i><span class="count-total">12</span></div></div>
     <div class="archive-navigation"><button data-action="prev" aria-label="上一个档案">↑</button><div id="file-ticks" class="file-ticks"></div><button data-action="next" aria-label="下一个档案">↓</button></div>
-    <div class="column-navigation"><button data-action="column-prev" aria-label="上一列">←</button><div><span id="column-number">COLUMN <span id="column-index">03</span> / 05</span><strong id="column-name">机构档案</strong></div><button data-action="column-next" aria-label="下一列">→</button></div>
+    <div class="column-navigation"><button data-action="column-prev" aria-label="上一列">←</button><div><span id="column-number">COLUMN <span id="column-index">01</span> / ${String(archiveColumns.length).padStart(2, "0")}</span><strong id="column-name">${escapeHtml(records[0].category)}</strong></div><button data-action="column-next" aria-label="下一列">→</button></div>
     <div class="archive-hint"><kbd>←</kbd> <kbd>→</kbd> 切换列 <span>／</span> <kbd>↑</kbd> <kbd>↓</kbd> 前后档案 <span>／</span> <kbd>ENTER</kbd> 读取</div>
   </section>
   <section id="detail-ui" class="detail-ui" aria-label="档案内容" hidden>
@@ -59,16 +62,18 @@ $("#stage").innerHTML = `
     <article id="detail-content" class="detail-content"></article>
   </section>
   <div class="powered">POWERED BY <b>RHINE LAB</b><i></i></div>
-  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
+  <footer class="system-footer"><span><i class="status-light"></i> ${escapeHtml(site.sessionStatus)}</span><span>${escapeHtml(site.sessionName)} <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
-  <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i></div>
+  <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i><a href="/?view=list" style="margin-top:24px;font-size:12px;letter-spacing:1px">OPEN READING INDEX →</a></div>
 `;
+
+$(".brand h1").textContent = site.brand;
 
 $("#boot-background").insertAdjacentHTML(
   "beforeend",
   '<div class="boot-white"></div>',
 );
-const bootSequence = new BootSequence($("#stage"));
+const bootSequence = new BootSequence($("#stage"), site.sessionName);
 
 type Mode = "boot" | "archive" | "detail";
 let mode: Mode = "boot",
@@ -116,8 +121,9 @@ function readLocal<T>(key: string, fallback: T): T {
     return fallback;
   }
 }
-const saved = new Set<string>(readLocal<string[]>("rhine-saved", []));
-const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality }>>("rhine-settings", {});
+const storedSaved = readLocal<unknown>("logger-saved-v1", []);
+const saved = new Set<string>(Array.isArray(storedSaved) ? storedSaved.filter(value => typeof value === 'string' && records.some(record => record.source === value)) : []);
+const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality }>>("logger-settings-v1", {});
 const prefs = {
   sound: true,
   music: storedPrefs.sound ?? true,
@@ -166,7 +172,7 @@ function recordAccess() {
 }
 function saveAudioPrefs() {
   try {
-    localStorage.setItem("rhine-settings", JSON.stringify(prefs));
+    localStorage.setItem("logger-settings-v1", JSON.stringify(prefs));
   } catch {}
   audio.configure(prefs);
 }
@@ -203,7 +209,7 @@ fit();
 $("#file-ticks").innerHTML = records
   .map(
     (r, i) =>
-      `<button data-select="${i}" aria-label="选择档案 ${r.id} ${r.title}" title="${r.id} · ${r.title}"></button>`,
+      `<button data-select="${i}" aria-label="选择档案 ${escapeHtml(r.id)} ${escapeHtml(r.title)}" title="${escapeHtml(r.id)} · ${escapeHtml(r.title)}"></button>`,
   )
   .join("");
 
@@ -345,11 +351,11 @@ function openFile() {
   });
 }
 function toggleSaved() {
-  const id = records[selected].id;
+  const id = records[selected].source;
   if (saved.has(id)) saved.delete(id);
   else saved.add(id);
   try {
-    localStorage.setItem("rhine-saved", JSON.stringify([...saved]));
+    localStorage.setItem("logger-saved-v1", JSON.stringify([...saved]));
   } catch {}
   $("#saved-count").textContent = String(saved.size).padStart(2, "0");
   const button = $<HTMLButtonElement>('[data-action="bookmark"]');
@@ -370,20 +376,21 @@ function renderDetail() {
   const r = records[selected];
   $("#object-id").textContent = "NO." + String(selected + 1).padStart(3, "0");
   $("#detail-content").innerHTML = `
-  <div class="detail-kicker"><span>FILE ${r.id}</span><span>${r.clearance}</span></div>
-  <h2>${r.en}</h2><div class="detail-title-cn">${r.title}<span>${r.category}</span></div>
+  <div class="detail-kicker"><span>FILE ${escapeHtml(r.id)}</span><span>${escapeHtml(r.clearance)}</span></div>
+  <h2>${escapeHtml(r.en)}</h2><div class="detail-title-cn">${escapeHtml(r.title)}<span>${escapeHtml(r.category)}</span></div>
   <div class="detail-rule"></div>
-  <dl class="metadata"><div><dt>DEPARTMENT / 科室</dt><dd>${r.department}</dd></div><div><dt>COLLECTION / 编目范围</dt><dd>${r.date}</dd></div><div><dt>RELATED / 相关人物</dt><dd>${r.lead}</dd></div><div><dt>STATUS / 状态</dt><dd><i></i>${r.clearance === "RESTRICTED" ? "目录访问" : "已归档 · 可读取"}</dd></div></dl>
+  <dl class="metadata"><div><dt>DEPARTMENT / 科室</dt><dd>${escapeHtml(r.department)}</dd></div><div><dt>COLLECTION / 编目范围</dt><dd>${escapeHtml(r.date)}</dd></div><div><dt>RELATED / 相关人物</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>STATUS / 状态</dt><dd><i></i>${r.clearance === "RESTRICTED" ? "目录访问" : "已归档 · 可读取"}</dd></div></dl>
+  <a class="entry-link" href="${escapeHtml(r.source)}">${r.source.startsWith('/') ? 'READ FULL ENTRY' : 'OPEN PROJECT'} <span>↗</span></a>
   <div class="detail-tabs" role="tablist"><button id="tab-overview" class="active" role="tab" aria-controls="tab-panel" aria-selected="true" data-tab="overview">01 <span>概述</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" aria-selected="false" data-tab="notes">02 <span>研究记录</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" aria-selected="false" data-tab="history">03 <span>访问日志</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
   <div id="tab-panel" class="tab-panel" role="tabpanel">${overview()}</div>
-  <div class="detail-actions"><button class="solid-button" data-action="bookmark">${saved.has(r.id) ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE"}<span>${saved.has(r.id) ? "已收藏" : "收藏档案"}</span></button><a class="export-button" href="/archives/RHINE-LAB-${r.id}.txt" download="RHINE-LAB-${r.id}.txt" aria-label="导出 ${r.id} 档案">EXPORT <span>↓</span></a></div>
-  <div class="detail-footnote"><a href="${r.source}" target="_blank" rel="noopener">设定参考 ↗</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
+  <div class="detail-actions"><button class="solid-button" data-action="bookmark">${saved.has(r.source) ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE"}<span>${saved.has(r.source) ? "已收藏" : "收藏档案"}</span></button><a class="export-button" href="/archives/${escapeHtml(r.id)}.txt" download="RHINE-LAB-${escapeHtml(r.id)}.txt" aria-label="导出 ${escapeHtml(r.id)} 档案">EXPORT <span>↓</span></a></div>
+  <div class="detail-footnote"><a href="${escapeHtml(r.reference || r.source)}" target="_blank" rel="noopener">${r.reference ? "设定参考 ↗" : "阅读全文 ↗"}</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
   $("#detail-content").setAttribute("tabindex", "-1");
-  $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.id)));
+  $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.source)));
   setTab(activeTab, false);
 }
 function overview() {
-  return `<div class="panel-label">ABSTRACT / 摘要</div><p>${records[selected].abstract}</p>`;
+  return `<div class="panel-label">ABSTRACT / 摘要</div><p>${escapeHtml(records[selected].abstract)}</p>`;
 }
 function setTab(tab: string, sound = true) {
   if (sound && tab === activeTab) return;
@@ -404,13 +411,13 @@ function setTab(tab: string, sound = true) {
     tab === "overview"
       ? overview()
       : tab === "notes"
-        ? `<div class="panel-label">RESEARCH NOTES / 研究记录</div><ol class="research-notes">${r.findings.map((f, i) => `<li><span>${String(i + 1).padStart(2, "0")}</span>${f}</li>`).join("")}</ol>`
+        ? `<div class="panel-label">RESEARCH NOTES / 研究记录</div><ol class="research-notes">${r.findings.map((f, i) => `<li><span>${String(i + 1).padStart(2, "0")}</span>${escapeHtml(f)}</li>`).join("")}</ol>`
         : `<div class="panel-label">ACCESS LOG / 本次访问</div>${accessLog
             .filter((entry) => entry.id === r.id)
             .slice(0, 4)
             .map(
               (entry) =>
-                `<div class="log-row"><span>${entry.time}</span><span>JOYCE MOORE</span><b>READ AUTHORIZED</b></div>`,
+                `<div class="log-row"><span>${entry.time}</span><span>${escapeHtml(site.sessionName)}</span><b>READ AUTHORIZED</b></div>`,
             )
             .join(
               "",
@@ -439,6 +446,10 @@ function openModal(kind: NonNullable<typeof modal>) {
   }
   modalClosing = false;
   modal = kind;
+  $("#archive-ui").inert = true;
+  $("#detail-ui").inert = true;
+  $(".system-nav").inert = true;
+  $(".system-footer").inert = true;
   searchQuery = "";
   filter = "全部档案";
   audio.play("page-open");
@@ -469,7 +480,7 @@ function renderModal() {
   if (!modal) return;
   modalTransition?.dispose();
   $("#modal-root").innerHTML =
-    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${modal === "settings" ? "系统设置" : modal === "saved" ? "收藏档案" : "档案检索"}"><div class="modal-top"><span>RHINE LAB / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="关闭窗口">CLOSE <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${modal === "saved" ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${modal === "saved" ? "收藏档案" : "内部档案检索"}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="输入档案编号、名称或科室" aria-label="检索档案"/><span class="key">ESC</span></div><div class="category-filters">${categories.map((c, i) => `<button data-filter="${c}" class="${i === 0 ? "active" : ""}">${c}</button>`).join("")}</div><div class="result-header"><span>FILE / 档案</span><span>DEPARTMENT / 科室</span><span>ACCESS</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>INTERNAL DATABASE <i>●</i> CONNECTED</span></div>`}</section></div>`;
+    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${modal === "settings" ? "系统设置" : modal === "saved" ? "收藏档案" : "档案检索"}"><div class="modal-top"><span>${escapeHtml(site.brand)} / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="关闭窗口">CLOSE <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${modal === "saved" ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${modal === "saved" ? "收藏档案" : "内部档案检索"}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="输入档案编号、名称或科室" aria-label="检索档案"/><span class="key">ESC</span></div><div class="category-filters">${categories.map((c, i) => `<button data-filter="${escapeHtml(c)}" class="${i === 0 ? "active" : ""}">${escapeHtml(c)}</button>`).join("")}</div><div class="result-header"><span>FILE / 档案</span><span>DEPARTMENT / 科室</span><span>ACCESS</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>INTERNAL DATABASE <i>●</i> CONNECTED</span></div>`}</section></div>`;
   const backdrop = $(".modal-backdrop");
   backdrop.hidden = true;
   modalTransition = new SurfaceTransition(backdrop, $(".terminal-modal"));
@@ -495,9 +506,9 @@ function renderResults() {
     .map((r, i) => ({ r, i }))
     .filter(
       ({ r }) =>
-        (modal !== "saved" || saved.has(r.id)) &&
+        (modal !== "saved" || saved.has(r.source)) &&
         (filter === "全部档案" || r.category === filter) &&
-        `${r.id} ${r.title} ${r.en} ${r.department} ${r.lead}`
+        `${r.id} ${r.title} ${r.en} ${r.department} ${r.lead} ${r.category} ${r.abstract} ${r.tags?.join(' ') ?? ''}`
           .toLowerCase()
           .includes(searchQuery.toLowerCase()),
     );
@@ -505,7 +516,7 @@ function renderResults() {
     ? results
         .map(
           ({ r, i }) =>
-            `<button class="result-row" data-result="${i}"><span class="result-name"><b>${r.id}</b><span>${r.title}<small>${r.en}</small></span>${saved.has(r.id) ? "<i>＋</i>" : ""}</span><span>${r.department}</span><span>${r.clearance === "RESTRICTED" ? "CATALOG ONLY" : "AUTHORIZED"} <i>↗</i></span></button>`,
+            `<button class="result-row" data-result="${i}"><span class="result-name"><b>${escapeHtml(r.id)}</b><span>${escapeHtml(r.title)}<small>${escapeHtml(r.en)}</small></span>${saved.has(r.source) ? "<i>＋</i>" : ""}</span><span>${escapeHtml(r.department)}</span><span>${r.clearance === "RESTRICTED" ? "CATALOG ONLY" : "AUTHORIZED"} <i>↗</i></span></button>`,
         )
         .join("")
     : `<div class="empty-results"><span>∅</span><strong>${modal === "saved" && !searchQuery ? "尚无收藏档案" : "没有匹配的档案"}</strong><p>${modal === "saved" && !searchQuery ? "读取档案时，选择 SAVE ARCHIVE 将其保存在此处。" : "尝试其他名称、档案编号，或切换科室分类。"}</p><button data-action="reset-search">${modal === "saved" ? "查看全部档案 →" : "重置检索 →"}</button></div>`;
@@ -520,7 +531,7 @@ function updateQualitySummary() {
   summary.textContent = `实际渲染 ${canvas.width} × ${canvas.height} · ${prefs.rendering.antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>减少镜头移动和过渡动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${qualityMarkup(prefs.rendering)}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom"><button data-action="fullscreen">FULLSCREEN <span>↗</span></button><button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="/fonts/MiSans-license.pdf" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">${escapeHtml(site.sessionName)} <span>·</span> ${escapeHtml(site.sessionStatus)}</p><div class="settings-list">${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>减少镜头移动和过渡动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${qualityMarkup(prefs.rendering)}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom"><button data-action="fullscreen">FULLSCREEN <span>↗</span></button><button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="/fonts/MiSans-license.pdf" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -653,7 +664,7 @@ document.addEventListener("keydown", (e) => {
   if (modal && e.key === "Tab") {
     const focusables = [
       ...$("#modal-root").querySelectorAll<HTMLElement>(
-        'button,input:not(:disabled),select:not(:disabled),summary,[tabindex="0"]',
+        'button,input:not(:disabled),select:not(:disabled),a[href],summary,[tabindex="0"]',
       ),
     ];
     const visible = focusables.filter(el => el.getClientRects().length > 0);
@@ -724,14 +735,14 @@ function bootFrame(t: number) {
   let caption =
     motion.step === "auth"
       ? t < 9.52
-        ? "身份信息确认：JOYCE MOORE"
+        ? `身份信息确认：${site.sessionName}`
         : t < 11.84
           ? "请求已接收"
           : "开始处理"
       : motion.step === "scan"
         ? "权限验证通过"
         : motion.step === "welcome"
-          ? "欢迎访问莱茵生命内部资料档案"
+          ? site.welcomeMessage
           : "";
   if (t >= 22) {
     step = "array";
@@ -785,7 +796,7 @@ function frame(ms: number) {
     $("#detail-content").style.opacity = String(scene.detailVisibility);
     $("#detail-content").style.transform =
       `translateY(${(1 - scene.detailVisibility) * 18}px)`;
-    $("#detail-content").inert = scene.detailVisibility < 0.1;
+    $("#detail-content").inert = !!modal || scene.detailVisibility < 0.1;
     if (pendingDetailFocus && scene.detailVisibility >= 0.1 && !modal && !viewer?.isOpen) {
       $("#detail-content").focus({ preventScroll: true });
       pendingDetailFocus = false;
@@ -884,8 +895,7 @@ async function start() {
     requestAnimationFrame(frame);
   } catch (error) {
     console.error(error);
-    $("#loading").innerHTML =
-      '<div class="error-state"><strong>CONNECTION INTERRUPTED</strong><p>三维档案资源未能载入。请确认浏览器已启用硬件加速，然后重新连接。</p><button onclick="location.reload()">RECONNECT →</button></div>';
+    window.dispatchEvent(new Event('archive-unavailable'));
   }
 }
 updateSelection();

@@ -1,16 +1,15 @@
 {
   "name": "rhine-lab-analysis-os",
   "version": "1.0.0",
-  "license": "MIT",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/export-records.mjs",
     "dev": "vite --host 127.0.0.1",
-    "prebuild": "node scripts/export-records.mjs",
-    "build": "tsc && vite build",
+    "build": "node scripts/content.mjs && tsc && vite build",
+    "preview": "vite preview --host 127.0.0.1",
     "format": "prettier --write src scripts index.html package.json tsconfig.json",
-    "preview": "vite preview --host 127.0.0.1"
+    "check": "node --test scripts/*.test.mjs && node scripts/check-motion.mjs && node scripts/check-appearance.mjs && node scripts/check-assembly.mjs"
   },
   "dependencies": {
     "@kitlangton/rolling-number": "0.4.1",
@@ -18,6 +17,11 @@
   },
   "devDependencies": {
     "@types/three": "^0.183.0",
+    "gray-matter": "^4.0.3",
+    "katex": "^0.16.22",
+    "markdown-it": "^14.1.0",
+    "markdown-it-anchor": "^9.2.0",
+    "markdown-it-texmath": "^1.0.0",
     "prettier": "^3.9.6",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
