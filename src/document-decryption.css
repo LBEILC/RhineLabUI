@@ -19,8 +19,6 @@
   will-change: transform;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .document-redaction-window {
-    display: none;
-  }
+.reduce-motion .document-redaction-window {
+  display: none;
 }

@@ -20,13 +20,23 @@
 
 ## 更新
 
-新版本会在后台下载完整资源，准备好后提示。进入设置，选择“更新并重启”即可应用；更新不会清除收藏与偏好。下载失败时继续使用上一个完整离线版本，联网后重试即可。不要为了更新而主动清除网站数据。
+新版本会在后台下载完整资源，准备好后在页面底部提供“更新并重启”，也可从右上角“设置”中更新。更新不会清除收藏与偏好。下载失败时继续使用上一个完整离线版本，联网后重试即可。
+
+如果旧版只有提示、找不到更新入口，请打开[更新终端](https://rhine.lubeiluchen.cc/update.html)，点击“更新并返回”。这个入口从网络获取，不经过旧版本的页面缓存；应用完整新版后返回终端。普通“清除缓存”不一定清除 Service Worker 的离线副本，无需清空网站数据或收藏。
+
+## 开机动画与选档动效
+
+首次进入时，本站遵循系统的减少动画偏好。Win11 的“设置 → 辅助功能 → 视觉效果 → 动画效果”关闭时，Chrome / Edge 可能请求减少动画，本站会跳过开机动画并简化选档等动效。终端之后会保存本地偏好，资源更新不会重置它。
+
+需要完整动效时，打开右上角圆形图标下标有“设置”的按钮，选择“启用完整动效并重播”。这只调整本站，无需修改系统设置。减少动态效果开关也可随时重新开启。
 
 ## 开发与 Vercel
 
 `npm run build` 生成静态站点和带内容版本号的 Service Worker，输出在 `dist`。现有 Vercel 项目沿用 GitHub 自动部署，配置见 `vercel.json`。Service Worker、manifest 与构建清单使用重新验证缓存头。离线功能只在正式构建的 HTTPS 或 localhost 环境注册，`npm run dev` 不注册。
 
 本地验证：运行 `npm run build`，再运行 `npm run preview`。浏览器测试见 `scripts/check-pwa.mjs`，需要本机可用的 Playwright 与 Chrome；可通过 `PLAYWRIGHT_MODULE` 指定已有 Playwright 模块路径。
+
+`scripts/check-startup-motion.mjs` 验证系统偏好与本站覆盖、重播和正文解密；`scripts/check-pwa-recovery.mjs` 验证旧版迁移，需要以 `PWA_PREVIOUS_DIST` 指定保留的旧生产构建。两个脚本可设 `REVIEW_CHANNEL=msedge` 验证 Edge。更新恢复页保持网络获取，未加入离线资源清单。
 
 图标源自项目共享莱茵生命 SVG 路径，生成脚本为 `scripts/build-icons.mjs`，通过 `SHARP_MODULE` 可指定本地 Sharp 模块。修改资源后重新构建即可生成新的离线版本，无需手动修改缓存编号。
 

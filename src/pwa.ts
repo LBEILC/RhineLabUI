@@ -37,6 +37,11 @@ function refresh() {
   const current = document.querySelector("#pwa-settings");
   if (current) current.outerHTML = pwaSettingsMarkup();
   document.documentElement.dataset.offlineReady = String(ready);
+  const notice = document.querySelector<HTMLElement>("#pwa-update-notice");
+  const waiting = Boolean(registration?.waiting);
+  if (notice) notice.hidden = !waiting;
+  const stage = document.querySelector<HTMLElement>("#stage");
+  if (stage) stage.dataset.pwaUpdate = String(waiting);
 }
 
 export async function initPwa(notify: (message: string) => void) {
@@ -53,7 +58,6 @@ export async function initPwa(notify: (message: string) => void) {
       worker.addEventListener("statechange", () => {
         if (worker.state === "installed") {
           failed = false;
-          if (registration?.waiting) tell("新版本已准备好，可在设置中更新");
           refresh();
         } else if (worker.state === "redundant" && !registration?.active) {
           failed = true; refresh();
@@ -62,7 +66,7 @@ export async function initPwa(notify: (message: string) => void) {
     };
     registration.addEventListener("updatefound", watch);
     watch();
-    if (registration.waiting) tell("新版本已准备好，可在设置中更新");
+    refresh();
     void navigator.serviceWorker.ready.then(() => { ready = true; failed = false; refresh(); });
     let lastCheck = Date.now();
     document.addEventListener("visibilitychange", () => {
@@ -76,6 +80,7 @@ export async function initPwa(notify: (message: string) => void) {
 
 if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("controllerchange", () => {
   if (reloading) location.reload();
+  else refresh();
 });
 document.addEventListener("click", async event => {
   const button = (event.target as Element).closest<HTMLButtonElement>("[data-pwa-action]");
