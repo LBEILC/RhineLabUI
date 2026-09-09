@@ -28,6 +28,8 @@ import {
   type ArchiveNavigation,
 } from "./archive-loop";
 import { labelMarkSvg } from "./brand";
+import { archiveFraming, swipeDirection } from "./viewport-layout";
+import { assetUrl as publicAsset } from "./asset-url";
 import {
   archiveWave,
   extraction,
@@ -113,8 +115,11 @@ export class ArchiveScene {
   private appliedQuality = "";
   private smaa = new SMAAPass();
   private aoKernelSize = 32;
+  private displayHeight = 0;
+  private layoutKind = "";
   onSelect?: (index: number, cell?: ArchiveCell) => void;
   onHover?: (index: number | null) => void;
+  onNavigate?: (axis: "row" | "lane", direction: number) => void;
   constructor(
     private container: HTMLElement,
     private readonly selectionPulse = baselineSelectionWave,
@@ -192,7 +197,7 @@ export class ArchiveScene {
     this.composer.addPass(new OutputPass());
     this.bindPointer();
   }
-  async load(assetUrl = "/assets/archive-cassette.glb") {
+  async load(assetUrl = publicAsset("assets/archive-cassette.glb")) {
     this.labelMark.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(labelMarkSvg)}`;
     await this.labelMark.decode();
     const gltf = await new GLTFLoader().loadAsync(
@@ -356,7 +361,7 @@ export class ArchiveScene {
   private assemblyTemplate?: Promise<THREE.Group>;
   async createAssemblyModel() {
     this.assemblyTemplate ??= new GLTFLoader()
-      .loadAsync("/assets/archive-assembly.glb")
+      .loadAsync(publicAsset("assets/archive-assembly.glb"))
       .then((gltf) => {
         gltf.scene.updateMatrixWorld(true);
         return gltf.scene;
@@ -621,6 +626,17 @@ export class ArchiveScene {
   resize() {
     const w = this.container.clientWidth,
       h = this.container.clientHeight;
+    const kind = this.container.closest<HTMLElement>("[data-layout]")?.dataset.layout ?? "";
+    const displayHeight = this.container.getBoundingClientRect().height;
+    if (this.layoutKind === "cinematic" && kind !== "cinematic" && this.displayHeight > 0) {
+      // Removing letterboxing starts from the same apparent model size. The
+      // existing camera interpolation then carries it to the responsive anchor.
+      this.camera.fov = THREE.MathUtils.radToDeg(2 * Math.atan(
+        Math.tan(THREE.MathUtils.degToRad(this.camera.fov / 2)) * displayHeight / this.displayHeight,
+      ));
+    }
+    this.displayHeight = displayHeight;
+    this.layoutKind = kind;
     const dimensions = resizeQuality(
       this.renderer,
       this.composer,
@@ -648,17 +664,29 @@ export class ArchiveScene {
     const canvas = this.renderer.domElement;
     let startX = 0,
       startY = 0;
+    let activePointer: number | null = null, previousX = 0, started = 0, cancelled = false;
+    const pointers = new Set<number>();
     canvas.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      pointers.add(e.pointerId);
+      if (pointers.size > 1) { cancelled = true; this.dragging = false; return; }
+      activePointer = e.pointerId;
+      cancelled = false;
+      previousX = e.clientX;
+      started = performance.now();
       startX = e.clientX;
       startY = e.clientY;
+      canvas.setPointerCapture(e.pointerId);
       if (this.canInspect) {
         this.dragging = true;
         canvas.setPointerCapture(e.pointerId);
       }
     });
     canvas.addEventListener("pointermove", (e) => {
+      if (activePointer !== null && e.pointerId !== activePointer) return;
+      if (cancelled) return;
       const r = canvas.getBoundingClientRect();
-      this.pointer.set(
+      if (e.pointerType === "mouse") this.pointer.set(
         (e.clientX - r.left) / r.width - 0.5,
         (e.clientY - r.top) / r.height - 0.5,
       );
@@ -668,12 +696,14 @@ export class ArchiveScene {
           return;
         }
         this.targetRotation = THREE.MathUtils.clamp(
-          this.targetRotation + e.movementX * 0.004,
+          this.targetRotation + (e.clientX - previousX) * 0.004,
           -0.8,
           0.8,
         );
+        previousX = e.clientX;
         return;
       }
+      if (e.pointerType !== "mouse") return;
       if (this.reveal < 0.8 || this.detail > 0.2 || !this.loaded) return;
       this.cursor.set(
         ((e.clientX - r.left) / r.width) * 2 - 1,
@@ -694,7 +724,15 @@ export class ArchiveScene {
       );
     });
     canvas.addEventListener("pointerup", (e) => {
+      pointers.delete(e.pointerId);
+      if (e.pointerId !== activePointer) return;
+      activePointer = null;
       this.dragging = false;
+      if (cancelled) return;
+      if (e.pointerType !== "mouse" && this.detail < 0.2 && this.reveal >= 0.8 && this.loaded) {
+        const swipe = swipeDirection(e.clientX - startX, e.clientY - startY, performance.now() - started);
+        if (swipe) { this.onNavigate?.(swipe.axis, swipe.direction); return; }
+      }
       if (
         Math.hypot(e.clientX - startX, e.clientY - startY) > 6 ||
         this.detail > 0.2 ||
@@ -722,7 +760,14 @@ export class ArchiveScene {
             : { ...this.selectedCell },
         );
     });
-    canvas.addEventListener("pointercancel", () => (this.dragging = false));
+    canvas.addEventListener("pointercancel", (e) => {
+      pointers.delete(e.pointerId);
+      if (e.pointerId === activePointer) { activePointer = null; cancelled = true; this.dragging = false; }
+    });
+    canvas.addEventListener("lostpointercapture", (e) => {
+      pointers.delete(e.pointerId);
+      if (e.pointerId === activePointer) { activePointer = null; this.dragging = false; }
+    });
     canvas.addEventListener("pointerleave", () => {
       this.pointer.set(0, 0);
       this.onHover?.(null);
@@ -1101,6 +1146,8 @@ export class ArchiveScene {
       anchorAim.addScaledVector(up, -(540 - screenY) / pixelScale);
       cameraAim.lerp(anchorAim, ease((shot - 27.3) / 0.5));
     }
+    const framing = archiveFraming(this.container.clientWidth, this.container.clientHeight, span, detail,
+      this.container.closest<HTMLElement>("[data-layout]")?.dataset.layout === "compact");
     if (!cinematic) {
       const right = new THREE.Vector3()
         .crossVectors(new THREE.Vector3(0, 1, 0), viewDirection)
@@ -1108,12 +1155,20 @@ export class ArchiveScene {
       const up = new THREE.Vector3()
         .crossVectors(viewDirection, right)
         .normalize();
-      const pixelScale = 1080 / THREE.MathUtils.lerp(span, 5.9, detail);
+      const width = this.container.clientWidth, height = this.container.clientHeight;
+      const pixelScale = height / framing.span;
+      if (framing.portrait) {
+        // Keep the preview camera independent of the live lift, wave and rail.
+        // Following model.position here would visually cancel those motions.
+        const previewAim = new THREE.Vector3(0, -4.6 + settlingWave(0, 26.56) + 0.4 + 1.85, -2.17);
+        previewAim.addScaledVector(up, (framing.previewY - 0.5) * height / pixelScale);
+        cameraAim.copy(previewAim);
+      }
       const detailAim = this.model.position
         .clone()
         .add(new THREE.Vector3(0, 1.85, 0));
-      detailAim.addScaledVector(right, (960 - 550) / pixelScale);
-      detailAim.addScaledVector(up, (560 - 540) / pixelScale);
+      detailAim.addScaledVector(right, (0.5 - framing.detailX) * width / pixelScale);
+      detailAim.addScaledVector(up, (framing.detailY - 0.5) * height / pixelScale);
       cameraAim.lerp(detailAim, detail);
     }
     const cameraPosition = cameraAim
@@ -1130,7 +1185,7 @@ export class ArchiveScene {
     this.camera.fov = THREE.MathUtils.lerp(
       this.camera.fov,
       THREE.MathUtils.radToDeg(
-        2 * Math.atan(THREE.MathUtils.lerp(span, 5.9, detail) / (2 * distance)),
+        2 * Math.atan((cinematic ? THREE.MathUtils.lerp(span, 5.9, detail) : framing.span) / (2 * distance)),
       ),
       cameraBlend,
     );
@@ -1192,7 +1247,7 @@ export class ArchiveScene {
     const p = this.model
       .localToWorld(new THREE.Vector3(x, y, 0.255))
       .project(this.camera);
-    return [(p.x + 1) * 960, (1 - p.y) * 540];
+    return [(p.x + 1) * this.container.clientWidth / 2, (1 - p.y) * this.container.clientHeight / 2];
   }
   get decryptionFrame() { return this.decryption.frame; }
   finishDecryption() { this.decryption.finish(); }
@@ -1205,7 +1260,7 @@ export class ArchiveScene {
       const p = this.model
         .localToWorld(new THREE.Vector3(x, y, z))
         .project(this.camera);
-      return [Math.round((p.x + 1) * 960), Math.round((1 - p.y) * 540)];
+      return [Math.round((p.x + 1) * this.container.clientWidth / 2), Math.round((1 - p.y) * this.container.clientHeight / 2)];
     };
     return {
       decryption: { ...this.decryption.frame, clarity: this.decryption.clarity },

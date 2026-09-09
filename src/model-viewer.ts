@@ -128,6 +128,8 @@ export class ModelViewer {
     this.controls.maxDistance = 28;
     this.controls.maxTargetRadius = 5;
     this.controls.screenSpacePanning = true;
+    this.controls.touches.ONE = THREE.TOUCH.ROTATE;
+    this.controls.touches.TWO = THREE.TOUCH.DOLLY_PAN;
     this.controls.enabled = false;
     this.controls.update();
     this.cameraMotion.snap(this.controlCamera, this.controls.target);
@@ -519,6 +521,11 @@ export class ModelViewer {
     this.camera.updateProjectionMatrix();
     this.controlCamera.aspect = this.camera.aspect;
     this.controlCamera.updateProjectionMatrix();
+    const touch = matchMedia("(pointer: coarse)").matches;
+    const help = this.root.querySelector(".viewer-help")!;
+    help.innerHTML = touch
+      ? "<span>单指旋转</span><span>双指缩放 / 平移</span>"
+      : "<span>拖动旋转</span><span>↑ ↓ ← → 平移</span><span>滚轮缩放</span>";
   }
 
   update(time: number) {
@@ -549,6 +556,14 @@ export class ModelViewer {
       dt,
       this.reduced,
     );
+    const portrait = this.root.closest<HTMLElement>("[data-layout]")?.dataset.layout === "portrait";
+    const zoom = portrait ? Math.min(1.15, this.camera.aspect / 0.85) / (1 + 0.08 * this.spread.value) : 1;
+    if (this.camera.zoom !== zoom) {
+      this.camera.zoom = zoom;
+      this.controlCamera.zoom = zoom;
+      this.camera.updateProjectionMatrix();
+      this.controlCamera.updateProjectionMatrix();
+    }
     // Match the detail scene's gentle haze without washing out the object as
     // the user zooms. The assembled model is centered on the world origin.
     const fog = this.scene.fog as THREE.Fog;

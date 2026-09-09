@@ -1,5 +1,6 @@
 import { hasTypingBetween } from "./typing-rhythm";
 import { TYPING_PCM, TYPING_SAMPLE_RATE } from "./typing-samples";
+import { assetUrl } from "./asset-url";
 export type Sound =
   | "page-open"
   | "page-close"
@@ -442,7 +443,7 @@ export class TerminalAudio {
     if (this.buffers) return Promise.resolve();
     this.loading ??= Promise.all(
       STEMS.map(async (name) => {
-        const response = await fetch(`/audio/${name}.ogg`);
+        const response = await fetch(assetUrl(`audio/${name}.ogg`));
         if (!response.ok) throw new Error(`Music ${name}: ${response.status}`);
         return c.decodeAudioData(await response.arrayBuffer());
       }),

@@ -9,8 +9,10 @@
     "dev": "vite --host 127.0.0.1",
     "prebuild": "node scripts/export-records.mjs",
     "check:content": "node --experimental-strip-types --test scripts/check-content.mjs",
+    "check:viewport": "node --experimental-strip-types scripts/check-viewport.mjs",
+    "review:mobile": "node scripts/serve-mobile-review.mjs",
     "export:archives": "node scripts/export-records.mjs",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && node scripts/build-pwa.mjs",
     "format": "prettier --write src scripts index.html package.json tsconfig.json",
     "preview": "vite preview --host 127.0.0.1"
   },

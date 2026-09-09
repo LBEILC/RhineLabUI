@@ -28,6 +28,8 @@ export class InspectionOverlay {
     project: (x: number, y: number) => number[],
     showLabel: boolean,
   ) {
+    const host = document.querySelector<HTMLElement>("#three-scene")!;
+    this.root.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
     this.root.style.opacity =
       frame.intervals.length || frame.markers > 0 || frame.point > 0
         ? "1"

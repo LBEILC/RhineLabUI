@@ -8,6 +8,10 @@ import { qualityMarkup, syncQualityUI } from "./quality-settings";
 import "@kitlangton/rolling-number/styles.css";
 import "./style.css";
 import "./quality-settings.css";
+import "./responsive.css";
+import { viewportLayout } from "./viewport-layout";
+import { assetUrl } from "./asset-url";
+import { initPwa, pwaSettingsMarkup } from "./pwa";
 import { createRollingNumber, createRollingText } from "@kitlangton/rolling-number";
 import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
@@ -73,6 +77,7 @@ $("#boot-background").insertAdjacentHTML(
   '<div class="boot-white"></div>',
 );
 const bootSequence = new BootSequence($("#stage"));
+$("#viewport").insertAdjacentHTML("beforeend", '<button class="mobile-entry" data-action="skip">进入档案 <span>→</span></button>');
 
 type Mode = "boot" | "archive" | "detail";
 let mode: Mode = "boot",
@@ -220,15 +225,46 @@ function savePrefs() {
   hoverCode.update({ animated: !prefs.reduced && mode === "archive" });
   $("#stage").classList.toggle("reduce-motion", prefs.reduced);
 }
+let previousLayout = "";
 function fit() {
-  const scale = Math.min(innerWidth / 1920, innerHeight / 1080);
-  $("#stage").style.transform = `translate(-50%, -50%) scale(${scale})`;
+  const stage = $("#stage");
+  const viewport = $("#viewport");
+  const coarse = matchMedia("(pointer: coarse)").matches;
+  const { width, height, scale, kind } = viewportLayout(viewport.clientWidth, viewport.clientHeight, coarse, mode === "boot");
+  stage.style.width = `${width}px`;
+  stage.style.height = `${height}px`;
+  stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  stage.dataset.layout = kind;
+  stage.dataset.touch = String(coarse);
+  viewport.dataset.mobileBoot = String(mode === "boot" && (coarse || viewport.clientWidth < 1100));
+  stage.style.setProperty("--stage-scale", String(scale));
+  // The software keyboard resizes dialogs without recomposing the 3D scene.
+  const visible = window.visualViewport;
+  const stageTop = (viewport.clientHeight - height * scale) / 2;
+  stage.style.setProperty("--modal-top", `${Math.max(0, (visible?.offsetTop ?? 0) - stageTop) / scale}px`);
+  stage.style.setProperty("--modal-height", `${Math.min(height, (visible?.height ?? viewport.clientHeight) / scale)}px`);
   $("#viewport").style.setProperty("--scale", String(scale));
-  scene?.resize();
-  viewer?.resize();
+  const marks = document.querySelector("#inspection-marks");
+  marks?.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  const layoutKey = JSON.stringify([width, height, scale, kind, devicePixelRatio]);
+  if (layoutKey !== previousLayout) {
+    previousLayout = layoutKey;
+    scene?.resize();
+    viewer?.resize();
+  }
   updateQualitySummary();
+  // Re-measure line covers and tab underline after wrapping changes.
+  requestAnimationFrame(() => {
+    documentDecryption.refresh();
+    const tab = document.querySelector<HTMLElement>(".detail-tabs button.active");
+    const indicator = document.querySelector<HTMLElement>(".tab-indicator");
+    if (tab && indicator) indicator.style.transform = `translateX(${tab.offsetLeft}px) scaleX(${tab.offsetWidth})`;
+  });
 }
 window.addEventListener("resize", fit);
+window.visualViewport?.addEventListener("resize", fit);
+window.visualViewport?.addEventListener("scroll", fit);
+matchMedia("(pointer: coarse)").addEventListener("change", fit);
 fit();
 $("#file-ticks").innerHTML = columnFiles(fileLocation(selected).lane)
   .map(
@@ -254,6 +290,7 @@ function setMode(next: Mode) {
     audio.configure(prefs);
   }
   $("#stage").dataset.mode = next;
+  if (previousMode !== next) fit();
   $("#boot").inert = next !== "boot";
   $("#boot").setAttribute("aria-hidden", String(next !== "boot"));
   $("#archive-ui").inert = next !== "archive" || Boolean(modal);
@@ -406,7 +443,7 @@ function renderDetail() {
   <dl class="metadata"><div><dt>DEPARTMENT / 科室</dt><dd>${escapeHtml(r.department)}</dd></div><div><dt>COLLECTION / 编目范围</dt><dd>${escapeHtml(r.date)}</dd></div><div><dt>RELATED / 相关人物</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>STATUS / 状态</dt><dd><i></i>${r.clearance === "RESTRICTED" ? "目录访问" : "已归档 · 可读取"}</dd></div></dl>
   <div class="detail-tabs" role="tablist"><button id="tab-overview" class="active" role="tab" aria-controls="tab-panel" aria-selected="true" data-tab="overview">01 <span>概述</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" aria-selected="false" data-tab="notes">02 <span>研究记录</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" aria-selected="false" data-tab="history">03 <span>访问日志</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
   <div id="tab-panel" class="tab-panel" role="tabpanel">${overview()}</div>
-  <div class="detail-actions"><button class="solid-button" data-action="bookmark">${saved.has(r.id) ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE"}<span>${saved.has(r.id) ? "已收藏" : "收藏档案"}</span></button><a class="export-button" href="/archives/RHINE-LAB-${r.id}.txt" download="RHINE-LAB-${r.id}.txt" aria-label="导出 ${r.id} 档案">EXPORT <span>↓</span></a></div>
+  <div class="detail-actions"><button class="solid-button" data-action="bookmark">${saved.has(r.id) ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE"}<span>${saved.has(r.id) ? "已收藏" : "收藏档案"}</span></button><a class="export-button" href="${assetUrl(`archives/RHINE-LAB-${r.id}.txt`)}" download="RHINE-LAB-${r.id}.txt" aria-label="导出 ${r.id} 档案">EXPORT <span>↓</span></a></div>
   <div class="detail-footnote"><a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">设定参考 ↗</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
   $("#detail-content").setAttribute("tabindex", "-1");
   $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.id)));
@@ -552,7 +589,7 @@ function updateQualitySummary() {
   summary.textContent = `实际渲染 ${canvas.width} × ${canvas.height} · ${prefs.rendering.antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>减少镜头移动和过渡动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${qualityMarkup(prefs.rendering)}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom"><button data-action="fullscreen">FULLSCREEN <span>↗</span></button><button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="/fonts/MiSans-license.pdf" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>减少镜头移动和过渡动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom">${document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -634,6 +671,9 @@ document.addEventListener("click", (e) => {
   if (action === "column-next") stepColumn(1);
   if (action === "open") openFile();
   if (action === "model-viewer" && mode === "detail") {
+    // Safari does not always focus a button when it is tapped. Capture the
+    // actual opener so closing the modal reliably restores the right control.
+    el.focus({ preventScroll: true });
     viewer ??= new ModelViewer($("#stage"), () => { audio.setScene(mode); audio.play("page-close"); }, (sound) => audio.play(sound === "tick" ? "ui-tick" : sound));
     audio.setScene("viewer");
     viewer.setQuality(prefs.rendering);
@@ -650,8 +690,10 @@ document.addEventListener("click", (e) => {
     setMode("archive");
     audio.play("back");
   }
-  if (action === "search" || action === "saved" || action === "settings")
+  if (action === "search" || action === "saved" || action === "settings") {
+    el.focus({ preventScroll: true });
     openModal(action);
+  }
   if (action === "close-modal") closeModal();
   if (action === "bookmark") toggleSaved();
   if (action === "reset-search") {
@@ -663,7 +705,7 @@ document.addEventListener("click", (e) => {
   if (action === "replay" || action === "restart") {
     replayBoot();
   }
-  if (action === "fullscreen") {
+  if (action === "fullscreen" && document.fullscreenEnabled) {
     if (document.fullscreenElement) void document.exitFullscreen();
     else
       void document.documentElement
@@ -810,12 +852,14 @@ let lastTime = 0,
   frameStart = performance.now(),
   fps = 0;
 function frame(ms: number) {
+  if (document.hidden) { requestAnimationFrame(frame); return; }
   const time = ms / 1000;
   const cinema =
     mode === "boot" && ready
       ? bootFrame(frozenTime ?? time - bootStart)
       : undefined;
-  if (!viewer?.isOpen) scene?.update(time, cinema);
+  // The calibrated 2D opening fully covers the scene until array entry.
+  if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
   viewer?.update(time);
   if (scene && mode === "detail") {
     documentDecryption.update(time, scene.decryptionFrame, prefs.reduced);
@@ -855,8 +899,13 @@ async function start() {
     ]);
     scene.select(selected);
     scene.onSelect = (i, cell) => {
-      if (mode === "boot") return;
+      if (mode !== "archive" || modal || viewer?.isOpen) return;
       select(i, cell ? { cell } : undefined);
+    };
+    scene.onNavigate = (axis, direction) => {
+      if (mode !== "archive" || modal || viewer?.isOpen) return;
+      if (axis === "lane") stepColumn(direction);
+      else stepFile(direction);
     };
     scene.onHover = (i) => {
       const label = $("#hover-label");
@@ -892,6 +941,7 @@ async function start() {
     if (!params.has("time")) bootStart += 0.6;
     if (prefs.reduced && !params.has("time")) setMode("archive");
     requestAnimationFrame(frame);
+    void initPwa(notify);
   } catch (error) {
     console.error(error);
     $("#loading").innerHTML =

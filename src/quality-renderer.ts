@@ -45,7 +45,7 @@ export function resizeQuality(
     quality,
     width,
     height,
-    Math.min(innerWidth / 1920, innerHeight / 1080),
+    host.getBoundingClientRect().width / width,
     devicePixelRatio,
     renderer.capabilities.maxTextureSize,
   );

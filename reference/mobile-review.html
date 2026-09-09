@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rhine Lab · 手机实测</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#e8e5e1;font-family:system-ui,sans-serif;color:#252820}iframe{position:fixed;inset:0;width:100%;height:100dvh;border:0}details{position:fixed;z-index:3;bottom:max(10px,env(safe-area-inset-bottom));left:12px;right:12px;background:#eeebe3f5;border:1px solid #bcb4a5;padding:12px;font-size:13px;box-shadow:0 6px 30px #33291820}details[open]{max-height:70dvh;overflow:auto}summary{cursor:pointer;min-height:28px;line-height:28px}h1{font-size:19px;margin:12px 0}p{line-height:1.7;margin:10px 0}button,a{font:inherit;min-height:44px;padding:10px 14px;border:1px solid #9a9385;background:#e8e5e1;color:inherit;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}button:disabled{opacity:.5}.actions{display:flex;flex-wrap:wrap;gap:8px}output{display:block;font-size:12px;white-space:pre-wrap;line-height:1.7;margin-top:12px}#progress{position:fixed;top:max(8px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);padding:7px 12px;background:#252820;color:#eee;z-index:4;font-size:11px;white-space:nowrap;pointer-events:none}#progress:empty{display:none}
+</style>
+<iframe id="app" title="莱茵生命档案" src="/?scene=archive"></iframe>
+<div id="progress" role="status"></div>
+<details open id="panel"><summary>手机实测 · 点击收起以体验完整画面</summary>
+<h1>iPhone / Safari 校准</h1>
+<p>先竖屏运行一次，再横屏运行一次。每次约 45 秒，期间保持页面在前台，测试会依次浏览档案、解密和拆解模型。结果只包含屏幕、画质与帧间隔信息，会回传到这台电脑。</p>
+<div class="actions"><button id="run">运行当前方向测试</button><a href="/?scene=archive" target="_blank">打开完整体验</a><button id="download" disabled>下载结果</button></div>
+<p>手动体验：左右滑动切列，上下滑动切档；详情正文可滚动；360° 查看器支持单指旋转、双指缩放和平移。请检查搜索键盘弹出后能否输入和关闭窗口。</p>
+<output id="result">等待档案载入…</output></details>
+<script type="module">
+const app=document.querySelector('#app'),panel=document.querySelector('#panel'),result=document.querySelector('#result'),progress=document.querySelector('#progress'),run=document.querySelector('#run'),download=document.querySelector('#download');
+let report=null;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const win=()=>app.contentWindow,doc=()=>win().document,stats=()=>win().rhine?.stats();
+async function until(test, timeout=30000){const start=performance.now();while(!test()){if(performance.now()-start>timeout)throw Error('档案载入或过渡超时，请重试');await wait(100)}}
+const click=selector=>{const button=doc().querySelector(selector);if(!button)throw Error(`操作不可用：${selector}`);button.click()};
+function summarize(values){const v=[...values].sort((a,b)=>a-b),p=q=>Math.round(v[Math.min(v.length-1,Math.floor(v.length*q))]*100)/100;return {frames:v.length,averageFps:Math.round(1000/(v.reduce((a,b)=>a+b,0)/v.length)*10)/10,p50:p(.5),p95:p(.95),p99:p(.99),over33ms:v.filter(n=>n>33.34).length,over50ms:v.filter(n=>n>50).length}}
+async function sample(name, duration=6000, action){progress.textContent=`正在测量：${name}`;let previous=null,start=null,lastAction=0;const values=[];await new Promise((resolve,reject)=>{function frame(t){if(document.hidden){reject(Error('页面进入后台，测量已停止，请在前台重试'));return}if(start===null)start=t;if(previous!==null)values.push(t-previous);previous=t;if(action&&t-lastAction>550){lastAction=t;action()}if(t-start>=duration){resolve();return}win().requestAnimationFrame(frame)}win().requestAnimationFrame(frame)});return {name,...summarize(values),quality:JSON.parse(doc().querySelector('#three-scene').dataset.renderQuality||'{}'),stats:stats()}}
+app.addEventListener('load',async()=>{await until(()=>stats()?.ready,60000);result.textContent='已就绪。可运行测试，或收起面板自由体验。'});
+run.onclick=async()=>{run.disabled=true;download.disabled=true;panel.open=false;const orientation=innerWidth>innerHeight?'landscape':'portrait';report={version:1,startedAt:new Date().toISOString(),userAgent:navigator.userAgent,viewport:{width:innerWidth,height:innerHeight,dpr:devicePixelRatio,orientation},samples:[]};try{
+await until(()=>stats()?.ready,60000);if(doc().querySelector('.model-viewer:not([hidden])'))click('[data-viewer="close"]');await wait(350);win().rhine.archive();await wait(1800);
+report.samples.push(await sample('阵列预览'));
+report.samples.push(await sample('连续切档',6000,()=>click('[data-action="next"]')));
+await wait(1600);win().rhine.detail();report.samples.push(await sample('抽取与解密',9000));await until(()=>stats().decryption.clarity===1);report.samples.push(await sample('清晰详情',4000));
+click('.viewer-open');await until(()=>JSON.parse(doc().querySelector('.model-viewer')?.dataset.stats||'{}').ready);await wait(700);click('[data-viewer="explode"]');report.samples.push(await sample('模型拆解',6000));click('[data-viewer="assemble"]');report.samples.push(await sample('模型重组',4000));click('[data-viewer="close"]');
+if((innerWidth>innerHeight?'landscape':'portrait')!==orientation)throw Error('测试中屏幕方向发生变化，请保持同一方向重新运行');
+report.finishedAt=new Date().toISOString();result.textContent=report.samples.map(s=>`${s.name}：${s.averageFps} FPS，P95 ${s.p95}ms`).join('\n');
+try{const response=await fetch('/__mobile-review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});if(!response.ok)throw Error();result.textContent+='\n结果已回传电脑。'}catch{result.textContent+='\n自动回传不可用，请下载结果。'}
+download.disabled=false;
+}catch(e){result.textContent=e.message}finally{progress.textContent='';run.disabled=false;panel.open=true}};
+download.onclick=()=>{if(!report)return;const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=`rhine-mobile-${report.viewport.orientation}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),30000)};
+</script>
+</html>
