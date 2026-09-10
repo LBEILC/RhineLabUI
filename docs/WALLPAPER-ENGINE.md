@@ -70,3 +70,11 @@ node scripts/check-wallpaper.mjs
 - [用户属性与暂停通知](https://docs.wallpaperengine.io/en/web/api/propertylistener.html)
 - [FPS 限制](https://docs.wallpaperengine.io/en/web/performance/fps.html)
 - [命令行预览与属性设置](https://help.wallpaperengine.io/en/functionality/cli.html)
+
+## 桌面试用反馈与设置说明（2026-09-10）
+
+用户已自行应用到桌面。设置顶部明确说明：每次启动读取 Wallpaper Engine 属性，页面内修改只对当前运行生效；长期设置须在宿主属性面板修改。画质区不再提示自动保存。
+
+用户反馈桌面方向键与滚轮无效。代码检查确认两类监听仍保留，没有壁纸模式禁用分支；尚未通过桌面事件跟踪确认滚轮未传入的具体原因。设置操作说明改为拖动阵列、点击界面按钮，并注明桌面可能无法传入方向键和滚轮。Wallpaper Engine 开发者说明键盘输入存在宿主限制：https://steamcommunity.com/app/431960/discussions/2/1644304412654510366/ 。
+
+本次 `npm run build:wallpaper` 与 `node scripts/check-wallpaper.mjs` 通过。
