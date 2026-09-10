@@ -82,8 +82,13 @@
           {
             "label": "极高",
             "value": "ultra"
+          },
+          {
+            "label": "自定义",
+            "value": "custom"
           }
-        ]
+        ],
+        "condition": "superperformance.value == false"
       },
       "reduced": {
         "order": 7,
@@ -572,6 +577,199 @@
         "type": "bool",
         "value": false,
         "condition": "colortheme.value == 'dark'"
+      },
+      "superperformance": {
+        "order": 5.5,
+        "text": "超级性能模式（保留动态效果）",
+        "type": "bool",
+        "value": false
+      },
+      "qualityscale": {
+        "order": 6.02,
+        "text": "自定义 · 三维渲染比例（%）",
+        "type": "slider",
+        "value": 100,
+        "min": 50,
+        "max": 200,
+        "step": 5,
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualitypixelratio": {
+        "order": 6.03,
+        "text": "自定义 · 像素密度上限",
+        "type": "combo",
+        "value": "1.5",
+        "options": [
+          {
+            "value": "1",
+            "label": "1×"
+          },
+          {
+            "value": "1.5",
+            "label": "1.5×"
+          },
+          {
+            "value": "2",
+            "label": "2×"
+          },
+          {
+            "value": "3",
+            "label": "3×"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualityantialias": {
+        "order": 6.04,
+        "text": "自定义 · 抗锯齿",
+        "type": "combo",
+        "value": "off",
+        "options": [
+          {
+            "value": "off",
+            "label": "原始"
+          },
+          {
+            "value": "smaa",
+            "label": "SMAA"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualityshadows": {
+        "order": 6.05,
+        "text": "自定义 · 阴影分辨率",
+        "type": "combo",
+        "value": "2048",
+        "options": [
+          {
+            "value": "0",
+            "label": "关闭"
+          },
+          {
+            "value": "1024",
+            "label": "1024"
+          },
+          {
+            "value": "2048",
+            "label": "2048"
+          },
+          {
+            "value": "4096",
+            "label": "4096"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualityaosamples": {
+        "order": 6.06,
+        "text": "自定义 · 环境遮蔽采样",
+        "type": "combo",
+        "value": "32",
+        "options": [
+          {
+            "value": "0",
+            "label": "关闭"
+          },
+          {
+            "value": "16",
+            "label": "16 采样"
+          },
+          {
+            "value": "32",
+            "label": "32 采样"
+          },
+          {
+            "value": "64",
+            "label": "64 采样"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualityaoresolution": {
+        "order": 6.07,
+        "text": "自定义 · 遮蔽分辨率",
+        "type": "combo",
+        "value": "1",
+        "options": [
+          {
+            "value": "0.5",
+            "label": "50%"
+          },
+          {
+            "value": "0.75",
+            "label": "75%"
+          },
+          {
+            "value": "1",
+            "label": "100%"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualitydepthoffield": {
+        "order": 6.08,
+        "text": "自定义 · 景深强度（%）",
+        "type": "slider",
+        "value": 100,
+        "min": 0,
+        "max": 150,
+        "step": 5,
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualitytransmission": {
+        "order": 6.09,
+        "text": "自定义 · 透明材质分辨率",
+        "type": "combo",
+        "value": "1",
+        "options": [
+          {
+            "value": "0.25",
+            "label": "25%"
+          },
+          {
+            "value": "0.5",
+            "label": "50%"
+          },
+          {
+            "value": "0.75",
+            "label": "75%"
+          },
+          {
+            "value": "1",
+            "label": "100%"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "qualityanisotropy": {
+        "order": 6.1,
+        "text": "自定义 · 纹理过滤",
+        "type": "combo",
+        "value": "16",
+        "options": [
+          {
+            "value": "1",
+            "label": "1×"
+          },
+          {
+            "value": "2",
+            "label": "2×"
+          },
+          {
+            "value": "4",
+            "label": "4×"
+          },
+          {
+            "value": "8",
+            "label": "8×"
+          },
+          {
+            "value": "16",
+            "label": "16×"
+          }
+        ],
+        "condition": "renderquality.value == 'custom' && superperformance.value == false"
       }
     }
   }

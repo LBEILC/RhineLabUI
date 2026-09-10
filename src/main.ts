@@ -5,6 +5,7 @@ import "./decryption.css";
 import { escapeHtml } from "./html";
 import { normalizeQuality, qualityPresets, type QualityPreset, type RenderQuality } from "./render-quality";
 import { qualityMarkup, syncQualityUI } from "./quality-settings";
+import { superPerformanceQuality, wallpaperQuality } from "./wallpaper-quality";
 import "@kitlangton/rolling-number/styles.css";
 import "./style.css";
 import "./quality-settings.css";
@@ -238,6 +239,8 @@ function saveAudioPrefs() {
   } catch {}
   configureAudio();
 }
+function superPerformanceEnabled() { return isWallpaper && wallpaperHost()?.properties.superperformance?.value === true; }
+function effectiveRenderQuality() { return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering; }
 function savePrefs() {
   saveAudioPrefs();
   if (prefs.reduced) {
@@ -250,8 +253,10 @@ function savePrefs() {
   scene?.setReduced(prefs.reduced);
   scene?.setTheme(prefs.colorTheme === "dark", prefs.reduced || !started);
   document.querySelectorAll<HTMLElement>("[data-color-theme]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.colorTheme === prefs.colorTheme)));
-  scene?.setQuality(prefs.rendering);
-  viewer?.setQuality(prefs.rendering);
+  scene?.setSuperPerformance(superPerformanceEnabled());
+  viewer?.setSuperPerformance(superPerformanceEnabled());
+  scene?.setQuality(effectiveRenderQuality());
+  viewer?.setQuality(effectiveRenderQuality());
   syncQualityUI(prefs.rendering);
   updateQualitySummary();
   fileCounter.update({ animated: !prefs.reduced && mode === "archive" });
@@ -630,7 +635,7 @@ function updateQualitySummary() {
   if (!summary || !scene) return;
   const canvas = scene.renderer.domElement;
   const metrics = JSON.parse(canvas.parentElement?.dataset.renderQuality ?? "{}");
-  summary.textContent = `实际渲染 ${canvas.width} × ${canvas.height} · ${prefs.rendering.antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
+  summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
 function motionSettingsMarkup() {
   return `<div id="motion-preference-note" class="motion-preference-note"><p>${prefs.reduced
@@ -729,7 +734,8 @@ document.addEventListener("click", (e) => {
     el.focus({ preventScroll: true });
     viewer ??= new ModelViewer($("#stage"), () => { audio.setScene(mode); audio.play("page-close"); }, (sound) => audio.play(sound === "tick" ? "ui-tick" : sound));
     audio.setScene("viewer");
-    viewer.setQuality(prefs.rendering);
+    viewer.setSuperPerformance(superPerformanceEnabled());
+    viewer.setQuality(effectiveRenderQuality());
     scene.finishDecryption();
     viewer.open(
       records[selected].id,
@@ -1064,9 +1070,9 @@ if (isWallpaper) {
       const value = properties[key.toLowerCase()]?.value;
       if (typeof value === "number" && Number.isFinite(value)) prefs[key] = Math.max(0, Math.min(1, value / 100));
     }
-    const quality = properties.renderquality?.value;
-    if (typeof quality === "string" && Object.hasOwn(qualityPresets, quality))
-      prefs.rendering = { ...qualityPresets[quality as QualityPreset] };
+    const qualityProperties = { ...wallpaperHost()?.properties, ...properties };
+    if (Object.keys(properties).some(key => key === "renderquality" || key.startsWith("quality")))
+      prefs.rendering = wallpaperQuality(qualityProperties, prefs.rendering);
     savePrefs();
     if (properties.boot?.value === false && started && mode === "boot") setMode("archive");
     // Keep an already-open settings surface in sync without replacing focused controls.

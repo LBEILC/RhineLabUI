@@ -34,6 +34,12 @@ export class ModelViewer {
   private renderer: THREE.WebGLRenderer;
   private pipeline: ReturnType<typeof createViewerPipeline>;
   private quality = normalizeQuality(undefined);
+  private superPerformance = false;
+  setSuperPerformance(enabled: boolean) {
+    if (this.superPerformance === enabled) return;
+    this.superPerformance = enabled;
+    this.resize();
+  }
   private appliedQuality = "";
   private scene = new THREE.Scene();
   private camera = new THREE.PerspectiveCamera(34, 16 / 9, 0.3, 120);
@@ -519,6 +525,7 @@ export class ModelViewer {
       this.pipeline.composer,
       this.canvasHost,
       this.quality,
+      this.superPerformance,
     );
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();

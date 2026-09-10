@@ -54,6 +54,8 @@ export class WallpaperEffects {
   }
   update(time: number, reduced: boolean) {
     const options = effectOptions(this.props);
+    const superPerformance = this.props.superperformance?.value === true;
+    this.stage.dataset.superPerformance = String(superPerformance);
     const insets = wallpaperInsets(this.props), insetSignature = JSON.stringify(insets);
     if (insetSignature !== this.insetSignature) {
       this.insetSignature = insetSignature;
@@ -86,6 +88,6 @@ export class WallpaperEffects {
       scene.uiOnlyParallax = true;
       scene.setSelectedIndexAccent(this.props.selectedindexaccent?.value === true);
     }
-    this.finish.update(options.screen, options.grain, options.fringe, options.vignette, options.grainSize, time, reduced);
+    this.finish.update(options.screen && !superPerformance, options.grain, options.fringe, options.vignette, options.grainSize, time, reduced);
   }
 }

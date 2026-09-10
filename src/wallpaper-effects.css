@@ -31,6 +31,10 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 1px 0 rgba(0,0,0,.08);
 }
 .wb-nav .frost-surface::after { inset: 0 -6px; }
+#stage[data-super-performance="true"] .frost-surface::after {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
 .system-footer .frost-surface::after { inset: -8px -12px; }
 .relay-actions.frost-surface::after { left: auto; width: 240px; }
 .reduce-motion .frost-surface::after { transition: none; }

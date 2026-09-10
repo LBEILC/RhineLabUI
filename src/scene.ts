@@ -56,6 +56,26 @@ export class ArchiveScene {
   uiOnlyParallax = false;
   private theme = new ThemeWave();
   private subduedIndex = { value: 0 };
+  private superPerformance = false;
+  setSuperPerformance(enabled: boolean) {
+    if (this.superPerformance === enabled) return;
+    this.superPerformance = enabled;
+    for (const inst of this.instances) {
+      const original = (inst.userData.fullMaterial ??= inst.material) as THREE.MeshPhysicalMaterial;
+      if (enabled && !inst.userData.fastMaterial) {
+        const fast = original.clone();
+        fast.onBeforeCompile = original.onBeforeCompile;
+        fast.customProgramCacheKey = original.customProgramCacheKey.bind(original);
+        fast.transmission = 0;
+        fast.clearcoat = 0;
+        fast.roughness = Math.max(.45, original.roughness);
+        inst.userData.fastMaterial = fast;
+      }
+      inst.material = enabled ? inst.userData.fastMaterial : original;
+      inst.visible = !enabled || original.name.replace(/\.\d+$/, "") !== "Titanium_Fasteners";
+    }
+    this.resize();
+  }
   setSelectedIndexAccent(onlySelected: boolean) { this.subduedIndex.value = Number(onlySelected); }
   private themeAttribute?: THREE.InstancedBufferAttribute;
   get themeAmount() { return this.theme.background(performance.now() / 1000); }
@@ -616,7 +636,6 @@ export class ArchiveScene {
     const changed = !sameCell(cell, this.selectedCell);
     if (this.looping && changed && this.loaded && this.lift.value > 0.0001) {
       const group = this.model.clone(true);
-      this.appearance.prepare(group);
       const label = group.children[group.children.length - 1] as THREE.Mesh;
       const canvas = document.createElement("canvas");
       canvas.width = 1024;
@@ -630,6 +649,10 @@ export class ArchiveScene {
         transparent: true,
         depthWrite: false,
       });
+      // Clone carries the selected label material by reference. Replace it
+      // before installing appearance shaders, so theme hooks are not appended
+      // to the original label a second time on every selection.
+      this.appearance.prepare(group);
       this.appearance.apply(group, ease(this.lift.value / 0.4));
       this.appearance.setClarity(group, this.decryption.clarity);
       this.scene.add(group);
@@ -732,6 +755,7 @@ export class ArchiveScene {
       this.composer,
       this.container,
       this.quality,
+      this.superPerformance,
     );
     this.ao.setSize(
       Math.max(1, Math.floor(dimensions.width * this.quality.aoResolution)),
@@ -1602,7 +1626,8 @@ export class ArchiveScene {
         this.quality.depthOfField) /
       100;
     this.renderer.info.reset();
-    this.composer.render();
+    if (this.superPerformance) this.renderer.render(this.scene, this.camera);
+    else this.composer.render();
   }
   projectCard(x: number, y: number) {
     this.model.updateMatrixWorld(true);
@@ -1639,6 +1664,7 @@ export class ArchiveScene {
       fieldOfView: this.camera.fov,
       loaded: this.loaded,
       drawCalls: this.renderer.info.render.calls,
+      superPerformance: this.superPerformance,
       triangles: this.renderer.info.render.triangles,
       archiveCount: this.drawnCells.length,
       archiveCandidates: this.cells.length,
