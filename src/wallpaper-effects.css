@@ -66,7 +66,13 @@
 [data-dark-surface="true"] #stage[data-custom-wallpaper-visible="true"] .archive-atmosphere::before { background-size: 100% var(--wallpaper-mask-range), 100% var(--wallpaper-mask-range), 100% 100%; background-position: top, bottom, center; }
 
 
-/* Local contrast support stays readable over unmasked photography. */
+/* Text contrast over photography; keep the existing glass treatment. */
 #stage[data-custom-wallpaper-visible="true"] .system-footer { color: var(--theme-ink, #242622); }
-#stage[data-custom-wallpaper-visible="true"] .system-footer > :is(span, button) { background: rgba(var(--theme-paper-rgb, 234,229,225), .88); box-shadow: 0 0 0 6px rgba(var(--theme-paper-rgb, 234,229,225), .88); }
 #stage[data-custom-wallpaper-visible="true"] .system-footer .three-toggle[aria-pressed="false"] { opacity: 1; }
+
+#stage[data-custom-wallpaper-visible="true"] :is(.wb-nav button, .wb-task, .wb-muted, .wb-task-count, .wb-storage, .wb-media small, .wb-timer-label, .system-nav button, .relay-entry) {
+  color: var(--theme-ink, #242622);
+}
+#stage[data-custom-wallpaper-visible="true"] :is(.wb-nav button, .wb-task, .system-nav button, .system-footer button, .relay-entry):hover {
+  color: var(--theme-ink, #242622);
+}
