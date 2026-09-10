@@ -138,8 +138,23 @@ for(const shot of [22.60,24.16,26.56,34]){
   expect(visible===159,'Reference animation instance count changed');
 }
 expect(referenceError<1e-5,'Reference animation grid changed');
+const opening=[];
+const container=document.querySelector('#scene');
+container.dataset.layout='opening';
+for(const [width,height] of [[1920,1080],[3840,1080],[1080,1920]]) {
+ container.style.width=width+'px';container.style.height=height+'px';scene.resize();
+ for(const shot of [22.2,24,25.8]) {
+  scene.update(time+=1/60,{reveal:1,lift:0,zoom:0,time:shot});
+  opening.push({width,height,shot,count:scene.drawnCells.length});
+  expect(scene.drawnCells.some(c=>c.row<0||c.row>=32||c.lane<0||c.lane>=5),'Normal opening retained finite grid');
+  expect(scene.drawnCells.length>0,'Normal opening has no cards');
+ }
+}
+delete container.dataset.layout;container.style.width='1100px';container.style.height='620px';scene.resize();
+scene.update(time+=1/60,{reveal:1,lift:0,zoom:1,time:34});
+expect(scene.drawnCells.length===159,'Explicit reference did not restore fixed grid after responsive opening');
 draw();
-document.querySelector('#result').textContent=JSON.stringify({passed:errors.length===0,errors,moves:moves.length,pickSamples,initialPool:initial.archiveCount,reference:{visible:referenceVisible,error:referenceError},afterLoops,rebasing:{before:beforeRebase,after:afterRebase},detail:{canInspect:detail.canInspect,lift:detail.extraction},aligning:{phase:aligning.returnPhase,height:aligning.modelPosition[1]},lastMoves:moves.slice(-5),finalStats},null,2);
+document.querySelector('#result').textContent=JSON.stringify({passed:errors.length===0,errors,opening,moves:moves.length,pickSamples,initialPool:initial.archiveCount,reference:{visible:referenceVisible,error:referenceError},afterLoops,rebasing:{before:beforeRebase,after:afterRebase},detail:{canInspect:detail.canInspect,lift:detail.extraction},aligning:{phase:aligning.returnPhase,height:aligning.modelPosition[1]},lastMoves:moves.slice(-5),finalStats},null,2);
 if(errors.length)throw new Error(errors.join('\n'));
 </script>
 </html>

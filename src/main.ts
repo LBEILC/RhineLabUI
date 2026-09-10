@@ -336,8 +336,8 @@ function setMode(next: Mode) {
   if (previousMode !== next) fit();
   $("#boot").inert = next !== "boot";
   $("#boot").setAttribute("aria-hidden", String(next !== "boot"));
-  $("#archive-ui").inert = next !== "archive" || Boolean(modal);
-  $("#archive-ui").setAttribute("aria-hidden", String(next !== "archive"));
+  $("#archive-ui").inert = next !== "archive" || Boolean(modal) || Boolean(workbench?.enabled);
+  $("#archive-ui").setAttribute("aria-hidden", String(next !== "archive" || Boolean(workbench?.enabled)));
   $(".system-nav").inert = next === "boot" || Boolean(modal);
   $(".system-footer").inert = next === "boot" || Boolean(modal);
   if (next === "detail") {
@@ -570,7 +570,7 @@ function closeModal(afterClose?: () => void) {
     modalTransition = undefined;
     modalSiblings.forEach(({ node, inert }) => (node.inert = inert));
     modalSiblings = [];
-    $("#archive-ui").inert = mode !== "archive";
+    $("#archive-ui").inert = mode !== "archive" || Boolean(workbench?.enabled);
     $("#detail-ui").inert = mode !== "detail";
     previousFocus?.focus({ preventScroll: true });
     afterClose?.();
@@ -862,6 +862,10 @@ function bootFrame(t: number) {
   }
   audio.updateBoot(t, frozenTime !== null);
   const motion = bootSequence.update(t);
+  if (workbench?.enabled && frozenTime === null) {
+    const end = openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, true) ? 35 : ARRAY_OPENING_END;
+    if (t > end - .35) $(".powered").style.opacity = String(1 - ease((t - end + .35) / .35));
+  }
   let step: string = motion.step;
   if (t >= 22) {
     step = "array";

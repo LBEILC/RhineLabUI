@@ -24,8 +24,25 @@ listeners.Properties({title:'A'}); listeners.Timeline({position:12,duration:100}
 assert.equal(window.rhineWallpaperMedia.playing,true);
 listeners.Properties({title:'B'});
 assert.equal(window.rhineWallpaperMedia.properties.title,'B');
-assert.equal(window.rhineWallpaperMedia.timeline,undefined,'Changing media clears stale progress');
-assert.equal(window.rhineWallpaperMedia.thumbnail,undefined,'Changing media clears stale cover');
+assert.equal(window.rhineWallpaperMedia.timeline.position,12,'Text updates cannot discard the independent timeline channel');
+assert.equal(window.rhineWallpaperMedia.thumbnail.thumbnail,'old','Same artwork may be reused across tracks without another callback');
+// Local player: artwork arrives first, then text, then a late metadata refresh.
+listeners.Thumbnail({thumbnail:'magic-theorem-cover'});
+listeners.Timeline({position:0,duration:242});
+listeners.Properties({title:'Magic Theorem',artist:'塞壬唱片-MSR/Adam Gubman/Sarah Kang'});
+listeners.Playback({state:7});
+listeners.Properties({title:'Magic Theorem',artist:'塞壬唱片-MSR/Adam Gubman/Sarah Kang',albumTitle:'Magic Theorem'});
+assert.equal(window.rhineWallpaperMedia.thumbnail.thumbnail,'magic-theorem-cover','Late text cannot erase a local-file cover');
+assert.equal(window.rhineWallpaperMedia.timeline.duration,242);
+// Reverse callback order, pause/resume and switching between players.
+listeners.Playback({state:2});listeners.Properties({title:'Cloud track'});listeners.Thumbnail({thumbnail:'cloud-cover'});
+assert.equal(window.rhineWallpaperMedia.thumbnail.thumbnail,'cloud-cover');
+listeners.Thumbnail({thumbnail:'magic-theorem-cover'});listeners.Properties({title:'Magic Theorem'});listeners.Playback({state:7});
+assert.equal(window.rhineWallpaperMedia.thumbnail.thumbnail,'magic-theorem-cover');
+// Explicit empty events still remove unavailable artwork/progress.
+listeners.Thumbnail({thumbnail:''});listeners.Timeline({position:0,duration:0});listeners.Properties({title:'No artwork'});
+assert.equal(window.rhineWallpaperMedia.thumbnail.thumbnail,'');
+assert.equal(window.rhineWallpaperMedia.timeline.duration,0);
 console.log('Workbench dates, timer suspension/reload, corrupt storage and early media callbacks passed.');
 const visibilitySource = ts.transpileModule(readFileSync('src/workbench-visibility.ts', 'utf8'), {compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {defaultWorkbenchVisibility, applyVisibilityProperties, workbenchElements} = await import(`data:text/javascript;base64,${Buffer.from(visibilitySource).toString('base64')}`);

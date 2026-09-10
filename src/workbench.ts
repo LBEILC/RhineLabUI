@@ -18,6 +18,7 @@ export class Workbench {
   private date = dayKey(new Date());
   private storageOK = true;
   private lastSecond = -1;
+  private exitAnimation?: Animation;
   private visibility: WorkbenchVisibility = defaultWorkbenchVisibility();
   constructor(private stage: HTMLElement, private onMode: () => void, private onLane: (lane: number) => void) {
     try {
@@ -74,9 +75,24 @@ export class Workbench {
   syncVisibility() {
     const hidden = !this.enabled || this.stage.dataset.mode === "boot";
     const entering = this.root.hidden && !hidden;
+    const reduced = this.stage.classList.contains("reduce-motion");
+    this.root.inert = hidden;
+    this.root.setAttribute("aria-hidden", String(hidden));
+    if (hidden && !this.root.hidden && !reduced) {
+      if (!this.exitAnimation) {
+        const animation = this.root.animate([{ opacity: getComputedStyle(this.root).opacity }, { opacity: 0 }], { duration: 220, fill: "forwards", easing: "ease-out" });
+        this.exitAnimation = animation;
+        animation.onfinish = () => { this.root.hidden = true; animation.cancel(); this.exitAnimation = undefined; };
+      }
+      return;
+    }
+    const interrupted = Boolean(this.exitAnimation);
+    const opacity = getComputedStyle(this.root).opacity;
+    this.exitAnimation?.cancel();
+    this.exitAnimation = undefined;
     this.root.hidden = hidden;
+    if (interrupted && !hidden && !reduced) this.root.animate([{ opacity }, { opacity: 1 }], { duration: 220, easing: "ease-out" });
     if (entering) {
-      const reduced = this.stage.classList.contains("reduce-motion");
       [".wb-time", ".wb-today", ".wb-module", ".wb-nav"].forEach((selector, i) => {
         const element = this.root.querySelector<HTMLElement>(selector)!;
         element.getAnimations().forEach(a => a.cancel());
@@ -154,7 +170,7 @@ export class Workbench {
     if (this.lane === 0) {
       const now = new Date(), end = new Date(now.getFullYear() + 1, 0, 1).getTime(), start = new Date(now.getFullYear(), 0, 1).getTime();
       const percent = (now.getTime() - start) / (end - start) * 100;
-      html = `<div class="wb-large">${now.getFullYear()}<small>YEAR</small></div><div class="wb-rule"><i style="width:${percent}%"></i></div><p class="wb-muted">今年已走过 ${percent.toFixed(1)}%<br>时间与日期跟随本机时区。</p>`;
+      html = `<div class="wb-large">${now.getFullYear()}<small>YEAR</small></div><div class="wb-rule"><i style="width:${percent}%"></i></div><p class="wb-muted">今年已走过 ${percent.toFixed(1)}%</p>`;
     }
     if (this.lane === 1) html = '<div class="wb-large">03<small>PRIORITIES</small></div><p class="wb-muted">把今天留给最重要的三件事。<br>点击左侧事项标记完成，再点一次撤销。完成状态每天重置。</p>';
     if (this.lane === 2) {
@@ -166,7 +182,7 @@ export class Workbench {
       const media = window.rhineWallpaperMedia ?? {}, p = media.properties, t = media.timeline;
       const cover = media.thumbnail?.thumbnail;
       const safeCover = typeof cover === "string" && /^data:image\/(png|jpeg|webp);base64,[a-z0-9+/=\s]+$/i.test(cover);
-      html = media.status?.enabled === false ? '<p class="wb-empty">媒体信息未启用</p><p class="wb-muted">请在 Wallpaper Engine 中启用媒体信息集成。</p>' : !p?.title ? '<p class="wb-empty">此刻，留一点安静。</p><p class="wb-muted">在支持系统媒体信息的播放器中播放音乐，歌曲与封面会显示在这里。</p>' : `<div class="wb-media">${safeCover ? `<img src="${escapeHtml(cover!)}" alt="专辑封面"/>` : '<div class="wb-cover" aria-hidden="true">♫</div>'}<div><small>${media.playing ? "正在播放" : "媒体已暂停或停止"}</small><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.artist || "")}</p></div></div>${t && typeof t.duration === "number" && t.duration > 0 && Number.isFinite(t.duration) && typeof t.position === "number" && Number.isFinite(t.position) ? `<div class="wb-rule"><i style="width:${Math.max(0, Math.min(100, t.position / t.duration * 100))}%"></i></div><p class="wb-muted">${durationText(t.position * 1000)} / ${durationText(t.duration * 1000)}</p>` : '<p class="wb-muted">播放器未提供进度</p>'}`;
+      html = media.status?.enabled === false ? '<p class="wb-empty">媒体信息未启用</p><p class="wb-muted">请在 Wallpaper Engine 中启用媒体信息集成。</p>' : !p?.title ? '<p class="wb-empty">此刻，留一点安静。</p><p class="wb-muted">在支持系统媒体信息的播放器中播放音乐，歌曲与封面会显示在这里。</p>' : `<div class="wb-media">${safeCover ? `<img src="${escapeHtml(cover!)}" alt="专辑封面"/>` : '<div class="wb-cover" aria-hidden="true">♫</div>'}<div><small>${media.playing ? "正在播放" : "媒体已暂停或停止"}</small><h3>${escapeHtml(p.title)}</h3><p>${escapeHtml(p.artist || "")}</p></div></div>${t && typeof t.duration === "number" && t.duration > 0 && Number.isFinite(t.duration) && typeof t.position === "number" && Number.isFinite(t.position) ? `<div class="wb-rule"><i style="width:${Math.max(0, Math.min(100, t.position / t.duration * 100))}%"></i></div><p class="wb-muted">${durationText(t.position * 1000)} / ${durationText(t.duration * 1000)}</p>` : ''}`;
     }
     if (this.lane === 4) html = `<div class="wb-timer-label">${this.timer.phase === "focus" ? "专注" : "休息"} · ${this.timer.status === "done" ? "已结束" : this.timer.status === "running" ? "进行中" : this.timer.status === "paused" ? "已暂停" : "准备开始"}</div><div class="wb-large wb-timer-digits">${durationText(this.timer.status === "idle" ? this.minutes() * 60000 : timerLeft(this.timer, Date.now()))}</div><div class="wb-timer-buttons"><button data-wb-timer="toggle">${this.timer.status === "running" ? "暂停" : this.timer.status === "paused" ? "继续" : "开始"}</button><button data-wb-timer="reset">重置</button><button data-wb-timer="phase">${this.timer.phase === "focus" ? "转入休息" : "开始专注"}</button></div><p class="wb-muted">${this.timer.status === "done" ? "这一段时间已完成。准备好后再开始下一段。" : "暂停壁纸或重新加载后按实际时间校正。"}<br>时长在 Wallpaper Engine 中设置。</p>`;
     this.root.querySelector(".wb-content")!.innerHTML = html;

@@ -31,10 +31,10 @@ for (const kind of ["Status", "Properties", "Thumbnail", "Playback", "Timeline"]
   const register = window["wallpaperRegisterMedia" + kind + "Listener"];
   if (typeof register === "function") register(function (event) {
     window.rhineWallpaperMedia[kind.toLowerCase()] = event;
-    if (kind === "Properties") {
-      delete window.rhineWallpaperMedia.thumbnail;
-      delete window.rhineWallpaperMedia.timeline;
-    }
+    // These are independent change-only channels, not a track snapshot.
+    // A player may send artwork/timeline before text, or reuse the same art
+    // across tracks without another thumbnail callback. Only their own events
+    // can replace/clear those values; a text update must not erase them.
     if (kind === "Playback") {
       const constants = window.wallpaperMediaIntegration || {};
       window.rhineWallpaperMedia.playing = event.state === (constants.PLAYBACK_PLAYING ?? constants.playback?.PLAYING ?? 1);

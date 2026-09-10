@@ -368,11 +368,11 @@
             "value": "legacy"
           },
           {
-            "label": "方案 A · 鼓点宽波",
+            "label": "方案 A · 左低中中右高频谱",
             "value": "wave"
           },
           {
-            "label": "方案 B · 整组轻抬",
+            "label": "方案 B · 连续层叠流波",
             "value": "lift"
           }
         ],

@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>工作台切换与开场复核</title>
+<style>body{margin:0;background:#969994;font:13px system-ui}header{padding:8px;display:flex;gap:8px;flex-wrap:wrap}button{padding:8px}#view{position:relative;margin:auto;overflow:hidden}iframe{display:block;border:0;transform-origin:top left}output{display:block;padding:8px;white-space:pre-wrap;max-height:180px;overflow:auto}</style>
+<header><button id="test">运行界面回归</button><button data-mode="archive">档案展示</button><button data-mode="workbench">工作台</button><button data-size="1920,1080">16:9</button><button data-size="3840,1080">32:9</button><button data-size="1080,1920">竖屏</button><button id="opening">播放阵列开场</button><button id="freeze">暂停／恢复</button><button id="game">开始接力</button><button data-rhythm="legacy">原版律动</button><button data-rhythm="wave">A · 左低中中右高</button><button data-rhythm="lift">B · 连续流波</button><button data-band="low">持续低频</button><button data-band="mid">持续中频</button><button data-band="high">持续高频</button><button data-band="all">混合频谱</button><button data-band="silent">静音</button></header>
+<div id="view"><iframe src="/?scene=archive" title="工作台修订预览"></iframe></div><output id="status"></output><output id="result"></output>
+<script>
+const f=document.querySelector('iframe'),view=document.querySelector('#view'),result=document.querySelector('#result');let size=[1920,1080],paused=false,band='silent';
+const wait=ms=>new Promise(r=>setTimeout(r,ms)),w=()=>f.contentWindow,d=()=>f.contentDocument;
+const props=p=>w().wallpaperPropertyListener?.applyUserProperties(Object.fromEntries(Object.entries(p).map(([k,v])=>[k,{value:v}])));
+function fit(){const scale=Math.min((innerWidth-20)/size[0],(innerHeight-260)/size[1]);f.style.width=size[0]+'px';f.style.height=size[1]+'px';f.style.transform=`scale(${scale})`;view.style.width=size[0]*scale+'px';view.style.height=size[1]*scale+'px'}fit();window.onresize=fit;
+const until=async fn=>{for(let i=0;i<50&&!fn();i++)await wait(100)};
+const assert=(ok,label)=>{result.textContent+=(ok?'PASS ':'FAIL ')+label+'\n';if(!ok)throw Error(label)};
+f.onload=async()=>{while(!w().rhine?.stats().ready)await wait(100);props({desktopmode:'workbench',sound:false,music:false,reduced:false,colortheme:'dark',showgame:true,audioreactive:true,selectionstyle:'flat',idlebreathing:false});w().rhine.archive()};
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>props({desktopmode:b.dataset.mode}));
+document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{size=b.dataset.size.split(',').map(Number);fit()});
+document.querySelectorAll('[data-rhythm]').forEach(b=>b.onclick=()=>props({rhythmstyle:b.dataset.rhythm}));
+document.querySelectorAll('[data-band]').forEach(b=>b.onclick=()=>band=b.dataset.band);
+document.querySelector('#opening').onclick=()=>{paused=false;w().wallpaperPropertyListener.setPaused(false);props({desktopmode:'workbench',openingdetail:'auto'});w().rhine.seek(22)};
+document.querySelector('#freeze').onclick=()=>w().wallpaperPropertyListener.setPaused(paused=!paused);
+document.querySelector('#game').onclick=()=>d().querySelector('.relay-entry').click();
+setInterval(()=>{if(!w().rhine)return;const t=w().performance.now()/1000;w().rhineWallpaperSpectrum={samples:Array.from({length:128},(_,i)=>{const key=i%64<8?'low':i%64<32?'mid':'high';return band===key?.45:band==='all'?.25+.18*Math.sin(t*(key==='low'?2:key==='mid'?3:5)):0}),time:t};const s=w().rhine.stats();document.querySelector('#status').textContent=JSON.stringify({size,mode:s.mode,time:s.bootTime,drawn:s.archiveCount,candidates:s.archiveCandidates,layout:d().querySelector('#stage')?.dataset.layout,band})},100);
+document.querySelector('#test').onclick=async()=>{result.textContent='';try{
+ props({desktopmode:'workbench',reduced:false,colortheme:'dark'});w().rhine.archive();await wait(1000);
+ assert(!d().querySelector('.wb-content').textContent.includes('跟随本机'),'移除时区说明');
+ w().rhineWallpaperMedia={status:{enabled:true},properties:{title:'回归测试曲目',artist:'测试'},playing:true};w().dispatchEvent(new (w().Event)('rhine-wallpaper-media'));d().querySelector('[data-wb-lane="3"]').click();
+ assert(!d().querySelector('.wb-content').textContent.includes('未提供进度'),'无进度时不显示说明');
+ const tick=w().getComputedStyle(d().querySelector('.wb-nav [aria-pressed="true"]'),'::before').backgroundColor;
+ assert(tick!=='rgb(8, 10, 8)'&&tick!=='rgba(0, 0, 0, 0)','暗色刻度 '+tick);
+ const root=d().querySelector('.workbench');props({desktopmode:'archive'});
+ assert(!root.hidden&&root.inert&&root.getAnimations().length>0,'工作台退场保留节点并隔离输入');await until(()=>root.hidden);assert(root.hidden,'工作台退场后隐藏');
+ await wait(400);const archive=d().querySelector('#archive-ui');props({desktopmode:'workbench'});
+ assert(w().getComputedStyle(archive).visibility==='visible'&&archive.inert,'档案退场保留可见性并隔离输入');await until(()=>w().getComputedStyle(archive).visibility==='hidden');assert(w().getComputedStyle(archive).visibility==='hidden','档案退场后隐藏');
+ props({desktopmode:'archive'});await wait(55);props({desktopmode:'workbench'});await until(()=>!root.hidden&&Number(w().getComputedStyle(root).opacity)>.99&&!root.inert);assert(!root.hidden&&Number(w().getComputedStyle(root).opacity)>.99&&!root.inert,'快速反向切换正确恢复');
+ d().querySelector('.relay-entry').click();await wait(300);const a=d().querySelector('.relay-exit').getBoundingClientRect(),b=d().querySelector('.settings-button').getBoundingClientRect();assert(a.top>=b.bottom+8,'结束游戏与设置分离');d().querySelector('.relay-exit').click();
+ props({reduced:true,desktopmode:'archive'});assert(root.hidden,'减少动态效果直接隐藏');props({desktopmode:'workbench'});assert(!root.hidden,'减少动态效果直接显示');props({reduced:false,openingdetail:'auto'});
+ size=[3840,1080];fit();w().wallpaperPropertyListener.setPaused(false);let hold=setInterval(()=>w().rhine.seek(24),20);await until(()=>d().querySelector('#stage').dataset.boot==='array'&&w().rhine.stats().archiveCount>300);clearInterval(hold);w().wallpaperPropertyListener.setPaused(true);
+ assert(w().rhine.stats().mode==='boot'&&d().querySelector('#stage').dataset.layout==='opening','普通开场使用实际视口');
+ assert(w().rhine.stats().archiveCount>159,'超宽开场已动态补齐 '+w().rhine.stats().archiveCount);
+ assert(w().getComputedStyle(archive).visibility==='hidden','工作台开场隐藏选档标签');
+ w().wallpaperPropertyListener.setPaused(false);hold=setInterval(()=>w().rhine.seek(25.65),20);await until(()=>{const p=Number(d().querySelector('.powered').style.opacity);return p>0&&p<1});clearInterval(hold);w().wallpaperPropertyListener.setPaused(true);
+ const power=Number(w().getComputedStyle(d().querySelector('.powered')).opacity);assert(power>0&&power<1,'Powered 开场末端淡出 '+power.toFixed(3));
+ w().wallpaperPropertyListener.setPaused(false);await until(()=>w().rhine.stats().mode==='archive');assert(w().rhine.stats().mode==='archive','短开场正常进入工作台');
+ result.textContent+='DONE';
+ }catch(e){result.textContent+='ERROR '+e.message}}
+</script></html>

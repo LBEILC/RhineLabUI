@@ -29,11 +29,22 @@ console.log('Six native groups and all display conditions passed.');
 
 const {RhythmMotion,rhythmDisplacement}=await load('src/archive-play-motion.ts');
 const rhythm=new RhythmMotion(); let motion;
-for(let i=0;i<180;i++){const t=i/60;const bass=i%30<5?.5:.015;motion=rhythm.update({low:bass,mid:.08,high:.3,activity:1},t,1/60,'wave');assert.ok(motion.pulses.length<=3);for(let j=1;j<motion.pulses.length;j++)assert.ok(motion.pulses[j].time-motion.pulses[j-1].time>=.22);}
-assert.ok(motion.pulses.length>0,'Bass onsets create coherent waves');
-for(let i=180;i<480;i++)motion=rhythm.update({low:.2,mid:.08,high:.3,activity:1},i/60,1/60,'wave');
-assert.equal(motion.pulses.length,0,'Sustained tone must not repeatedly trigger beats');
-for(let i=480;i<600;i++)motion=rhythm.update({low:.2,mid:.08,high:.3,activity:1},i/60,1/60,'lift');
-const liftA=rhythmDisplacement(0,0,10,quietBands(),1,motion),liftB=rhythmDisplacement(30,5,10,quietBands(),1,motion);assert.ok(Math.abs(liftA-liftB)<.001,'Lift mode moves the array together');
-for(let i=600;i<960;i++)motion=rhythm.update(quietBands(),i/60,1/60,'lift');assert.ok(motion.lift<.0001,'Silence settles to rest');
-console.log('Rhythm onset, cooldown, bounded overlap, steady-tone rejection, coherent lift and silence passed.');
+const tone={low:0,mid:.5,high:0,activity:1};
+for(let i=0;i<300;i++)motion=rhythm.update(tone,i/60,1/60,'wave');
+const displacement=(x,b=tone,t=5)=>rhythmDisplacement(10,2,t,b,1,motion,x);
+assert.ok(displacement(.5)>.15,'Sustained midrange remains visible after five seconds');
+assert.ok(displacement(.5)>displacement(0)*10&&displacement(.5)>displacement(1)*10,'Midrange lives in the screen center');
+assert.ok(displacement(0,{...tone,low:.5,mid:0})>.15,'Bass lives on the left');
+assert.ok(displacement(1,{...tone,high:.5,mid:0})>.15,'Treble lives on the right');
+assert.ok(Math.abs(displacement(.499)-displacement(.501))<.001,'Band boundary is continuous');
+assert.equal(displacement(.5,quietBands()),0,'Silence has no new motion');
+for(let i=300;i<600;i++)motion=rhythm.update(tone,i/60,1/60,'lift');
+for(const key of ['low','mid','high']) {
+ const b={...quietBands(),[key]:.5,activity:1};
+ const samples=Array.from({length:60},(_,i)=>rhythmDisplacement(10,2,10+i/60,b,1,motion));
+ assert.ok(Math.min(...samples)>0,'All sustained bands drive B continuously');
+ assert.ok(Math.max(...samples)-Math.min(...samples)>.01,'B keeps travelling during sustained music');
+}
+assert.equal(rhythmDisplacement(10,2,20,quietBands(),1,motion),0);
+for(let i=0;i<200;i++){motion=rhythm.update(tone,i/60,1/60,i%2?'wave':'legacy');assert.ok(Math.abs(Object.values(motion.style).reduce((a,b)=>a+b,0)-1)<1e-10)}
+console.log('Continuous spectrum position, sustained notes, smooth bands, travelling layers, silence and interrupted style blend passed.');

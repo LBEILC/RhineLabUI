@@ -18,7 +18,10 @@
 [data-dark-surface="true"] :is(.wb-storage, a, .workbench button:hover, .relay-entry:hover) { color: var(--theme-accent); }
 [data-dark-surface="true"] :is(.wb-kicker, .wb-today, .wb-title, .wb-task, .wb-check, .wb-timer-buttons button, .wb-settings, .wb-settings button, .theme-settings, .theme-choices button, .modal-top, .settings-list label, .settings-bottom, .settings-shortcuts, .detail-tabs, .result-header, .result-row, .quality-grid, .quality-heading, .quality-range, .viewer-parts p, .viewer-footer, .viewer-surface button, .relay-entry, .relay-actions button, .category-filters button) { border-color: var(--theme-line); }
 [data-dark-surface="true"] :is(.wb-rule, .callout-rule, .file-ticks button::before, .wb-nav button::before, .relay-time) { background: var(--theme-line); }
-[data-dark-surface="true"] :is(.wb-rule i, .wb-nav button[aria-pressed="true"]::before, .powered i, .tab-indicator, .status-light, .relay-time i) { background: var(--theme-ink); }
+[data-dark-surface="true"] :is(.wb-rule i, .powered i, .tab-indicator, .status-light, .relay-time i) { background: var(--theme-ink); }
+[data-dark-surface="true"] .wb-nav button[aria-pressed="true"]::before { background: var(--theme-ink); }
+[data-dark-surface="true"] .wb-nav button:hover::before { background: var(--theme-accent); }
+[data-dark-surface="true"] .system-footer button:hover { color: var(--theme-accent); }
 [data-dark-surface="true"] :is(.theme-choices button[aria-pressed="true"], .wb-settings button[aria-pressed="true"], .wb-task[aria-pressed="true"] .wb-check, .wb-timer-buttons button:first-child, .category-filters button.active, .viewer-surface button[aria-pressed="true"], .viewer-actions button[aria-pressed="true"]) { background: var(--theme-ink); color: var(--theme-paper); border-color: var(--theme-ink); }
 [data-dark-surface="true"] :is(input, select) { color: var(--theme-ink); accent-color: var(--theme-accent); }
 [data-dark-surface="true"] input::placeholder { color: var(--theme-muted); }

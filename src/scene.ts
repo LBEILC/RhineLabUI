@@ -1192,6 +1192,11 @@ export class ArchiveScene {
       const next = height + ((key === gameTarget ? .95 : 0) - height) * (this.reduced ? 1 : 1 - Math.exp(-dt * 8));
       if (next < .001 && key !== gameTarget) this.relayLifts.delete(key); else this.relayLifts.set(key, next);
     }
+    const spectrumPoint = new THREE.Vector3();
+    const screenX = (row: number, lane: number) => {
+      spectrumPoint.set((lane - 2) * COLUMN_SPACING - trackX, -4.6, (row - 15.5) * ROW_SPACING + this.rail.value).project(this.camera);
+      return (spectrumPoint.x + 1) / 2;
+    };
     const field = (row: number, lane: number) => {
       if (cinematic)
         return cinematicField(
@@ -1231,7 +1236,7 @@ export class ArchiveScene {
         (height +
         settlingWave(distance, 26.56) *
           columnStrength(lane, this.laneFocus.value)) * (1 - this.flatMix) + breathing + pulseHeight +
-        (activePlay && !this.reduced ? rhythmDisplacement(row, lane, time, play.bands, play.strength, rhythm) : 0) +
+        (activePlay && !this.reduced ? rhythmDisplacement(row, lane, time, play.bands, play.strength, rhythm, screenX(row, lane)) : 0) +
         (this.relayLifts.get(cellKey({ row, lane })) ?? 0)
       );
     };
@@ -1519,7 +1524,7 @@ export class ArchiveScene {
     this.camera.updateMatrixWorld();
     // Build and compact the instance set only after the actual damped camera
     // is final for this frame. Picking uses the same packed index-to-cell map.
-    const fixed = Boolean(cinematic) || !this.looping;
+    const fixed = (Boolean(cinematic) || !this.looping) && !responsiveOpening;
     this.cells = fixed ? Array.from({ length: 160 }, (_, i) => poolCell(i))
       : this.visibility.update(this.camera, fog.far, trackX, entryZ + this.rail.value, this.extraCoverage);
     const hidden = new Set(this.outgoing.map(o => cellKey(o.cell)));
