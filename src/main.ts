@@ -27,6 +27,8 @@ import {
 } from "./data";
 import { TerminalAudio } from "./audio";
 import { audioSettingsMarkup } from "./audio-settings";
+import { StartupGate } from "./startup";
+import "./startup.css";
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
@@ -188,6 +190,24 @@ const selectedCode = createRollingNumber($("#selected-code"), codeOptions);
 const hoverCode = createRollingNumber($("#hover-code"), codeOptions);
 const audio = new TerminalAudio();
 audio.configure(prefs);
+const reviewEntry = reviewParams.has("scene") || reviewParams.has("time") || reviewParams.get("review") === "1";
+let started = false;
+const loading = $("#loading");
+// The entry screen uses the actual viewport, including portrait phones; the
+// reference animation still uses its calibrated 1920 x 1080 stage.
+$("#viewport").append(loading);
+$("#stage").inert = true;
+$(".mobile-entry").inert = true;
+const entry = !reviewEntry && (prefs.sound || prefs.music) ? new StartupGate({
+  root: loading,
+  unlock: () => audio.unlock(),
+  cancel: () => audio.cancelEntry(),
+  start: silent => completeStartup(silent),
+}) : undefined;
+if (entry) {
+  audio.holdForEntry();
+  if (prefs.music) void audio.prepareMusic().catch(() => { /* Entry offers retry. */ });
+}
 let audioPreview = false, audioPreviewRequest = 0;
 let scene: ArchiveScene;
 let viewer: ModelViewer | undefined;
@@ -634,6 +654,7 @@ document.addEventListener("change", (e) => {
   }
 });
 document.addEventListener("click", (e) => {
+  if (!started) return;
   if (modalClosing) return;
   const el = (e.target as Element).closest<HTMLElement>("button");
   if (!el) return;
@@ -726,6 +747,7 @@ document.addEventListener("click", (e) => {
   }
 });
 document.addEventListener("keydown", (e) => {
+  if (!started) return;
   if (viewer?.isOpen) return;
   if (modalClosing) {
     e.preventDefault();
@@ -858,6 +880,9 @@ function bootFrame(t: number) {
 
 const inspectionOverlay = new InspectionOverlay();
 const documentDecryption = new DocumentDecryption();
+// A newly opened archive can introduce another font shard. Re-measure its
+// redaction lines after font swap while retaining the current reveal progress.
+document.fonts.addEventListener("loadingdone", () => documentDecryption.refresh());
 
 let lastTime = 0,
   frameCount = 0,
@@ -906,8 +931,12 @@ async function start() {
     scene = new ArchiveScene($("#three-scene"));
     await Promise.all([
       scene.load(),
-      document.fonts.load("400 20px MiSans"),
-      document.fonts.load("700 20px MiSans"),
+      // With unicode-range faces, preload the opening's actual characters,
+      // not every font shard. Other archive text loads on demand.
+      document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
+      document.fonts.load("400 20px MiSans", "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE"),
+      document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
+      document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
     ]);
     scene.select(selected);
     scene.onSelect = (i, cell) => {
@@ -940,25 +969,48 @@ async function start() {
     };
     savePrefs();
     ready = true;
-    bootStart = performance.now() / 1000;
-    setMode("boot");
     select(0);
-    $("#loading").classList.add("loaded");
-    setTimeout(() => $("#loading").remove(), 600);
-    const params = new URLSearchParams(location.search);
-    if (params.get("scene") === "archive") setMode("archive");
-    if (params.get("scene") === "detail") setMode("detail");
-    bootStart -= params.has("time") ? Number(params.get("time")) : 1.76;
-    // Let the loading veil finish before the first reference letter appears.
-    if (!params.has("time")) bootStart += 0.6;
-    if (prefs.reduced && !params.has("time")) setMode("archive");
-    requestAnimationFrame(frame);
-    void initPwa(notify);
+    if (entry) entry.ready();
+    else completeStartup(false);
   } catch (error) {
     console.error(error);
     $("#loading").innerHTML =
       '<div class="error-state"><strong>CONNECTION INTERRUPTED</strong><p>三维档案资源未能载入。请确认浏览器已启用硬件加速，然后重新连接。</p><button onclick="location.reload()">RECONNECT →</button></div>';
   }
+}
+function completeStartup(silent: boolean) {
+  if (started || !ready) return;
+  started = true;
+  if (silent) {
+    prefs.sound = false;
+    prefs.music = false;
+    saveAudioPrefs();
+  }
+  audio.releaseEntry();
+  audio.restartBoot();
+  const fade = prefs.reduced ? 0 : 600;
+  bootStart = performance.now() / 1000 - (reviewParams.has("time") ? Number(reviewParams.get("time")) : 1.76);
+  if (!reviewParams.has("time")) bootStart += fade / 1000;
+  setMode("boot");
+  if (reviewParams.get("scene") === "archive" || (prefs.reduced && !reviewParams.has("time"))) setMode("archive");
+  if (reviewParams.get("scene") === "detail") setMode("detail");
+  $("#stage").inert = false;
+  $(".mobile-entry").inert = false;
+  loading.classList.add("loaded");
+  loading.inert = true;
+  setTimeout(() => {
+    const restoreFocus = loading.contains(document.activeElement) || document.activeElement === document.body;
+    loading.remove();
+    if (entry && restoreFocus) {
+      const skip = $("#skip");
+      const target = mode === "boot" ? skip.getClientRects().length ? skip : $(".mobile-entry") : $(".read-file");
+      target.focus({ preventScroll: true });
+    }
+  }, fade);
+  requestAnimationFrame(frame);
+  // Do not compete with entry audio/font downloads. Full offline installation
+  // begins after startup is complete and remains atomic.
+  setTimeout(() => void initPwa(notify), 1500);
 }
 updateSelection();
 void start();
@@ -994,8 +1046,9 @@ Object.assign(window, {
       fps: Math.round(fps),
       mode,
       ready,
+      startup: started ? "started" : entry?.phase ?? "loading",
       motion: { reduced: prefs.reduced, systemReduced: matchMedia("(prefers-reduced-motion: reduce)").matches },
-      bootTime: mode === "boot" ? (frozenTime ?? performance.now() / 1000 - bootStart) + 5 : null,
+      bootTime: mode === "boot" ? started ? (frozenTime ?? performance.now() / 1000 - bootStart) + 5 : 6.76 : null,
       selected: records[selected].id,
       saved: [...saved],
       audio: audio.stats(),

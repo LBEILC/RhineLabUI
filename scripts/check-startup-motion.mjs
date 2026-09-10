@@ -10,7 +10,11 @@ const report={channel,version:browser.version(),checks:[]};
 try {for(const reducedMotion of ['no-preference','reduce']) {
  const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion,serviceWorkers:'block'});
  const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
- const loaded=()=>page.waitForFunction(()=>window.rhine?.stats().ready&&!document.querySelector('#loading'));
+ const loaded=async()=>{
+   await page.waitForFunction(()=>window.rhine?.stats().ready);
+   if(await page.locator('.entry-start').count())await page.locator('.entry-start').click();
+   await page.waitForFunction(()=>!document.querySelector('#loading'));
+ };
  await page.goto(process.env.REVIEW_URL || 'http://127.0.0.1:5190/');await loaded();
  let state=await page.evaluate(()=>window.rhine.stats());
  assert.equal(state.mode,reducedMotion==='reduce'?'archive':'boot');

@@ -1,8 +1,4 @@
-@font-face {
-  font-family: MiSans;
-  src: url("/fonts/MiSans-Regular.woff2") format("woff2");
-  font-display: swap;
-}
+@import url("/src/fonts.css");
 * {
   box-sizing: border-box;
 }

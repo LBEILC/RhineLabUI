@@ -3,4 +3,12 @@ Copyright © 2020-2025 Beijing Xiaomi Mobile Software Co.,Ltd. All Rights Reserv
 
 Official source: https://hyperos.mi.com/font/download
 Archive: https://hyperos.mi.com/font-download/MiSans.zip
-Files are embedded in this application unmodified. License: MiSans-license.pdf
+The application now uses third-party split webfonts from misans-webfont@4.3.1
+(font Version 4.003), distributed with this application for on-demand loading.
+Font shards are copied byte-for-byte from that package. CSS family names,
+weight mappings and URLs are adapted for the existing interface.
+Upstream copyright: Copyright © 2020-2023 Beijing Xiaomi Mobile Software Co.,Ltd. All Rights Reserved.
+Upstream project: https://github.com/mobeicanyue/misans-webfont
+Package source, integrity and file hashes: misans-webfont-4.3.1/source.json
+Upstream README: misans-webfont-4.3.1/UPSTREAM-README.md
+Font license: MiSans-license.pdf (retained separately from upstream tooling license).

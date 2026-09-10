@@ -1,0 +1,12 @@
+#viewport > .loading { position: fixed; }
+.entry-controls { display: flex; align-items: center; flex-direction: column; margin-top: 32px; max-width: calc(100vw - 40px); text-align: center; }
+.entry-start { min-height: 48px; padding: 8px 24px; border-block: 1px solid #969183; font-size: 16px; letter-spacing: 2px; }
+.entry-start:disabled, .entry-start[aria-disabled="true"] { color: #888277; cursor: wait; }
+.entry-start:focus-visible, .entry-silent:focus-visible { outline: 2px solid #555c45; outline-offset: 5px; }
+.entry-silent { min-height: 44px; margin-top: 12px; font-size: 13px; color: #666454; text-decoration: underline; text-underline-offset: 4px; }
+.entry-status { font-size: 12px; color: #777468; line-height: 1.8; margin: 14px 0 0; }
+.loading[data-entry="waiting"] > i:after, .loading[data-entry="error"] > i:after { animation: none; width: 100%; }
+@media (max-width: 600px) {
+  .loading-mark { width: 125px; margin-bottom: 32px; }
+  .loading > span { font-size: 9px; letter-spacing: 1.3px; }
+}

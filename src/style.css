@@ -1,31 +1,4 @@
-@font-face {
-  font-family: "MiSans";
-  src: url("/fonts/MiSans-Light.woff2") format("woff2");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MiSans";
-  src: url("/fonts/MiSans-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MiSans";
-  src: url("/fonts/MiSans-Demibold.woff2") format("woff2");
-  font-weight: 600;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "MiSans";
-  src: url("/fonts/MiSans-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+@import "./fonts.css";
 * {
   box-sizing: border-box;
 }
@@ -131,7 +104,7 @@ button {
 }
 .brand h1 {
   font-size: 44px;
-  letter-spacing: 2.5px;
+  letter-spacing: 2.324px;
   line-height: 48px;
   margin: 0;
   font-weight: 750;
@@ -139,7 +112,7 @@ button {
 .brand > div {
   font-size: 19px;
   line-height: 23px;
-  letter-spacing: 0.65px;
+  letter-spacing: 0.587px;
   font-weight: 600;
 }
 .brand p {

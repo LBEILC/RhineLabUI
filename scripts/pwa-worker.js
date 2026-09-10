@@ -11,8 +11,20 @@ self.addEventListener("install", event => {
   event.waitUntil((async () => {
     try {
       const cache = await caches.open(CACHE);
-      // Conditional validation also catches model/font changes at stable URLs.
-      await cache.addAll(urls.map(url => new Request(url, { cache: "no-cache" })));
+      // Limit connections so a complete font family does not flood the page.
+      // Keep successful files private until every resource is present; failure
+      // still deletes this entire release and leaves the active release intact.
+      let next = 0;
+      const workers = Array.from({ length: 6 }, async () => {
+        while (next < urls.length) {
+          const url = urls[next++];
+          const immutable = /\/fonts\/misans-webfont-4\.3\.1\//.test(url) || /\/assets\/archive-(cassette|assembly)\.[a-f0-9]{16}\.glb$/.test(url);
+          await cache.add(new Request(url, { cache: immutable ? "default" : "no-cache" }));
+        }
+      });
+      const results = await Promise.allSettled(workers);
+      const failure = results.find(result => result.status === "rejected");
+      if (failure) throw failure.reason;
     } catch (error) {
       await caches.delete(CACHE);
       throw error;

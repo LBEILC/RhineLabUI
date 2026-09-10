@@ -4,6 +4,14 @@
   "outputDirectory": "dist",
   "headers": [
     {
+      "source": "/fonts/misans-webfont-4.3.1/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/assets/:file(archive-(?:cassette|assembly)\\.[a-f0-9]{16}\\.glb)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
       "source": "/update(.*)",
       "headers": [{ "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }]
     },
