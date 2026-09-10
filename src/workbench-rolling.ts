@@ -1,13 +1,36 @@
 import { createRollingText } from "@kitlangton/rolling-number";
 
 const controllers = new WeakMap<HTMLElement, ReturnType<typeof createRollingText>>();
+const textMeasure = document.createElement("canvas").getContext("2d")!;
+function fitMediaText(element: HTMLElement, text: string) {
+  if (!element.matches(".wb-media h3, .wb-media p")) return text;
+  element.title = text;
+  const style = getComputedStyle(element);
+  textMeasure.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+  const width = element.parentElement!.clientWidth;
+  if (!width) return text;
+  const spacing = parseFloat(style.letterSpacing) || 0;
+  const measure = (value: string) => textMeasure.measureText(value).width + [...value].length * spacing;
+  if (measure(text) <= width) return text;
+  const chars = [...text];
+  let low = 0, high = chars.length;
+  while (low < high) {
+    const mid = Math.ceil((low + high) / 2);
+    if (measure(chars.slice(0, mid).join("") + "…") <= width) low = mid;
+    else high = mid - 1;
+  }
+  return chars.slice(0, low).join("") + "…";
+}
 export function rollText(element: HTMLElement, text: string, animated: boolean) {
+  const fullText = text;
+  text = fitMediaText(element, text);
   let controller = controllers.get(element);
   if (!controller) {
     controller = createRollingText(element, { text, duration: 460, motionBlur: true, transition: "direct", stagger: "none", direction: "up", animated });
     controllers.set(element, controller);
   } else controller.update({ text, animated });
   if (!animated) controller.finish();
+  if (element.matches(".wb-media h3, .wb-media p")) element.setAttribute("aria-label", fullText);
 }
 
 /** Patch in place so media callbacks retain active reels, artwork and focus. */

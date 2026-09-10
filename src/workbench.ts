@@ -50,6 +50,7 @@ export class Workbench {
     });
     window.addEventListener("rhine-wallpaper-properties", event => this.apply((event as CustomEvent<WallpaperProperties>).detail));
     window.addEventListener("rhine-wallpaper-media", () => { if (this.lane === 3) this.renderPanel(); });
+    window.addEventListener("resize", () => { if (this.lane === 3) this.renderPanel(); });
     this.apply(wallpaperHost()?.properties ?? {});
   }
   private text(key: string) { const v = this.props[key]?.value; return typeof v === "string" ? v.trim().slice(0, 240) : ""; }
