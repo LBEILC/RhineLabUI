@@ -1,4 +1,4 @@
-import { rollText } from "./workbench-rolling";
+import { createRollingClock } from "./rolling-clock";
 import { InspectionOverlay } from "./inspection-overlay";
 import { DocumentDecryption } from "./document-decryption";
 import "./document-decryption.css";
@@ -159,6 +159,7 @@ const rollingMotion = {
   motionBlur: true,
   animated: !prefs.reduced,
 };
+const updateFooterClock = createRollingClock($("#clock"));
 const numberOptions = {
   ...rollingMotion,
   locales: "en-US",
@@ -972,7 +973,7 @@ function frame(ms: number) {
     (x, y) => currentScene.projectCard(x, y), Boolean(cinema));
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
-    rollText($("#clock"), new Date().toLocaleTimeString("en-GB"), !prefs.reduced);
+    updateFooterClock(new Date(), !prefs.reduced);
   }
   frameCount++;
   if (ms - frameStart > 1000) {

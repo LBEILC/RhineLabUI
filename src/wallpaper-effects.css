@@ -76,3 +76,5 @@
 #stage[data-custom-wallpaper-visible="true"] :is(.wb-nav button, .wb-task, .system-nav button, .system-footer button, .relay-entry):hover {
   color: var(--theme-ink, #242622);
 }
+#clock { display: inline-flex; align-items: baseline; font-variant-numeric: tabular-nums; white-space: nowrap; }
+#clock > span { flex: none; }

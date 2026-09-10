@@ -2,6 +2,9 @@
   "retainedMediaNode": true,
   "retainedUnchangedReel": true,
   "clockReels": true,
+  "footerNumericReels": 3,
+  "footerRunningAnimation": true,
+  "footerHourCarry": true,
   "focusReels": true,
   "reducedMotion": true,
   "errors": []
