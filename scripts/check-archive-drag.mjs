@@ -28,8 +28,8 @@ drag.move(202, 360, 10);
 assert.equal(drag.axis, "row");
 drag.move(202, 280, 50);
 assert.ok(drag.value > 1 && drag.value < 1.1);
-assert.ok(drag.release(50, false) > drag.value);
-assert.ok(drag.release(50, false) <= drag.value + 0.65);
+assert.ok(drag.release(50, false) > drag.value + 2, "A quick row flick carries across multiple files");
+assert.ok(drag.release(50, false) <= drag.value + 3);
 assert.equal(
   drag.release(50, true),
   drag.value,
@@ -38,6 +38,14 @@ assert.equal(
 drag.start(200, 400, 390, 844);
 assert.equal(drag.axis, null, "A new gesture resets all previous state");
 assert.equal(drag.moved, false);
+drag.move(180, 400, 10);
+drag.move(100, 400, 40);
+assert.equal(drag.axis, "lane");
+assert.equal(drag.release(40, false), drag.value + 2, "Column momentum has a shorter two-column cap");
+assert.equal(drag.release(140, false), drag.value, "Holding before release removes momentum");
+drag.move(140, 400, 200);
+drag.move(180, 400, 225);
+assert.ok(drag.release(225, false) < drag.value, "A reversed flick carries in the latest direction");
 console.log(
   "Drag axis lock, slow travel, reversal, flick and reduced-motion checks passed.",
 );

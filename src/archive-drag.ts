@@ -40,7 +40,7 @@ export class ArchiveDrag {
       .slice(-12);
   }
 
-  /** A short flick can add at most one cell; holding still removes momentum. */
+  /** Project a flick farther through rows; wider columns keep a shorter reach. */
   release(time: number, reduced: boolean) {
     const first = this.samples[0],
       last = this.samples.at(-1);
@@ -53,6 +53,7 @@ export class ArchiveDrag {
     )
       return this.value;
     const speed = (last.value - first.value) / (last.time - first.time);
-    return this.value + Math.max(-0.45, Math.min(0.45, speed * 90));
+    const limit = this.axis === "lane" ? 2 : 3;
+    return this.value + Math.max(-limit, Math.min(limit, speed * 240));
   }
 }

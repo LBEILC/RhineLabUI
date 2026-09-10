@@ -853,11 +853,24 @@ export class ArchiveScene {
         moveArchive(e);
         if (this.archiveDrag.axis) {
           const axis = this.archiveDrag.axis;
+          const released = this.archiveDrag.release(performance.now(), this.reduced);
           navigate(
             displayedOrigin(axis) -
               origin[axis] +
-              this.archiveDrag.release(performance.now(), this.reduced),
+              released,
           );
+          const track = axis === "lane" ? this.columnCamera : this.rail;
+          const spacing = axis === "lane" ? COLUMN_SPACING : -ROW_SPACING;
+          const target = axis === "lane"
+            ? (this.selectedCell.lane - 2) * COLUMN_SPACING
+            : -2.17 - (this.selectedCell.row - 15.5) * ROW_SPACING;
+          const distance = target - track.value;
+          const momentum = (released - this.archiveDrag.value) * spacing;
+          // Carry momentum into the existing spring, without overshooting the
+          // snapped cell or restarting the release animation from rest.
+          if (Math.sign(momentum) === Math.sign(distance)) {
+            track.velocity = Math.sign(distance) * Math.min(Math.abs(momentum), Math.abs(distance)) * 3.7;
+          }
         } else if (!moved) {
           const cell = this.pickCell(e.clientX, e.clientY);
           if (cell) this.onSelect?.(fileAtCell(cell), cell);
