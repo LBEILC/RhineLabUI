@@ -1,0 +1,9 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>工作台宿主回调验证</title>
+<style>body{margin:0;font:14px system-ui;background:#e8e5df}header{padding:10px;display:flex;gap:12px;flex-wrap:wrap}input{width:140px}button{padding:6px}iframe{width:100%;height:calc(100vh - 95px);border:0}</style>
+<header><label>事项 1 <input id="task" value="测试事项"></label><label>目标日期 <input id="date" value="2026-12-31 18:00"></label><button id="apply">应用测试属性</button><button id="reload">重载验证保存</button><button id="media">模拟媒体回调</button><span>仅验证页使用模拟数据；不随壁纸发布。</span></header>
+<iframe src="/?scene=archive" title="工作台"></iframe>
+<script>
+const frame=document.querySelector('iframe');
+function apply(){const w=frame.contentWindow;if(!w.wallpaperPropertyListener)return;w.wallpaperPropertyListener.applyUserProperties({desktopmode:{value:'workbench'},boot:{value:false},music:{value:false},sound:{value:false},task1:{value:document.querySelector('#task').value},eventname:{value:'测试目标'},eventdate:{value:document.querySelector('#date').value},focusminutes:{value:1}})}
+frame.addEventListener('load',apply);document.querySelector('#apply').onclick=apply;document.querySelector('#reload').onclick=()=>frame.contentWindow.location.reload();document.querySelector('#media').onclick=()=>{const w=frame.contentWindow;w.rhineWallpaperMedia={status:{enabled:true},properties:{title:'媒体接口测试',artist:'测试歌手'},timeline:{position:30,duration:180},playing:true};w.dispatchEvent(new Event('rhine-wallpaper-media'))};
+</script></html>
