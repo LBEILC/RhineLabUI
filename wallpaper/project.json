@@ -483,6 +483,47 @@
         "max": 100,
         "step": 1,
         "condition": "screenfinish.value == true"
+      },
+      "groupuimargins": {
+        "order": 51,
+        "text": "界面边距 · 正值内收 / 负值外扩",
+        "type": "group"
+      },
+      "uimargintop": {
+        "order": 52,
+        "text": "上边距（px）",
+        "type": "slider",
+        "value": 0,
+        "min": -300,
+        "max": 300,
+        "step": 1
+      },
+      "uimarginbottom": {
+        "order": 53,
+        "text": "下边距（px）",
+        "type": "slider",
+        "value": 0,
+        "min": -300,
+        "max": 300,
+        "step": 1
+      },
+      "uimarginleft": {
+        "order": 54,
+        "text": "左边距（px）",
+        "type": "slider",
+        "value": 0,
+        "min": -300,
+        "max": 300,
+        "step": 1
+      },
+      "uimarginright": {
+        "order": 55,
+        "text": "右边距（px）",
+        "type": "slider",
+        "value": 0,
+        "min": -300,
+        "max": 300,
+        "step": 1
       }
     }
   }

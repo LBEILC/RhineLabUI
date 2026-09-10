@@ -18,14 +18,14 @@ console.log('Spectrum stereo/clamping/decay, relay pause/scoring/retry/timeout, 
 const project=JSON.parse(readFileSync('wallpaper/project.json','utf8')),props=project.general.properties;
 assert.equal(project.general.supportsaudioprocessing,true,'WE reads audio support from general');
 assert.equal(Object.hasOwn(project,'supportsaudioprocessing'),false,'Root-level flag is not recognized by the host');
-assert.equal(Object.values(props).filter(p=>p.type==='group').length,7);
+assert.equal(Object.values(props).filter(p=>p.type==='group').length,8);
 function visible(key,override={}){const context=structuredClone(props);for(const [k,v] of Object.entries(override))context[k].value=v;return !props[key].condition||vm.runInNewContext(props[key].condition,context)}
 assert.equal(visible('groupworkbench',{desktopmode:'archive'}),false);
 assert.equal(visible('reactiveintensity',{audioreactive:false}),false);
 assert.equal(visible('gamepace',{showgame:false}),false);
 assert.equal(visible('openingdetail',{boot:false}),false);
 for(const key of Object.keys(props))visible(key);
-console.log('Seven native groups and all display conditions passed.');
+console.log('Eight native groups and all display conditions passed.');
 
 const {RhythmMotion,rhythmDisplacement}=await load('src/archive-play-motion.ts');
 const rhythm=new RhythmMotion(); let motion;

@@ -3,6 +3,15 @@ import type { ArchiveScene } from "./scene";
 import { HudProjection } from "./hud-projection";
 import { ScreenFinish } from "./screen-finish";
 import "./wallpaper-effects.css";
+import "./wallpaper-insets.css";
+
+export function wallpaperInsets(props: WallpaperProperties) {
+  const pixels = (side: string) => {
+    const value = props[`uimargin${side}`]?.value;
+    return typeof value === "number" && Number.isFinite(value) ? Math.max(-300, Math.min(300, value)) : 0;
+  };
+  return { top: pixels("top"), right: pixels("right"), bottom: pixels("bottom"), left: pixels("left") };
+}
 
 export function effectOptions(props: WallpaperProperties) {
   const flag = (key: string) => props[key]?.value === true;
@@ -20,6 +29,7 @@ export class WallpaperEffects {
   private current = { x: 0, y: 0 };
   private depth = 0;
   private last = 0;
+  private insetSignature = "";
   private projection: HudProjection;
   private finish: ScreenFinish;
   constructor(private stage: HTMLElement, private scene: () => ArchiveScene | undefined) {
@@ -44,6 +54,17 @@ export class WallpaperEffects {
   }
   update(time: number, reduced: boolean) {
     const options = effectOptions(this.props);
+    const insets = wallpaperInsets(this.props), insetSignature = JSON.stringify(insets);
+    if (insetSignature !== this.insetSignature) {
+      this.insetSignature = insetSignature;
+      this.stage.dataset.uiInsets = String(Object.values(insets).some(value => value !== 0));
+      for (const [side, value] of Object.entries(insets)) {
+        // Compensate for the reference-stage scale: a 60px slider remains 60px
+        // in the displayed wallpaper, rather than changing with monitor height.
+        this.stage.style.setProperty(`--ui-${side}`, `calc(${value}px / var(--stage-scale, 1))`);
+      }
+      this.projection.invalidate();
+    }
     const active = this.stage.dataset.mode !== "boot";
     const moving = active && options.parallax && options.tracking && !reduced && !this.stage.querySelector("#modal-root")?.childElementCount;
     const dt = this.last ? Math.min(.1, Math.max(0, time - this.last)) : 0;

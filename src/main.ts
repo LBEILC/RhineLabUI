@@ -932,8 +932,8 @@ function frame(ms: number) {
   if (scene && mode === "detail") {
     documentDecryption.update(time, scene.decryptionFrame, prefs.reduced);
     $("#detail-content").style.opacity = String(scene.detailVisibility);
-    $("#detail-content").style.transform =
-      `translateY(${(1 - scene.detailVisibility) * 18}px)`;
+    $("#detail-content").style.translate =
+      `0 ${(1 - scene.detailVisibility) * 18}px`;
     $("#detail-content").inert = scene.detailVisibility < 0.1;
     if (pendingDetailFocus && scene.detailVisibility >= 0.1 && !modal && !viewer?.isOpen) {
       $("#detail-content").focus({ preventScroll: true });
