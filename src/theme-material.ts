@@ -6,7 +6,7 @@ const surfaces: Record<string, string> = {
   Subsurface_Optics: "#939e9f", Optical_Edges: "#bbc3bc", Carbon_Ink: "#b6bdb8",
 };
 /** Extend existing optical shaders; one float per instance avoids new meshes or passes. */
-export function themeMaterial(material: THREE.Material, name: string, instanced = false) {
+export function themeMaterial(material: THREE.Material, name: string, instanced = false, subduedIndex = { value: 0 }) {
   const amount = { value: 0 };
   const before = material.onBeforeCompile;
   const cache = material.customProgramCacheKey.bind(material)();
@@ -15,12 +15,13 @@ export function themeMaterial(material: THREE.Material, name: string, instanced 
     before.call(material, shader, renderer);
     shader.uniforms.rhineTheme = amount;
     shader.uniforms.rhineDarkSurface = { value: color };
+    shader.uniforms.rhineSubduedIndex = subduedIndex;
     if (instanced) {
       shader.vertexShader = "attribute float archiveTheme; varying float vRhineTheme;\n" + shader.vertexShader;
       shader.vertexShader = shader.vertexShader.replace("#include <begin_vertex>", "#include <begin_vertex>\nvRhineTheme = archiveTheme;");
       shader.fragmentShader = "varying float vRhineTheme;\n" + shader.fragmentShader;
     }
-    shader.fragmentShader = "uniform float rhineTheme; uniform vec3 rhineDarkSurface;\n" + shader.fragmentShader;
+    shader.fragmentShader = "uniform float rhineTheme; uniform vec3 rhineDarkSurface; uniform float rhineSubduedIndex;\n" + shader.fragmentShader;
     const mix = instanced ? "vRhineTheme" : "rhineTheme";
     const printed = name === "Printed_Canvas";
     const anchor = printed ? "#include <opaque_fragment>" : "#include <roughnessmap_fragment>";
@@ -28,7 +29,7 @@ export function themeMaterial(material: THREE.Material, name: string, instanced 
       ? "mix(vec3(0.023, 0.032, 0.037), vec3(0.78, 0.78, 0.71), 1.0 - smoothstep(0.12, 0.65, dot(diffuseColor.rgb, vec3(.2126,.7152,.0722))))"
       : name === "Frosted_Polymer" && !instanced
         ? "mix(rhineDarkSurface, vec3(0.92, 0.96, 0.97), glassRevealAtHeight(archiveClarity, vArchiveHeight))"
-        : "rhineDarkSurface";
+        : name === "Index_Inlay" ? "mix(rhineDarkSurface, vec3(0.030, 0.042, 0.048), rhineSubduedIndex)" : "rhineDarkSurface";
     const output = printed ? "outgoingLight" : "diffuseColor.rgb";
     shader.fragmentShader = shader.fragmentShader.replace(anchor, `${output} = mix(${output}, ${dark}, ${mix});\n${anchor}`);
   };

@@ -23,7 +23,7 @@ for(const [i,p] of [[0,[0,0]],[1,[400,0]],[2,[400,200]],[3,[0,200]]]) {
 }
 const events={};globalThis.window={addEventListener:(key,fn)=>events[key]=fn};globalThis.document={addEventListener(){}};
 globalThis.effectProbe={};
-const mocks=`const layoutWorkbenchInsets=()=>false;const wallpaperHost=()=>undefined;class HudProjection{constructor(stage){this.stage=stage}invalidate(){}update(depth,pointer){globalThis.effectProbe.depth=depth;globalThis.effectProbe.pointer={...pointer};this.stage.dataset.hudDepth=String(depth>.00001)}}class ScreenFinish{update(...args){globalThis.effectProbe.screen=args}}`;
+const mocks=`const wallpaperHost=()=>undefined;class HudProjection{constructor(stage){this.stage=stage}invalidate(){}update(depth,pointer){globalThis.effectProbe.depth=depth;globalThis.effectProbe.pointer={...pointer};this.stage.dataset.hudDepth=String(depth>.00001)}}class ScreenFinish{update(...args){globalThis.effectProbe.screen=args}}`;
 const input=readFileSync('src/wallpaper-effects.ts','utf8').replace(/^import .*;\r?\n/gm,'');
 const {WallpaperEffects,effectOptions,wallpaperInsets}=await moduleFrom(mocks+input);
 assert.deepEqual(wallpaperInsets({}),{top:0,right:0,bottom:0,left:0});
@@ -33,7 +33,7 @@ assert.equal(effectOptions({}).parallax,false);assert.equal(effectOptions({}).tr
 assert.equal(effectOptions({huddepth:{value:Infinity}}).depth,.2);assert.equal(effectOptions({huddepth:{value:999}}).depth,1);assert.equal(effectOptions({uifroststrength:{value:-3}}).frostStrength,0);
 const pointer={},css={};let modal=0;
 const stage={dataset:{mode:'archive'},style:{setProperty:(k,v)=>css[k]=v},addEventListener:(k,fn)=>pointer[k]=fn,getBoundingClientRect:()=>({left:0,top:0,width:1000,height:800}),querySelectorAll:()=>[],querySelector:()=>({childElementCount:modal})};
-const scene={};const fx=new WallpaperEffects(stage,()=>scene),probe=globalThis.effectProbe;
+const scene={setSelectedIndexAccent(){}};const fx=new WallpaperEffects(stage,()=>scene),probe=globalThis.effectProbe;
 const props=p=>events['rhine-wallpaper-properties']({detail:Object.fromEntries(Object.entries(p).map(([k,value])=>[k,{value}]))});
 props({hudparallax:true,uifrost:true,screenfinish:true});pointer.pointermove({pointerType:'mouse',clientX:1000,clientY:0});
 for(let i=1;i<120;i++)fx.update(i/60,false);

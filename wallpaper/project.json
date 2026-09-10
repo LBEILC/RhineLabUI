@@ -565,6 +565,13 @@
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
+      },
+      "selectedindexaccent": {
+        "order": 4.5,
+        "text": "暗色模式仅选中档案标签使用强调色",
+        "type": "bool",
+        "value": false,
+        "condition": "colortheme.value == 'dark'"
       }
     }
   }

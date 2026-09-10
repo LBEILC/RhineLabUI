@@ -6,22 +6,14 @@
   --ui-viewer-top: 58px; --ui-viewer-bottom: 68px; --ui-viewer-side: 60px; --ui-viewer-state: 37px;
   --ui-modal-clearance: 100px;
 }
-#stage[data-ui-insets="true"]:not([data-mode="boot"]) > :is(.workbench, #archive-ui, #detail-ui) {
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > :is(#archive-ui, #detail-ui) {
   inset: var(--ui-top) var(--ui-right) var(--ui-bottom) var(--ui-left);
 }
-#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { bottom: 0; }
-#stage[data-ui-insets="true"]:not([data-mode="boot"]) .wb-nav { bottom: calc(var(--wb-nav-bottom, 9%) + var(--ui-bottom)); }
-.wb-overview { --wb-anchor-top: 24; }
-.wb-module { --wb-anchor-top: 30; }
-@media (max-width: 1000px) {
-  .wb-overview { --wb-anchor-top: 20; }
-  .wb-module { --wb-anchor-top: 22; }
-  .wb-nav { --wb-nav-bottom: 10%; }
-}
-@media (max-height: 650px) and (min-width: 701px) {
-  .wb-overview { --wb-anchor-top: 22; }
-  .wb-module { --wb-anchor-top: 20; }
-  .wb-nav { --wb-nav-bottom: 8%; }
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { inset: var(--ui-top) var(--ui-right) 0 var(--ui-left); }
+/* Translate the lower rows AFTER their HUD projection. Changing their layout
+   anchors would resample the curved surface and change their relative gaps. */
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) :is(.wb-nav, .system-footer, .relay-entry) {
+  translate: 0 calc(-1 * var(--ui-bottom));
 }
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .brand {
   left: calc(var(--edge) + var(--ui-left)); top: calc(var(--ui-brand-top) + var(--ui-top));
@@ -30,13 +22,13 @@
   right: calc(var(--edge) + var(--ui-right)); top: calc(var(--ui-nav-top) + var(--ui-top));
 }
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .system-footer {
-  left: calc(var(--edge) + var(--ui-left)); right: calc(var(--edge) + var(--ui-right)); bottom: calc(var(--ui-footer-bottom) + var(--ui-bottom));
+  left: calc(var(--edge) + var(--ui-left)); right: calc(var(--edge) + var(--ui-right)); bottom: var(--ui-footer-bottom);
 }
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .powered {
   right: calc(var(--edge) + var(--ui-right)); bottom: calc(108px + var(--ui-bottom));
 }
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .relay-entry {
-  left: calc(var(--edge) + var(--ui-left)); bottom: calc(9% + var(--ui-bottom));
+  left: calc(var(--edge) + var(--ui-left));
 }
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .relay-hud {
   top: calc(15% + var(--ui-top)); left: calc(var(--edge) + var(--ui-left)); right: calc(var(--edge) + var(--ui-right));
@@ -64,6 +56,6 @@
 }
 #stage[data-layout="portrait"] { --ui-viewer-bottom: calc(var(--bottom-edge) + 24px); }
 @media (max-width: 700px) {
-  #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { top: calc(100px + var(--ui-top)); bottom: calc(50px + var(--ui-bottom)); }
+  #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { top: calc(100px + var(--ui-top)); bottom: 50px; }
   #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .relay-hud { top: calc(max(120px, 18%) + var(--ui-top)); }
 }

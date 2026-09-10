@@ -55,6 +55,8 @@ const ease = (t: number) => {
 export class ArchiveScene {
   uiOnlyParallax = false;
   private theme = new ThemeWave();
+  private subduedIndex = { value: 0 };
+  setSelectedIndexAccent(onlySelected: boolean) { this.subduedIndex.value = Number(onlySelected); }
   private themeAttribute?: THREE.InstancedBufferAttribute;
   get themeAmount() { return this.theme.background(performance.now() / 1000); }
   setTheme(dark: boolean, immediate = false) { this.theme.set(dark, performance.now() / 1000, this.selectedCell, immediate); }
@@ -387,7 +389,7 @@ export class ArchiveScene {
       this.appearance.register(name, mat, arrayMat);
       this.themeAttribute ??= new THREE.InstancedBufferAttribute(new Float32Array(count), 1).setUsage(THREE.DynamicDrawUsage);
       geom.setAttribute("archiveTheme", this.themeAttribute);
-      themeMaterial(arrayMat, name, true);
+      themeMaterial(arrayMat, name, true, this.subduedIndex);
       const inst = new THREE.InstancedMesh(geom, arrayMat, count);
       inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       inst.castShadow = name === "Optical_Diffuser";
@@ -1307,7 +1309,7 @@ export class ArchiveScene {
       );
       const quality = ease(o.lift.value / 0.4);
       this.appearance.apply(o.group, quality);
-      this.appearance.setTheme(o.group, this.theme.sample(o.cell, time));
+      this.appearance.setTheme(o.group, this.theme.sample(o.cell, time), this.subduedIndex.value > 0);
       o.clarity = this.reduced ? 0 : o.clarity * Math.exp(-dt * 9);
       this.appearance.setClarity(o.group, o.clarity);
       const { row, lane } = o.cell;

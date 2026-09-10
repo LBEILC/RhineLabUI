@@ -1,4 +1,10 @@
 /* Every panel occupies its own tangent on the same radial HUD surface. */
+#stage .hud-surface {
+  /* Motion is driven by the projection controller. In particular, the global
+     reduced-motion duration must not create an implicit `all` transition that
+     retains the previous matrix while measuring the unprojected layout. */
+  transition-property: opacity, color, background-color, border-color !important;
+}
 #stage[data-hud-depth="true"] .hud-surface {
   transform-origin: 0 0 !important;
   transform: var(--hud-projection, none) !important;

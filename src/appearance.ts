@@ -81,7 +81,8 @@ export class CardAppearance {
       };
       mat.customProgramCacheKey = () =>
         `archive-surface-clarity-${name}-${Boolean(palette.low)}`;
-      mesh.userData.themeAmount = themeMaterial(mat, name);
+      mesh.userData.subduedIndex = { value: 0 };
+      mesh.userData.themeAmount = themeMaterial(mat, name, false, mesh.userData.subduedIndex);
     }
   }
 
@@ -122,8 +123,11 @@ export class CardAppearance {
     });
   }
 
-  setTheme(group: THREE.Group, value: number) {
-    group.traverse(child => { if (child.userData.themeAmount) child.userData.themeAmount.value = value; });
+  setTheme(group: THREE.Group, value: number, subduedIndex = false) {
+    group.traverse(child => {
+      if (child.userData.themeAmount) child.userData.themeAmount.value = value;
+      if (child.userData.subduedIndex) child.userData.subduedIndex.value = Number(subduedIndex);
+    });
   }
 
   apply(group: THREE.Group, value: number) {

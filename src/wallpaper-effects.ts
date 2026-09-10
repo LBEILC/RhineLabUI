@@ -2,7 +2,6 @@ import { wallpaperHost, type WallpaperProperties } from "./wallpaper";
 import type { ArchiveScene } from "./scene";
 import { HudProjection } from "./hud-projection";
 import { ScreenFinish } from "./screen-finish";
-import { layoutWorkbenchInsets } from "./workbench-insets";
 import "./wallpaper-effects.css";
 import "./wallpaper-insets.css";
 
@@ -66,7 +65,6 @@ export class WallpaperEffects {
       }
       this.projection.invalidate();
     }
-    if (layoutWorkbenchInsets(this.stage, insets.bottom)) this.projection.invalidate();
     const active = this.stage.dataset.mode !== "boot";
     const moving = active && options.parallax && options.tracking && !reduced && !this.stage.querySelector("#modal-root")?.childElementCount;
     const dt = this.last ? Math.min(.1, Math.max(0, time - this.last)) : 0;
@@ -86,6 +84,7 @@ export class WallpaperEffects {
       // Wallpaper pointer depth belongs exclusively to the HUD, including when
       // its switch is off. Explicit card dragging still uses the scene inputs.
       scene.uiOnlyParallax = true;
+      scene.setSelectedIndexAccent(this.props.selectedindexaccent?.value === true);
     }
     this.finish.update(options.screen, options.grain, options.fringe, options.vignette, options.grainSize, time, reduced);
   }
