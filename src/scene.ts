@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { createScreenFinish } from "./screen-finish";
 import { ArchiveVisibility } from "./archive-visibility";
 import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
@@ -53,6 +54,14 @@ const ease = (t: number) => {
   return t * t * t * (t * (t * 6 - 15) + 10);
 };
 export class ArchiveScene {
+  private screenFinish = createScreenFinish();
+  uiOnlyParallax = false;
+  setScreenEffects(enabled: boolean, grain: number, fringe: number, vignette: number) {
+    this.screenFinish.enabled = enabled && (grain > 0 || fringe > 0 || vignette > 0);
+    Object.assign(this.screenFinish.uniforms.grain, { value: grain });
+    Object.assign(this.screenFinish.uniforms.fringe, { value: fringe });
+    Object.assign(this.screenFinish.uniforms.vignette, { value: vignette });
+  }
   private theme = new ThemeWave();
   private themeAttribute?: THREE.InstancedBufferAttribute;
   get themeAmount() { return this.theme.background(performance.now() / 1000); }
@@ -255,6 +264,7 @@ export class ArchiveScene {
     this.smaa.enabled = false;
     this.composer.addPass(this.smaa);
     this.composer.addPass(new OutputPass());
+    this.composer.addPass(this.screenFinish);
     this.bindPointer();
   }
   async load(assetUrl = publicAsset("assets/archive-cassette.glb")) {
@@ -1496,7 +1506,7 @@ export class ArchiveScene {
     const cameraPosition = cameraAim
       .clone()
       .addScaledVector(viewDirection, distance);
-    if (!cinematic && !this.reduced) {
+    if (!cinematic && !this.reduced && !this.uiOnlyParallax) {
       cameraPosition.x += this.pointer.x * 0.12;
       cameraPosition.y -= this.pointer.y * 0.12;
     }

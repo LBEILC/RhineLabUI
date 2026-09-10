@@ -393,6 +393,79 @@
             "value": "extra"
           }
         ]
+      },
+      "groupvisualeffects": {
+        "order": 40,
+        "text": "HUD 与画面质感",
+        "type": "group"
+      },
+      "hudparallax": {
+        "order": 41,
+        "text": "UI 鼠标视差",
+        "type": "bool",
+        "value": false
+      },
+      "huddepth": {
+        "order": 42,
+        "text": "视差强度",
+        "type": "slider",
+        "value": 40,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "hudparallax.value == true"
+      },
+      "screenfinish": {
+        "order": 43,
+        "text": "屏幕质感",
+        "type": "bool",
+        "value": false
+      },
+      "screengrain": {
+        "order": 44,
+        "text": "细颗粒",
+        "type": "slider",
+        "value": 20,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "screenfinish.value == true"
+      },
+      "screenfringe": {
+        "order": 45,
+        "text": "边缘色散",
+        "type": "slider",
+        "value": 20,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "screenfinish.value == true"
+      },
+      "screenvignette": {
+        "order": 46,
+        "text": "暗角",
+        "type": "slider",
+        "value": 25,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "screenfinish.value == true"
+      },
+      "uifrost": {
+        "order": 47,
+        "text": "文字与按钮磨砂底",
+        "type": "bool",
+        "value": false
+      },
+      "uifroststrength": {
+        "order": 48,
+        "text": "磨砂强度",
+        "type": "slider",
+        "value": 55,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "uifrost.value == true"
       }
     }
   }

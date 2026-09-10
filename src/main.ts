@@ -37,6 +37,8 @@ import { ArchivePlayground } from "./archive-playground";
 import { ARRAY_OPENING_END, openingShowsDetail } from "./wallpaper-opening";
 import { paintTheme, themeSettingsMarkup } from "./theme-ui";
 let playground: ArchivePlayground | undefined;
+import { WallpaperEffects } from "./wallpaper-effects";
+let wallpaperEffects: WallpaperEffects | undefined;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
@@ -914,6 +916,7 @@ function frame(ms: number) {
   if (document.hidden) { requestAnimationFrame(frame); return; }
   workbench?.tick();
   const time = ms / 1000;
+  wallpaperEffects?.update(time, prefs.reduced);
   const theme = scene?.themeAmount ?? (prefs.colorTheme === "dark" ? 1 : 0);
   paintTheme(theme);
   viewer?.setTheme(theme);
@@ -1100,6 +1103,7 @@ if (isWallpaper) {
   playground = new ArchivePlayground($("#stage"), () => scene,
     () => ({ enabled: !!workbench?.enabled && mode === "archive" && ready, paused: Boolean(modal) || modalClosing || Boolean(wallpaperHost()?.paused) || document.hidden, reduced: prefs.reduced }),
     value => { musicSuppressed = value; configureAudio(); }, () => audio.play("tick"));
+  wallpaperEffects = new WallpaperEffects($("#stage"), () => scene);
   document.addEventListener("click", event => {
     const button = (event.target as Element).closest<HTMLElement>("[data-workbench-mode]");
     if (button) closeModal(() => { workbench!.setEnabled(button.dataset.workbenchMode === "workbench"); });

@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>壁纸 UI 视差与磨砂验证</title>
+<style>body{margin:0;background:#dedbd6;font:14px system-ui}header{display:flex;gap:12px;padding:10px}button{padding:6px}iframe{border:0;width:100%;height:calc(100vh - 90px)}output{display:block;padding:4px 10px}</style>
+<header><button id="on">开启全部效果</button><button id="off">关闭全部效果</button><button id="dark">暗色</button><button id="light">亮色</button><button id="probe">测试右上视差</button></header><output id="result">等待载入</output><iframe src="/?scene=archive" title="效果预览"></iframe>
+<script>
+const f=document.querySelector('iframe'),out=document.querySelector('output');
+function apply(values){f.contentWindow.wallpaperPropertyListener.applyUserProperties(Object.fromEntries(Object.entries(values).map(([k,v])=>[k,{value:v}])))}
+f.onload=()=>{apply({desktopmode:'workbench',boot:false,music:false,sound:false});out.textContent='已载入，效果默认关闭'};
+document.querySelector('#on').onclick=()=>apply({hudparallax:true,huddepth:75,screenfinish:true,screengrain:60,screenfringe:65,screenvignette:60,uifrost:true,uifroststrength:65});
+document.querySelector('#off').onclick=()=>apply({hudparallax:false,screenfinish:false,uifrost:false});
+for(const theme of ['light','dark'])document.querySelector('#'+theme).onclick=()=>apply({colortheme:theme});
+document.querySelector('#probe').onclick=()=>{const w=f.contentWindow,s=w.document.querySelector('#stage'),r=s.getBoundingClientRect();s.dispatchEvent(new w.PointerEvent('pointermove',{clientX:r.right-10,clientY:r.top+10,pointerType:'mouse',bubbles:true}));setTimeout(()=>{const brand=w.document.querySelector('.brand'),mask=w.getComputedStyle(brand,'::after');out.textContent=JSON.stringify({hud:s.dataset.hudDepth,translate:w.getComputedStyle(brand).translate,rotate:w.getComputedStyle(brand).rotate,frost:s.dataset.uiFrost,blur:mask.backdropFilter,canvasTranslate:w.getComputedStyle(w.document.querySelector('canvas')).translate});},1200)};
+</script></html>
