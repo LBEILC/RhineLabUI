@@ -1,3 +1,4 @@
+import { rollText } from "./workbench-rolling";
 import { InspectionOverlay } from "./inspection-overlay";
 import { DocumentDecryption } from "./document-decryption";
 import "./document-decryption.css";
@@ -971,7 +972,7 @@ function frame(ms: number) {
     (x, y) => currentScene.projectCard(x, y), Boolean(cinema));
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
-    $("#clock").textContent = new Date().toLocaleTimeString("en-GB");
+    rollText($("#clock"), new Date().toLocaleTimeString("en-GB"), !prefs.reduced);
   }
   frameCount++;
   if (ms - frameStart > 1000) {
@@ -1257,3 +1258,4 @@ Object.assign(window, {
   },
 });
 if (import.meta.hot) import.meta.hot.dispose(() => audio.dispose());
+
