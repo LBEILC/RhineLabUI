@@ -57,14 +57,14 @@ export class ArchiveScene {
   private themeAttribute?: THREE.InstancedBufferAttribute;
   get themeAmount() { return this.theme.background(performance.now() / 1000); }
   setTheme(dark: boolean, immediate = false) { this.theme.set(dark, performance.now() / 1000, this.selectedCell, immediate); }
-  private playfield = { enabled: false, bands: quietBands(), strength: 1, flatten: 0, target: null as string | null };
+  private playfield = { enabled: false, bands: quietBands(), strength: 1, flatten: 0, target: null as string | null, breathing: true };
   private flatMix = 0;
   private relayLifts = new Map<string, number>();
   private relayPoints = new Map<string, { cell: ArchiveCell; point: THREE.Vector3 }>();
   private relayActive = false;
   onRelayPick?: (key: string | null) => void;
-  setPlayfield(enabled: boolean, bands: MusicBands, strength: number, flatten: number, target: string | null) {
-    this.playfield = { enabled, bands, strength, flatten, target };
+  setPlayfield(enabled: boolean, bands: MusicBands, strength: number, flatten: number, target: string | null, breathing = true) {
+    this.playfield = { enabled, bands, strength, flatten, target, breathing };
   }
   setRelayActive(active: boolean) {
     if (active === this.relayActive) return;
@@ -1166,7 +1166,7 @@ export class ArchiveScene {
       ? 0
       : THREE.MathUtils.lerp(
           this.idleGain,
-          idle ? 1 : 0,
+          idle ? (this.playfield.enabled ? (this.playfield.breathing && !this.relayActive ? 1 - this.playfield.bands.activity : 0) : 1) : 0,
           1 - Math.exp(-dt * (idle ? 0.8 : 4)),
         );
     this.pulseGain = THREE.MathUtils.lerp(
@@ -1192,14 +1192,14 @@ export class ArchiveScene {
           this.shoulder.value,
           this.laneFocus.value,
         );
-      let height =
+      const height =
         archiveWave(
           row + this.coordinateOrigin.row,
           lane + this.coordinateOrigin.lane,
           this.scanTime,
         ) *
-          this.scanBlend +
-        idleWave(
+          this.scanBlend;
+      const breathing = idleWave(
           row + this.coordinateOrigin.row,
           lane + this.coordinateOrigin.lane,
           time,
@@ -1221,7 +1221,7 @@ export class ArchiveScene {
       return (
         (height +
         settlingWave(distance, 26.56) *
-          columnStrength(lane, this.laneFocus.value)) * (1 - this.flatMix) + pulseHeight +
+          columnStrength(lane, this.laneFocus.value)) * (1 - this.flatMix) + breathing + pulseHeight +
         (activePlay && !this.reduced ? musicDisplacement(row, lane, time, play.bands, play.strength) : 0) +
         (this.relayLifts.get(cellKey({ row, lane })) ?? 0)
       );

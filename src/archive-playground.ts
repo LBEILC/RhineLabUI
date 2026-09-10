@@ -77,7 +77,7 @@ export class ArchivePlayground {
     const strength = typeof intensity === "number" && Number.isFinite(intensity) ? Math.max(0, Math.min(2, intensity / 100)) : 1;
     const style = this.props.selectionstyle?.value ?? "music-flat";
     const flatten = playing || style === "flat" ? 1 : style === "music-flat" && reactive ? bands.activity : 0;
-    scene?.setPlayfield(context.enabled, { ...bands, low: bands.low * this.musicGain, mid: bands.mid * this.musicGain, high: bands.high * this.musicGain }, strength, flatten, this.round.target);
+    scene?.setPlayfield(context.enabled, { ...bands, low: bands.low * this.musicGain, mid: bands.mid * this.musicGain, high: bands.high * this.musicGain }, strength, flatten, this.round.target, this.bool("idlebreathing", true));
     if (scene) scene.onRelayPick = key => this.hit(key);
     this.round.tick(elapsed, context.paused);
     if (context.paused) this.last = 0;
