@@ -1,11 +1,12 @@
-/* Individual transforms compose with the existing enter/exit transform animations. */
-[data-hud-depth="true"] { perspective: 1600px; }
-[data-hud-depth="true"] > .hud-depth-layer {
-  translate: var(--hud-x) var(--hud-y);
-  rotate: var(--hud-axis-x) var(--hud-axis-y) 0 var(--hud-angle);
+/* Every panel occupies its own tangent on the same radial HUD surface. */
+#stage[data-hud-depth="true"] .hud-surface {
+  transform-origin: 0 0 !important;
+  transform: var(--hud-projection, none) !important;
 }
+.screen-finish-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
 [data-ui-frost="true"] .frost-surface { isolation: isolate; }
 .wb-time, .wb-today, .relay-heading, .relay-actions { position: relative; }
+.system-footer > .frost-surface { position: relative; }
 .frost-surface::after {
   content: "";
   position: absolute;
@@ -24,7 +25,7 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.12), 0 1px 0 rgba(0,0,0,.08);
 }
 .wb-nav .frost-surface::after { inset: 0 -6px; }
-.system-footer.frost-surface::after { inset: -8px -12px; }
+.system-footer .frost-surface::after { inset: -8px -12px; }
 .relay-actions.frost-surface::after { left: auto; width: 240px; }
 .reduce-motion .frost-surface::after { transition: none; }
 @media(max-width:700px) { [data-ui-frost="true"] .wb-module { position: relative; } }

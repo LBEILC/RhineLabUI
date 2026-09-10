@@ -407,7 +407,7 @@
       },
       "huddepth": {
         "order": 42,
-        "text": "视差强度",
+        "text": "曲面纵深",
         "type": "slider",
         "value": 40,
         "min": 0,
@@ -416,13 +416,13 @@
         "condition": "hudparallax.value == true"
       },
       "screenfinish": {
-        "order": 43,
-        "text": "屏幕质感",
+        "order": 44,
+        "text": "全局屏幕效果",
         "type": "bool",
         "value": false
       },
       "screengrain": {
-        "order": 44,
+        "order": 45,
         "text": "细颗粒",
         "type": "slider",
         "value": 20,
@@ -432,7 +432,7 @@
         "condition": "screenfinish.value == true"
       },
       "screenfringe": {
-        "order": 45,
+        "order": 47,
         "text": "边缘色散",
         "type": "slider",
         "value": 20,
@@ -442,7 +442,7 @@
         "condition": "screenfinish.value == true"
       },
       "screenvignette": {
-        "order": 46,
+        "order": 48,
         "text": "暗角",
         "type": "slider",
         "value": 25,
@@ -452,13 +452,13 @@
         "condition": "screenfinish.value == true"
       },
       "uifrost": {
-        "order": 47,
+        "order": 49,
         "text": "文字与按钮磨砂底",
         "type": "bool",
         "value": false
       },
       "uifroststrength": {
-        "order": 48,
+        "order": 50,
         "text": "磨砂强度",
         "type": "slider",
         "value": 55,
@@ -466,6 +466,23 @@
         "max": 100,
         "step": 1,
         "condition": "uifrost.value == true"
+      },
+      "hudtracking": {
+        "order": 43,
+        "text": "鼠标追踪",
+        "type": "bool",
+        "value": true,
+        "condition": "hudparallax.value == true"
+      },
+      "screengrainsize": {
+        "order": 46,
+        "text": "颗粒尺寸",
+        "type": "slider",
+        "value": 35,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "screenfinish.value == true"
       }
     }
   }

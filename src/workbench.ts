@@ -96,7 +96,7 @@ export class Workbench {
       [".wb-time", ".wb-today", ".wb-module", ".wb-nav"].forEach((selector, i) => {
         const element = this.root.querySelector<HTMLElement>(selector)!;
         element.getAnimations().forEach(a => a.cancel());
-        if (!reduced) element.animate([{ opacity: 0, transform: "translateY(9px)" }, { opacity: 1, transform: "translateY(0)" }],
+        if (!reduced) element.animate([{ opacity: 0, translate: "0 9px" }, { opacity: 1, translate: "0 0" }],
           { duration: 460, delay: 60 + i * 65, easing: "cubic-bezier(.22,.7,.2,1)", fill: "backwards" });
       });
     }
