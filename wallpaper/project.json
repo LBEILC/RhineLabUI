@@ -409,7 +409,7 @@
         "order": 42,
         "text": "曲面纵深",
         "type": "slider",
-        "value": 40,
+        "value": 20,
         "min": 0,
         "max": 100,
         "step": 1,
@@ -445,7 +445,7 @@
         "order": 48,
         "text": "暗角",
         "type": "slider",
-        "value": 25,
+        "value": 20,
         "min": 0,
         "max": 100,
         "step": 1,
@@ -478,7 +478,7 @@
         "order": 46,
         "text": "颗粒尺寸",
         "type": "slider",
-        "value": 35,
+        "value": 20,
         "min": 0,
         "max": 100,
         "step": 1,
@@ -524,6 +524,47 @@
         "min": -300,
         "max": 300,
         "step": 1
+      },
+      "groupcapabilities": {
+        "order": 56,
+        "text": "工作台 · 可用功能",
+        "type": "group",
+        "condition": "desktopmode.value == 'workbench'"
+      },
+      "enabletime": {
+        "order": 57,
+        "text": "启用时间日期",
+        "type": "bool",
+        "value": true,
+        "condition": "desktopmode.value == 'workbench'"
+      },
+      "enabletasks": {
+        "order": 58,
+        "text": "启用今日事项",
+        "type": "bool",
+        "value": true,
+        "condition": "desktopmode.value == 'workbench'"
+      },
+      "enableevent": {
+        "order": 59,
+        "text": "启用重要日程",
+        "type": "bool",
+        "value": true,
+        "condition": "desktopmode.value == 'workbench'"
+      },
+      "enablemedia": {
+        "order": 60,
+        "text": "启用正在播放",
+        "type": "bool",
+        "value": true,
+        "condition": "desktopmode.value == 'workbench'"
+      },
+      "enablefocus": {
+        "order": 61,
+        "text": "启用专注计时",
+        "type": "bool",
+        "value": true,
+        "condition": "desktopmode.value == 'workbench'"
       }
     }
   }

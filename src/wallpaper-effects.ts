@@ -2,6 +2,7 @@ import { wallpaperHost, type WallpaperProperties } from "./wallpaper";
 import type { ArchiveScene } from "./scene";
 import { HudProjection } from "./hud-projection";
 import { ScreenFinish } from "./screen-finish";
+import { layoutWorkbenchInsets } from "./workbench-insets";
 import "./wallpaper-effects.css";
 import "./wallpaper-insets.css";
 
@@ -19,7 +20,7 @@ export function effectOptions(props: WallpaperProperties) {
     const value = props[key]?.value;
     return typeof value === "number" && Number.isFinite(value) ? Math.max(0, Math.min(100, value)) / 100 : fallback;
   };
-  return { parallax: flag("hudparallax"), tracking: props.hudtracking?.value !== false, depth: amount("huddepth", .4), frost: flag("uifrost"), frostStrength: amount("uifroststrength", .55), screen: flag("screenfinish"), grain: amount("screengrain", .2), grainSize: amount("screengrainsize", .35), fringe: amount("screenfringe", .2), vignette: amount("screenvignette", .25) };
+  return { parallax: flag("hudparallax"), tracking: props.hudtracking?.value !== false, depth: amount("huddepth", .2), frost: flag("uifrost"), frostStrength: amount("uifroststrength", .55), screen: flag("screenfinish"), grain: amount("screengrain", .2), grainSize: amount("screengrainsize", .2), fringe: amount("screenfringe", .2), vignette: amount("screenvignette", .2) };
 }
 
 /** DOM-only pointer depth. The renderer and its camera never receive this input. */
@@ -65,6 +66,7 @@ export class WallpaperEffects {
       }
       this.projection.invalidate();
     }
+    if (layoutWorkbenchInsets(this.stage, insets.bottom)) this.projection.invalidate();
     const active = this.stage.dataset.mode !== "boot";
     const moving = active && options.parallax && options.tracking && !reduced && !this.stage.querySelector("#modal-root")?.childElementCount;
     const dt = this.last ? Math.min(.1, Math.max(0, time - this.last)) : 0;

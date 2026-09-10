@@ -7,6 +7,7 @@ import { defaultWorkbenchVisibility, applyVisibilityProperties, type WorkbenchVi
 type Media = { status?: { enabled?: boolean }; properties?: { title?: string; artist?: string; albumTitle?: string }; thumbnail?: { thumbnail?: string }; timeline?: { position?: number; duration?: number }; playing?: boolean };
 declare global { interface Window { rhineWallpaperMedia?: Media; } }
 const names = ["时间日期", "今日事项", "重要日程", "正在播放", "专注计时"];
+const capabilityKeys = ["enabletime", "enabletasks", "enableevent", "enablemedia", "enablefocus"];
 const key = "rhine-workbench-v1";
 export class Workbench {
   enabled = false;
@@ -61,6 +62,10 @@ export class Workbench {
     const previous = this.done.length;
     this.done = this.done.filter(id => [0, 1, 2].every(i => !props[`task${i + 1}`] || !id.startsWith(`${i}:`) || id === this.taskId(i)));
     if (previous !== this.done.length) this.save();
+    if (!this.laneEnabled(this.lane)) {
+      this.lane = capabilityKeys.findIndex((_, i) => this.laneEnabled(i));
+      if (this.lane >= 0) this.onLane(this.lane);
+    }
     this.renderTasks(); this.renderPanel();
     this.syncElements();
   }
@@ -101,8 +106,10 @@ export class Workbench {
       });
     }
   }
+  private laneEnabled(lane: number) { return lane >= 0 && lane < names.length && this.props[capabilityKeys[lane]]?.value !== false; }
   select(lane: number) {
-    this.lane = Math.max(0, Math.min(4, lane));
+    if (!this.laneEnabled(lane)) return;
+    this.lane = lane;
     this.renderPanel();
   }
   settingsMarkup() {
@@ -111,6 +118,10 @@ export class Workbench {
   private syncElements() {
     const selectors = { clock: ".wb-time", tasks: ".wb-today", module: ".wb-module", navigation: ".wb-nav" } as const;
     for (const [key, selector] of Object.entries(selectors)) this.root.querySelector<HTMLElement>(selector)!.hidden = !this.visibility[key as WorkbenchElement];
+    const available = capabilityKeys.some((_, i) => this.laneEnabled(i));
+    this.root.querySelector<HTMLElement>(".wb-module")!.hidden = !this.visibility.module || !available;
+    this.root.querySelector<HTMLElement>(".wb-nav")!.hidden = !this.visibility.navigation || !available;
+    this.root.querySelectorAll<HTMLButtonElement>("[data-wb-lane]").forEach(button => { button.hidden = !this.laneEnabled(+button.dataset.wbLane!); });
     this.root.querySelector<HTMLElement>(".wb-overview")!.hidden = !this.visibility.clock && !this.visibility.tasks;
     this.root.dataset.clockVisible = String(this.visibility.clock);
     this.stage.dataset.workbenchBrand = String(!this.enabled || this.visibility.brand);
@@ -163,8 +174,14 @@ export class Workbench {
     if (timer) timer.textContent = durationText(this.timer.status === "idle" ? this.minutes() * 60000 : timerLeft(this.timer, now));
   }
   private renderPanel() {
+    if (this.lane < 0) {
+      this.root.querySelector(".wb-title")!.textContent = "";
+      this.root.querySelector(".wb-content")!.replaceChildren();
+      return;
+    }
     this.root.querySelector(".wb-title")!.textContent = names[this.lane];
-    this.root.querySelector(".wb-index")!.textContent = `0${this.lane + 1} / 05`;
+    const available = capabilityKeys.map((_, i) => i).filter(i => this.laneEnabled(i));
+    this.root.querySelector(".wb-index")!.textContent = `${String(available.indexOf(this.lane) + 1).padStart(2, "0")} / ${String(available.length).padStart(2, "0")}`;
     this.root.querySelectorAll<HTMLButtonElement>("[data-wb-lane]").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.wbLane! === this.lane)));
     let html = "";
     if (this.lane === 0) {

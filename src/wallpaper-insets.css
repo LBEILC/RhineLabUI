@@ -9,6 +9,20 @@
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > :is(.workbench, #archive-ui, #detail-ui) {
   inset: var(--ui-top) var(--ui-right) var(--ui-bottom) var(--ui-left);
 }
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { bottom: 0; }
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) .wb-nav { bottom: calc(var(--wb-nav-bottom, 9%) + var(--ui-bottom)); }
+.wb-overview { --wb-anchor-top: 24; }
+.wb-module { --wb-anchor-top: 30; }
+@media (max-width: 1000px) {
+  .wb-overview { --wb-anchor-top: 20; }
+  .wb-module { --wb-anchor-top: 22; }
+  .wb-nav { --wb-nav-bottom: 10%; }
+}
+@media (max-height: 650px) and (min-width: 701px) {
+  .wb-overview { --wb-anchor-top: 22; }
+  .wb-module { --wb-anchor-top: 20; }
+  .wb-nav { --wb-nav-bottom: 8%; }
+}
 #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .brand {
   left: calc(var(--edge) + var(--ui-left)); top: calc(var(--ui-brand-top) + var(--ui-top));
 }
