@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>工作台切换与开场复核</title>
 <style>body{margin:0;background:#969994;font:13px system-ui}header{padding:8px;display:flex;gap:8px;flex-wrap:wrap}button{padding:8px}#view{position:relative;margin:auto;overflow:hidden}iframe{display:block;border:0;transform-origin:top left}output{display:block;padding:8px;white-space:pre-wrap;max-height:180px;overflow:auto}</style>
-<header><button id="test">运行界面回归</button><button data-mode="archive">档案展示</button><button data-mode="workbench">工作台</button><button data-size="1920,1080">16:9</button><button data-size="3840,1080">32:9</button><button data-size="1080,1920">竖屏</button><button id="opening">播放阵列开场</button><button id="freeze">暂停／恢复</button><button id="game">开始接力</button><button data-rhythm="legacy">原版律动</button><button data-rhythm="wave">A · 左低中中右高</button><button data-rhythm="lift">B · 连续流波</button><button data-band="low">持续低频</button><button data-band="mid">持续中频</button><button data-band="high">持续高频</button><button data-band="all">混合频谱</button><button data-band="silent">静音</button></header>
+<header><button id="test">运行界面回归</button><button id="gametest">验证游戏进出过渡</button><button data-mode="archive">档案展示</button><button data-mode="workbench">工作台</button><button data-size="1920,1080">16:9</button><button data-size="3840,1080">32:9</button><button data-size="1080,1920">竖屏</button><button id="opening">播放阵列开场</button><button id="freeze">暂停／恢复</button><button id="game">开始接力</button><button data-rhythm="legacy">原版律动</button><button data-rhythm="wave">A · 左低中中右高</button><button data-rhythm="lift">B · 连续流波</button><button data-band="low">持续低频</button><button data-band="mid">持续中频</button><button data-band="high">持续高频</button><button data-band="all">混合频谱</button><button data-band="silent">静音</button></header>
 <div id="view"><iframe src="/?scene=archive" title="工作台修订预览"></iframe></div><output id="status"></output><output id="result"></output>
 <script>
 const f=document.querySelector('iframe'),view=document.querySelector('#view'),result=document.querySelector('#result');let size=[1920,1080],paused=false,band='silent';
@@ -41,4 +41,19 @@ document.querySelector('#test').onclick=async()=>{result.textContent='';try{
  w().wallpaperPropertyListener.setPaused(false);await until(()=>w().rhine.stats().mode==='archive');assert(w().rhine.stats().mode==='archive','短开场正常进入工作台');
  result.textContent+='DONE';
  }catch(e){result.textContent+='ERROR '+e.message}}
+document.querySelector('#gametest').onclick=async()=>{result.textContent='';try {
+ props({desktopmode:'workbench',showgame:true,reduced:false});w().wallpaperPropertyListener.setPaused(false);w().rhine.archive();await wait(700);
+ const root=d().querySelector('.workbench'),hud=d().querySelector('.relay-hud'),entry=d().querySelector('.relay-entry'),exit=d().querySelector('.relay-exit');
+ entry.click();assert(hud.dataset.transition==='opening'&&!hud.hidden&&root.inert,'进入游戏：HUD 淡入、旧界面立即隔离');
+ await until(()=>hud.dataset.transition==='open'&&w().getComputedStyle(root).visibility==='hidden');assert(w().getComputedStyle(root).visibility==='hidden','工作台完成淡出');
+ exit.click();assert(hud.dataset.transition==='closing'&&!hud.hidden&&hud.inert&&root.inert,'退出游戏：保留 HUD 淡出、隔离点击');
+ await until(()=>hud.hidden&&!root.inert);assert(hud.hidden&&!root.inert&&w().getComputedStyle(root).visibility==='visible','退出完成恢复工作台');
+ assert(d().activeElement===entry,'退出后焦点返回入口');
+ entry.click();exit.click();entry.click();await until(()=>hud.dataset.transition==='open');assert(!hud.hidden&&d().querySelector('#stage').dataset.relay==='true','快速进出再进入不被旧回调隐藏');
+ size=[1080,1920];fit();await wait(300);const a=exit.getBoundingClientRect(),b=d().querySelector('.settings-button').getBoundingClientRect();assert(a.top>b.bottom,'竖屏退出按钮与设置不重叠');
+ props({showgame:false});exit.click();await until(()=>hud.hidden);assert(entry.hidden,'隐藏入口时退出不重现入口');
+ props({showgame:true,reduced:true});await wait(150);entry.click();assert(hud.dataset.transition==='open','减少动态效果直接进入');exit.click();assert(hud.hidden&&!root.inert,'减少动态效果直接退出');
+ props({reduced:false});entry.click();exit.click();props({desktopmode:'archive'});await until(()=>hud.hidden&&!d().querySelector('#archive-ui').inert);assert(!d().querySelector('#archive-ui').inert,'退出期间切到档案模式不残留输入锁');
+ props({desktopmode:'workbench'});size=[1920,1080];fit();result.textContent+='DONE';
+ }catch(e){result.textContent+='ERROR '+e.message}};
 </script></html>

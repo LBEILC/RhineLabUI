@@ -1,6 +1,7 @@
 import { RelayRound, SpectrumEnvelope } from "./archive-play-motion";
 import type { ArchiveScene } from "./scene";
 import { wallpaperHost, type WallpaperProperties } from "./wallpaper";
+import { SurfaceTransition } from "./ui-transitions";
 import "./archive-playground.css";
 
 declare global { interface Window { rhineWallpaperSpectrum?: { samples: number[]; time: number }; } }
@@ -21,6 +22,12 @@ export class ArchivePlayground {
   private message: HTMLElement;
   private retry: HTMLButtonElement;
   private bar: HTMLElement;
+  private hudTransition: SurfaceTransition;
+  private entryTransition: SurfaceTransition;
+  private markerTransition: SurfaceTransition;
+  private closing = false;
+  private entryVisible = false;
+  private markerVisible = false;
   get active() { return this.round.status !== "idle"; }
   constructor(private stage: HTMLElement, private scene: () => ArchiveScene | undefined, private context: () => Context, private mute: (value: boolean) => void, private hitSound: () => void) {
     stage.insertAdjacentHTML("beforeend", `<button class="relay-entry" hidden><span>↗</span> 波纹接力</button><section class="relay-hud" hidden aria-label="波纹接力"><div class="relay-heading"><small>RIPPLE RELAY</small><strong class="relay-score">00</strong><p class="relay-message" role="status"></p></div><div class="relay-time"><i></i></div><div class="relay-actions"><button class="relay-retry" hidden>再玩一次</button><button class="relay-exit">结束游戏</button></div></section><button class="relay-target" hidden aria-label="接住波纹"></button>`);
@@ -31,6 +38,9 @@ export class ArchivePlayground {
     this.message = this.hud.querySelector(".relay-message")!;
     this.retry = this.hud.querySelector(".relay-retry")!;
     this.bar = this.hud.querySelector(".relay-time i")!;
+    this.hudTransition = new SurfaceTransition(this.hud, this.hud, 300, 220);
+    this.entryTransition = new SurfaceTransition(this.entry, undefined, 260, 180);
+    this.markerTransition = new SurfaceTransition(this.marker, undefined, 160, 140);
     this.entry.onclick = this.retry.onclick = () => this.start();
     this.hud.querySelector<HTMLButtonElement>(".relay-exit")!.onclick = () => this.stop();
     this.marker.onclick = () => this.hit(this.round.target);
@@ -42,17 +52,67 @@ export class ArchivePlayground {
   private bool(key: string, fallback: boolean) { const v = this.props[key]?.value; return typeof v === "boolean" ? v : fallback; }
   private start() {
     if (!this.context().enabled || !this.scene()) return;
+    this.closing = false;
     this.round.start(); this.previousTarget = "";
+    this.score.textContent = "00";
+    this.message.textContent = "点击抬起的档案，接住下一道波纹";
+    this.retry.hidden = true;
+    this.bar.style.transform = "scaleX(0)";
+    this.showMarker(false);
     this.scene()!.setRelayActive(true);
-    this.hud.hidden = false;
+    this.stage.dataset.relay = "true";
+    this.hud.inert = false;
+    this.hud.setAttribute("aria-hidden", "false");
+    this.hudTransition.show(this.context().reduced);
+    this.updateEntry();
+    this.syncInputIsolation();
     this.hud.querySelector<HTMLButtonElement>(".relay-exit")!.focus({ preventScroll: true });
   }
   stop() {
-    this.round.stop(); this.scene()?.setRelayActive(false);
-    this.marker.hidden = true;
-    this.hud.hidden = true; this.stage.dataset.relay = "false";
-    this.entry.hidden = !this.context().enabled || !this.bool("showgame", true);
-    if (!this.entry.hidden) this.entry.focus({ preventScroll: true });
+    if (!this.active && !this.closing) return;
+    if (this.closing) return;
+    this.round.stop(); this.closing = true;
+    this.stage.dataset.relay = "false";
+    this.hud.inert = true;
+    this.hud.setAttribute("aria-hidden", "true");
+    this.showMarker(false);
+    this.hudTransition.hide(this.context().reduced, () => {
+      this.closing = false;
+      this.scene()?.setRelayActive(false);
+      this.updateEntry();
+      this.syncInputIsolation();
+      if (this.context().enabled && !this.context().paused) {
+        const target = this.entryVisible ? this.entry : this.stage.querySelector<HTMLButtonElement>(".settings-button");
+        target?.focus({ preventScroll: true });
+      }
+    });
+  }
+  private updateEntry() {
+    const visible = this.context().enabled && !this.active && !this.closing && this.bool("showgame", true);
+    if (visible === this.entryVisible) return;
+    this.entryVisible = visible;
+    this.entry.inert = !visible;
+    this.entry.setAttribute("aria-hidden", String(!visible));
+    if (visible) this.entryTransition.show(this.context().reduced);
+    else this.entryTransition.hide(this.context().reduced);
+  }
+  private showMarker(visible: boolean) {
+    if (visible === this.markerVisible) return;
+    this.markerVisible = visible;
+    this.marker.inert = !visible;
+    this.marker.setAttribute("aria-hidden", String(!visible));
+    if (visible) this.markerTransition.show(this.context().reduced);
+    else this.markerTransition.hide(this.context().reduced);
+  }
+  private syncInputIsolation() {
+    const mode = this.stage.dataset.mode;
+    const blocked = this.active || this.closing || Boolean(this.stage.querySelector("#modal-root")?.childElementCount);
+    const workbench = this.stage.querySelector<HTMLElement>(".workbench");
+    if (workbench) workbench.inert = blocked || !this.context().enabled;
+    const archive = this.stage.querySelector<HTMLElement>("#archive-ui");
+    if (archive) archive.inert = blocked || mode !== "archive" || this.stage.dataset.workbench === "true";
+    const footer = this.stage.querySelector<HTMLElement>(".system-footer");
+    if (footer) footer.inert = blocked || mode === "boot";
   }
   private hit(key: string | null) {
     if (this.context().paused) return;
@@ -94,13 +154,17 @@ export class ArchivePlayground {
     }
     const over = this.round.status === "over";
     // Keep the game isolated until the user exits, including its result screen.
-    scene?.setRelayActive(this.active);
+    scene?.setRelayActive(this.active || this.closing);
     this.stage.dataset.relay = String(this.active);
     this.stage.dataset.relayStatus = this.round.status;
     this.stage.dataset.relayScore = String(this.round.score);
     this.stage.dataset.spectrumLevel = bands.activity.toFixed(3);
-    this.entry.hidden = !context.enabled || this.active || !this.bool("showgame", true);
-    this.hud.hidden = !this.active;
+    this.updateEntry();
+    this.syncInputIsolation();
+    if (context.reduced) {
+      this.hudTransition.finish(); this.entryTransition.finish(); this.markerTransition.finish();
+    }
+    if (this.closing) return;
     this.retry.hidden = !over;
     const score = String(this.round.score).padStart(2, "0");
     if (this.score.textContent !== score) this.score.textContent = score;
@@ -111,7 +175,7 @@ export class ArchivePlayground {
   }
   position() {
     const point = this.round.target ? this.scene()?.projectRelay(this.round.target) : null;
-    this.marker.hidden = !point || this.context().paused;
+    this.showMarker(Boolean(point) && !this.context().paused && this.active && !this.closing);
     if (point) {
       const rect = this.stage.getBoundingClientRect();
       this.marker.style.left = `${(point.x - rect.left) / rect.width * 100}%`;
