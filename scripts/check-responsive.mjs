@@ -4,7 +4,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 const { chromium, webkit } = await import(process.env.PLAYWRIGHT_MODULE ? pathToFileURL(resolve(process.env.PLAYWRIGHT_MODULE)).href : "playwright");
-const base=process.env.REVIEW_URL || "http://127.0.0.1:5187";
+const base=process.env.REVIEW_URL || "http://127.0.0.1:5204";
 const output=resolve(".tools/responsive");await mkdir(output,{recursive:true});
 const engine=process.env.REVIEW_ENGINE || "chromium";
 const browser=engine==='webkit'?await webkit.launch({headless:true}):await chromium.launch({channel:'chrome',headless:true,args:['--use-angle=d3d11','--enable-gpu','--ignore-gpu-blocklist']});
@@ -39,11 +39,15 @@ for(const [name,width,height,mobile] of cases.filter(([name])=>!process.env.REVI
  const before=await stats(page);
  if(mobile){
    const y=Math.round(height*(width>height?.4:.25)),x=Math.round(width*.4);
-   await touch(page,[[x,y],[x-40,y+1],[x-85,y+2]]);await page.waitForTimeout(350);
-   assert.equal((await stats(page)).selectedCell.lane,before.selectedCell.lane+1,'Swipe left advances one column');
+   let vector=(await stats(page)).dragProjection.lane;
+   await touch(page,[[x,y],[x+vector.x*.4,y+vector.y*.4],[x+vector.x*.8,y+vector.y*.8]]);
+   await page.waitForFunction(()=>!rhine.stats().archiveMomentum);
+   assert.equal((await stats(page)).selectedCell.lane,before.selectedCell.lane+1,'Projected column travel advances one column');
    const row=(await stats(page)).selectedCell.row;
-   await touch(page,[[width*.45,y],[width*.45,y-40],[width*.45,y-75]]);await page.waitForTimeout(300);
-   assert.equal((await stats(page)).selectedCell.row,row+1,'Swipe up advances one file');
+   vector=(await stats(page)).dragProjection.row;
+   await touch(page,[[x,y],[x+vector.x*.4,y+vector.y*.4],[x+vector.x*.8,y+vector.y*.8]]);
+   await page.waitForFunction(()=>!rhine.stats().archiveMomentum);
+   assert.equal((await stats(page)).selectedCell.row,row+1,'Projected depth travel advances one file');
  }
  // Eight steps traverse the seam without changing the remembered content.
  const loop=await stats(page);

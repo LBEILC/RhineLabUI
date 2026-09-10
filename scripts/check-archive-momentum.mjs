@@ -19,7 +19,11 @@ const rest = (page) =>
     timeout: 12000,
   });
 try {
-  for (const mobile of [false, true]) {
+  for (const mobile of [false, true].filter(
+    (mobile) =>
+      !process.env.REVIEW_CASES ||
+      process.env.REVIEW_CASES === (mobile ? "mobile" : "desktop"),
+  )) {
     const width = mobile ? 390 : 1920,
       height = mobile ? 844 : 1080;
     const context = await browser.newContext({
@@ -31,7 +35,7 @@ try {
       errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(
-      `${process.env.REVIEW_URL || "http://127.0.0.1:5202"}/?scene=archive`,
+      `${process.env.REVIEW_URL || "http://127.0.0.1:5204"}/?scene=archive`,
     );
     await page.waitForFunction(
       () => window.rhine?.stats().extraction >= 0.399,
@@ -43,8 +47,6 @@ try {
     const cdp = mobile ? await context.newCDPSession(page) : null;
     const x = width * 0.6,
       y = height * 0.38;
-    const rowStep = Math.max(72, Math.min(150, height * 0.14));
-    const laneStep = Math.max(100, Math.min(280, width * 0.24));
     const down = async () =>
       mobile
         ? cdp.send("Input.dispatchTouchEvent", {
@@ -68,12 +70,14 @@ try {
         : page.mouse.up();
     const fling = async (delay, axis = "row") => {
       await down();
+      const vector = (await stats(page)).dragProjection[axis];
+      const travel = axis === "row" ? 3.2 : 0.8;
       const segments = delay < 30 ? 4 : 8;
       for (let i = 1; i <= segments; i++) {
         await page.waitForTimeout(delay);
         await move(
-          axis === "lane" ? x - (laneStep * 1.8 * i) / segments : x,
-          axis === "row" ? y - (rowStep * 1.8 * i) / segments : y,
+          x + (vector.x * travel * i) / segments,
+          y + (vector.y * travel * i) / segments,
         );
       }
       await up();
@@ -86,7 +90,7 @@ try {
     await fling(8);
     const released = await stats(page);
     assert.equal(released.archiveMomentum?.phase, "coasting");
-    assert.ok(released.archiveMomentum.velocity > 2);
+    assert.ok(released.archiveMomentum.velocity.row > 2);
     await page.waitForTimeout(450);
     const moving = await stats(page);
     assert.ok(
@@ -98,13 +102,19 @@ try {
       "Released array keeps travelling",
     );
     assert.ok(
-      moving.archiveMomentum.velocity < released.archiveMomentum.velocity,
+      moving.archiveMomentum.velocity.row <
+        released.archiveMomentum.velocity.row,
       "Speed decays continuously",
     );
     await rest(page);
     const fast = await stats(page);
     const fastDistance = fast.selectedCell.row - slow.selectedCell.row;
-    console.log({mobile,slowDistance,fastDistance,releaseVelocity:released.archiveMomentum.velocity});
+    console.log({
+      mobile,
+      slowDistance,
+      fastDistance,
+      releaseVelocity: released.archiveMomentum.velocity.row,
+    });
     assert.ok(
       fastDistance > slowDistance,
       "Fast travel goes farther than identical slow travel",
@@ -129,7 +139,8 @@ try {
       "Pressing catches the current rail before direction lock",
     );
     assert.deepEqual(held.selectedCell, caught.selectedCell);
-    await move(x - laneStep * 0.8, y);
+    const capturedVector = caught.dragProjection.lane;
+    await move(x + capturedVector.x * 0.8, y + capturedVector.y * 0.8);
     await page.waitForTimeout(160);
     await up();
     await rest(page);
@@ -140,7 +151,10 @@ try {
 
     await fling(8, "lane");
     const lateral = await stats(page);
-    assert.equal(lateral.archiveMomentum?.axis, "lane");
+    assert.ok(
+      lateral.archiveMomentum?.velocity.lane > 0,
+      JSON.stringify(lateral.archiveMomentum),
+    );
     await page.waitForTimeout(250);
     assert.ok((await stats(page)).columnCamera > lateral.columnCamera + 0.5);
     await rest(page);
@@ -173,7 +187,7 @@ try {
       mobile,
       slowDistance,
       fastDistance,
-      releaseVelocity: released.archiveMomentum.velocity,
+      releaseVelocity: released.archiveMomentum.velocity.row,
       releaseRow: released.selectedCell.row,
       movingRow: moving.selectedCell.row,
       checks: "passed",

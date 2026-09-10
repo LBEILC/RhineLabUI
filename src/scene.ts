@@ -29,7 +29,7 @@ import {
 } from "./archive-loop";
 import { labelMarkSvg } from "./brand";
 import { archiveFraming } from "./viewport-layout";
-import { ArchiveDrag, ArchiveMomentum, type DragAxis, type DragProjection } from "./archive-drag";
+import { ArchiveDrag, ArchivePlaneMomentum, type DragAxis, type DragProjection, type DragPosition } from "./archive-drag";
 import { assetUrl as publicAsset } from "./asset-url";
 import {
   archiveWave,
@@ -106,9 +106,9 @@ export class ArchiveScene {
   private hoverCell: ArchiveCell | null = null;
   private hoverLifts = new Map<string, number>();
   private archiveDrag = new ArchiveDrag();
-  private dragTrack: { axis: DragAxis; value: number } | null = null;
+  private dragTrack: DragPosition | null = null;
   private navigatingDrag = false;
-  private archiveMomentum: { axis: DragAxis; motion: ArchiveMomentum; time: number } | null = null;
+  private archiveMomentum: { motion: ArchivePlaneMomentum; time: number } | null = null;
   private holdingArchive = false;
   private cancelPointer = () => {};
   private rotation = 0;
@@ -751,15 +751,21 @@ export class ArchiveScene {
       ? (coordinate - 2) * COLUMN_SPACING
       : -2.17 - (coordinate - 15.5) * ROW_SPACING;
   }
-  private navigateTrack(axis: DragAxis, coordinate: number) {
-    const goal = Math.round(coordinate);
+  private navigatePlane(coordinate: DragPosition) {
+    const goal = { lane: Math.round(coordinate.lane), row: Math.round(coordinate.row) };
+    if (sameCell(goal, this.selectedCell)) return;
+    const from = { ...this.selectedCell };
+    const steps = Math.min(64, Math.max(Math.abs(goal.lane - from.lane), Math.abs(goal.row - from.row)));
     this.navigatingDrag = true;
     try {
-      // Each crossed cell keeps the existing column memory, sound and wave rules.
-      for (let i = 0; i < 64 && this.selectedCell[axis] !== goal; i++) {
-        const before = this.selectedCell[axis];
-        this.onNavigate?.(axis, Math.sign(goal - before));
-        if (this.selectedCell[axis] === before) break;
+      // Select physical cells along the travelled segment in one update per cell.
+      // Column memory is updated by onSelect, but never pulls a held plane away.
+      for (let i = 1; i <= steps; i++) {
+        const cell = {
+          lane: Math.round(from.lane + (goal.lane - from.lane) * i / steps),
+          row: Math.round(from.row + (goal.row - from.row) * i / steps),
+        };
+        if (!sameCell(cell, this.selectedCell)) this.onSelect?.(fileAtCell(cell), cell);
       }
     } finally {
       this.navigatingDrag = false;
@@ -767,8 +773,8 @@ export class ArchiveScene {
   }
   private stopMomentum() {
     if (this.archiveMomentum) {
-      const track = this.archiveMomentum.axis === "lane" ? this.columnCamera : this.rail;
-      track.velocity = 0;
+      this.columnCamera.velocity = 0;
+      this.rail.velocity = 0;
     }
     this.archiveMomentum = null;
   }
@@ -821,29 +827,30 @@ export class ArchiveScene {
       reset();
     };
     const moveArchive = (e: PointerEvent) => {
-      const pending = this.archiveDrag.axis === null;
+      const pending = !this.archiveDrag.active;
       for (const sample of e.getCoalescedEvents?.() ?? []) {
         this.archiveDrag.move(sample.clientX, sample.clientY, sample.timeStamp);
       }
       this.archiveDrag.move(e.clientX, e.clientY, e.timeStamp);
       moved ||= this.archiveDrag.moved;
-      const axis = this.archiveDrag.axis;
-      if (!axis) return;
+      if (!this.archiveDrag.active) return;
       if (pending) {
         startTrack = { lane: this.columnCamera.value, row: this.rail.value };
       }
       this.setHover(null);
       this.lastInteraction = this.clock;
       canvas.style.cursor = "grabbing";
-      const spacing = axis === "lane" ? COLUMN_SPACING : -ROW_SPACING;
       this.dragTrack = {
-        axis,
-        value: startTrack[axis] + this.archiveDrag.value * spacing,
+        lane: startTrack.lane + this.archiveDrag.value.lane * COLUMN_SPACING,
+        row: startTrack.row - this.archiveDrag.value.row * ROW_SPACING,
       };
-      const track = axis === "lane" ? this.columnCamera : this.rail;
-      track.value = this.dragTrack.value;
-      track.velocity = 0;
-      this.navigateTrack(axis, this.trackCoordinate(axis, track.value));
+      this.columnCamera.value = this.dragTrack.lane;
+      this.rail.value = this.dragTrack.row;
+      this.columnCamera.velocity = this.rail.velocity = 0;
+      this.navigatePlane({
+        lane: this.trackCoordinate("lane", this.columnCamera.value),
+        row: this.trackCoordinate("row", this.rail.value),
+      });
     };
     canvas.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
@@ -868,15 +875,7 @@ export class ArchiveScene {
       this.holdingArchive = browse;
       this.dragging = !browse && this.canInspect;
       startTrack = { lane: this.columnCamera.value, row: this.rail.value };
-      const r = canvas.getBoundingClientRect();
-      this.archiveDrag.start(
-        e.clientX,
-        e.clientY,
-        r.width,
-        r.height,
-        e.timeStamp,
-        this.dragProjection(),
-      );
+      this.archiveDrag.start(e.clientX, e.clientY, this.dragProjection(), e.timeStamp);
       this.setHover(null);
       canvas.setPointerCapture(e.pointerId);
     });
@@ -910,15 +909,12 @@ export class ArchiveScene {
       if (e.pointerId !== activePointer) return;
       if (!cancelled && browse && this.canBrowse()) {
         moveArchive(e);
-        if (this.archiveDrag.axis) {
-          const axis = this.archiveDrag.axis;
-          const track = axis === "lane" ? this.columnCamera : this.rail;
+        if (this.archiveDrag.active) {
           if (!this.reduced) {
             this.archiveMomentum = {
-              axis,
               time: performance.now() / 1000,
-              motion: new ArchiveMomentum(
-                this.trackCoordinate(axis, track.value),
+              motion: new ArchivePlaneMomentum(
+                { lane: this.trackCoordinate("lane", this.columnCamera.value), row: this.trackCoordinate("row", this.rail.value) },
                 this.archiveDrag.releaseVelocity(e.timeStamp, false),
               ),
             };
@@ -1032,7 +1028,7 @@ export class ArchiveScene {
     if (momentum) {
       momentum.motion.step(Math.min(Math.max(time - momentum.time, 0), 0.25));
       momentum.time = time;
-      this.navigateTrack(momentum.axis, momentum.motion.value);
+      this.navigatePlane(momentum.motion.value);
       this.lastInteraction = time;
     }
     const hoverKey = !cinematic && this.hoverCell ? cellKey(this.hoverCell) : null;
@@ -1049,22 +1045,22 @@ export class ArchiveScene {
     const selectedLane = this.selectedCell.lane;
     damp(this.shoulder, selectedRow, this.reduced ? 35 : 5, dt);
     damp(this.laneFocus, selectedLane, this.reduced ? 35 : 4, dt);
-    // Pressing during a coast catches the displayed array immediately, even
-    // before the next drag has crossed its direction-lock threshold.
-    if (!this.holdingArchive || this.dragTrack) {
-      if (momentum?.axis !== "lane") damp(this.columnCamera, chosen.x, this.reduced ? 35 : 3.7, dt);
-      if (momentum?.axis !== "row") damp(this.rail, cinematic ? 0 : -2.17 - chosen.z, this.reduced ? 35 : 3.7, dt);
+    // A held or freely coasting plane owns both tracks; selection cannot pull it.
+    if (!this.holdingArchive && !momentum) {
+      damp(this.columnCamera, chosen.x, this.reduced ? 35 : 3.7, dt);
+      damp(this.rail, cinematic ? 0 : -2.17 - chosen.z, this.reduced ? 35 : 3.7, dt);
     }
     if (momentum) {
-      const track = momentum.axis === "lane" ? this.columnCamera : this.rail;
-      track.value = this.trackPosition(momentum.axis, momentum.motion.value);
-      track.velocity = momentum.motion.velocity * (momentum.axis === "lane" ? COLUMN_SPACING : -ROW_SPACING);
+      this.columnCamera.value = this.trackPosition("lane", momentum.motion.lane.value);
+      this.rail.value = this.trackPosition("row", momentum.motion.row.value);
+      this.columnCamera.velocity = momentum.motion.lane.velocity * COLUMN_SPACING;
+      this.rail.velocity = -momentum.motion.row.velocity * ROW_SPACING;
       if (momentum.motion.phase === "idle") this.archiveMomentum = null;
     }
     if (this.dragTrack && !cinematic) {
-      const track = this.dragTrack.axis === "lane" ? this.columnCamera : this.rail;
-      track.value = this.dragTrack.value;
-      track.velocity = 0;
+      this.columnCamera.value = this.dragTrack.lane;
+      this.rail.value = this.dragTrack.row;
+      this.columnCamera.velocity = this.rail.velocity = 0;
     }
     if (cinematic) {
       this.rail.value = 0;
@@ -1552,14 +1548,13 @@ export class ArchiveScene {
       hoverLifts: Object.fromEntries(this.hoverLifts),
       dragTrack: this.dragTrack ? { ...this.dragTrack } : null,
       archiveMomentum: this.archiveMomentum ? {
-        axis: this.archiveMomentum.axis,
         phase: this.archiveMomentum.motion.phase,
         value: this.archiveMomentum.motion.value,
         velocity: this.archiveMomentum.motion.velocity,
       } : null,
       holdingArchive: this.holdingArchive,
       dragProjection: this.dragProjection(),
-      dragMapping: this.archiveDrag.mapping,
+      dragMapping: this.archiveDrag.active ? "free" : null,
       coordinateOrigin: { ...this.coordinateOrigin },
       poolBounds: {
         minLane: Math.min(...this.cells.map((c) => c.lane)),

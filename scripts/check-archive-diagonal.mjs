@@ -34,7 +34,7 @@ try {
       errors = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto(
-      `${process.env.REVIEW_URL || "http://127.0.0.1:5203"}/?scene=archive`,
+      `${process.env.REVIEW_URL || "http://127.0.0.1:5204"}/?scene=archive`,
     );
     await page.waitForFunction(
       () => window.rhine?.stats().extraction >= 0.399,
@@ -91,10 +91,10 @@ try {
         const during = await stats(page);
         assert.equal(
           during.dragMapping,
-          "scene",
+          "free",
           `${width}x${height}: ${axis} uses the camera projection`,
         );
-        assert.equal(during.dragTrack.axis, axis);
+        assert.ok(during.dragTrack);
         const track = axis === "lane" ? "columnCamera" : "rail",
           spacing = axis === "lane" ? 5.2 : -0.62;
         assert.ok(
@@ -117,12 +117,85 @@ try {
         });
         results.push({ axis, sign, direction, mapping: during.dragMapping });
       }
+    // One held gesture moves freely in screen space and turns without relocking.
+    await down();
+    const anchor = await stats(page),
+      basis = anchor.dragProjection;
+    const paths = [
+      [45, 0],
+      [45, 50],
+      [-35, 50],
+      [-35, -30],
+      [0, 0],
+    ];
+    for (const [dx, dy] of paths) {
+      await move(x + dx, y + dy);
+      await page.waitForTimeout(100);
+      const state = await stats(page);
+      const lane = (state.columnCamera - anchor.columnCamera) / 5.2;
+      const row = (state.rail - anchor.rail) / -0.62;
+      assert.ok(
+        Math.abs(lane * basis.lane.x + row * basis.row.x - dx) < 2,
+        "Screen X follows the pointer",
+      );
+      assert.ok(
+        Math.abs(lane * basis.lane.y + row * basis.row.y - dy) < 2,
+        "Screen Y follows the pointer",
+      );
+      assert.equal(state.dragMapping, "free");
+    }
+    await up();
+    await page.waitForFunction(() => !rhine.stats().archiveMomentum);
+    results.push({ screenPath: paths, checks: "free turns passed" });
+    if (!mobile) {
+      await down();
+      const releaseBasis = (await stats(page)).dragProjection;
+      for (let i = 1; i <= 4; i++) {
+        await move(
+          x + ((releaseBasis.lane.x * 0.4 + releaseBasis.row.x * 1.8) * i) / 4,
+          y + ((releaseBasis.lane.y * 0.4 + releaseBasis.row.y * 1.8) * i) / 4,
+        );
+        await page.waitForTimeout(8);
+      }
+      await up();
+      const release = (await stats(page)).archiveMomentum;
+      assert.equal(release?.phase, "coasting");
+      assert.ok(release.velocity.lane > 0 && release.velocity.row > 0);
+      await page.waitForTimeout(250);
+      const coast = (await stats(page)).archiveMomentum;
+      assert.equal(coast?.phase, "coasting");
+      assert.ok(
+        coast.value.lane > release.value.lane &&
+          coast.value.row > release.value.row,
+      );
+      assert.ok(
+        Math.abs(
+          coast.velocity.lane / coast.velocity.row -
+            release.velocity.lane / release.velocity.row,
+        ) < 0.001,
+      );
+      await down();
+      const caught = await stats(page);
+      assert.equal(caught.archiveMomentum, null);
+      await page.waitForTimeout(120);
+      const held = await stats(page);
+      assert.equal(held.columnCamera, caught.columnCamera);
+      assert.equal(held.rail, caught.rail);
+      await up();
+      await page.waitForTimeout(1500);
+      results.push({
+        checks: "free coast and two-track catch passed",
+        release,
+      });
+    }
     await page.screenshot({
       path: resolve(`.tools/array-input/diagonal-${width}x${height}.png`),
     });
     assert.deepEqual(errors, []);
     report.push({ width, height, mobile, results, checks: "passed" });
-    console.log(`${width}x${height}: diagonal axes and reversals passed`);
+    console.log(
+      `${width}x${height}: projected axes, free screen paths and turns passed`,
+    );
     await context.close();
   }
 } finally {
