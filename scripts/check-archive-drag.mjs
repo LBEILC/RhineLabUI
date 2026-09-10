@@ -2,6 +2,58 @@ import assert from "node:assert/strict";
 import { ArchiveDrag, ArchiveMomentum } from "../src/archive-drag.ts";
 
 const drag = new ArchiveDrag();
+const projection = { lane: { x: -240, y: 120 }, row: { x: -50, y: -15 } };
+const diagonal = new ArchiveDrag();
+diagonal.start(500, 500, 1920, 1080, 0, projection);
+diagonal.move(380, 560, 40);
+assert.equal(diagonal.axis, "lane");
+assert.equal(diagonal.mapping, "scene");
+assert.ok(
+  Math.abs(diagonal.value - 0.5) < 1e-10,
+  "Half a projected column follows half a cell",
+);
+diagonal.move(620, 440, 80);
+assert.equal(diagonal.axis, "lane");
+assert.ok(
+  Math.abs(diagonal.value + 0.5) < 1e-10,
+  "Diagonal reversal retains the captured axis",
+);
+diagonal.start(500, 500, 1920, 1080, 0, projection);
+diagonal.move(400, 470, 40);
+assert.equal(diagonal.axis, "row");
+assert.equal(diagonal.mapping, "scene");
+assert.ok(
+  Math.abs(diagonal.value - 2) < 1e-10,
+  "Depth travel uses the projected spacing",
+);
+diagonal.start(500, 500, 1920, 1080, 0, projection);
+diagonal.move(220, 500, 40);
+assert.equal(diagonal.axis, "lane");
+assert.equal(diagonal.mapping, "screen");
+assert.equal(
+  diagonal.value,
+  1,
+  "Horizontal shortcut keeps its original distance",
+);
+diagonal.start(500, 500, 1920, 1080, 0, projection);
+diagonal.move(500, 350, 40);
+assert.equal(diagonal.axis, "row");
+assert.equal(diagonal.mapping, "screen");
+assert.equal(
+  diagonal.value,
+  1,
+  "Vertical shortcut keeps its original distance",
+);
+const alternateCamera = { lane: { x: 180, y: 100 }, row: { x: 40, y: -12 } };
+diagonal.start(500, 500, 390, 844, 0, alternateCamera);
+alternateCamera.lane.x = 0;
+diagonal.move(590, 550, 40);
+assert.equal(diagonal.axis, "lane");
+assert.equal(diagonal.mapping, "scene");
+assert.ok(
+  Math.abs(diagonal.value - 0.5) < 1e-10,
+  "Camera directions are frozen for the gesture, not hard-coded by angle",
+);
 drag.start(500, 500, 1920, 1080);
 drag.move(504, 502, 10);
 assert.equal(drag.axis, null);
@@ -67,7 +119,10 @@ drag.start(500, 500, 1920, 1080, 0);
 drag.move(300, 500, 20);
 drag.move(300, 500, 30);
 drag.move(310, 500, 45);
-assert.ok(drag.releaseVelocity(45, false) < 0, "Stationary samples at the turning point cannot retain the old direction");
+assert.ok(
+  drag.releaseVelocity(45, false) < 0,
+  "Stationary samples at the turning point cannot retain the old direction",
+);
 console.log(
   "Drag axis lock, slow travel, reversal, flick and reduced-motion checks passed.",
 );

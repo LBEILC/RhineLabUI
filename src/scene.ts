@@ -29,7 +29,7 @@ import {
 } from "./archive-loop";
 import { labelMarkSvg } from "./brand";
 import { archiveFraming } from "./viewport-layout";
-import { ArchiveDrag, ArchiveMomentum, type DragAxis } from "./archive-drag";
+import { ArchiveDrag, ArchiveMomentum, type DragAxis, type DragProjection } from "./archive-drag";
 import { assetUrl as publicAsset } from "./asset-url";
 import {
   archiveWave,
@@ -721,6 +721,31 @@ export class ArchiveScene {
       ? value / COLUMN_SPACING + 2
       : (-value - 2.17) / ROW_SPACING + 15.5;
   }
+  private dragProjection(): DragProjection {
+    this.model.updateMatrixWorld(true);
+    this.camera.updateMatrixWorld(true);
+    const center = this.model.localToWorld(new THREE.Vector3(0, 1.85, 0));
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    const project = (motion: THREE.Vector3) => {
+      const from = center
+        .clone()
+        .addScaledVector(motion, -0.5)
+        .project(this.camera);
+      const to = center
+        .clone()
+        .addScaledVector(motion, 0.5)
+        .project(this.camera);
+      return {
+        x: ((to.x - from.x) * rect.width) / 2,
+        y: (-(to.y - from.y) * rect.height) / 2,
+      };
+    };
+    // Positive navigation moves the array along -X for columns and -Z for rows.
+    return {
+      lane: project(new THREE.Vector3(-COLUMN_SPACING, 0, 0)),
+      row: project(new THREE.Vector3(0, 0, -ROW_SPACING)),
+    };
+  }
   private trackPosition(axis: DragAxis, coordinate: number) {
     return axis === "lane"
       ? (coordinate - 2) * COLUMN_SPACING
@@ -850,6 +875,7 @@ export class ArchiveScene {
         r.width,
         r.height,
         e.timeStamp,
+        this.dragProjection(),
       );
       this.setHover(null);
       canvas.setPointerCapture(e.pointerId);
@@ -1532,6 +1558,8 @@ export class ArchiveScene {
         velocity: this.archiveMomentum.motion.velocity,
       } : null,
       holdingArchive: this.holdingArchive,
+      dragProjection: this.dragProjection(),
+      dragMapping: this.archiveDrag.mapping,
       coordinateOrigin: { ...this.coordinateOrigin },
       poolBounds: {
         minLane: Math.min(...this.cells.map((c) => c.lane)),

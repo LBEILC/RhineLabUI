@@ -1,4 +1,5 @@
 export type DragAxis = "lane" | "row";
+export type DragProjection = Record<DragAxis, { x: number; y: number }>;
 
 /** Pointer travel in CSS pixels, independent of renderer resolution. */
 export class ArchiveDrag {
@@ -10,9 +11,19 @@ export class ArchiveDrag {
   private samples: { value: number; time: number }[] = [];
   private lastMotion = -Infinity;
   private motionDirection = 0;
+  private projection: DragProjection | null = null;
+  private direction = { x: 0, y: 0 };
+  mapping: "screen" | "scene" | null = null;
   value = 0;
 
-  start(x: number, y: number, width: number, height: number, time = 0) {
+  start(
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    time = 0,
+    projection?: DragProjection,
+  ) {
     this.axis = null;
     this.moved = false;
     this.x = x;
@@ -21,6 +32,13 @@ export class ArchiveDrag {
     this.samples = [{ value: 0, time }];
     this.lastMotion = -Infinity;
     this.motionDirection = 0;
+    this.projection = projection
+      ? {
+          lane: { ...projection.lane },
+          row: { ...projection.row },
+        }
+      : null;
+    this.mapping = null;
     this.step = {
       lane: Math.max(100, Math.min(280, width * 0.24)),
       row: Math.max(72, Math.min(150, height * 0.14)),
@@ -34,18 +52,71 @@ export class ArchiveDrag {
     if (!this.axis) {
       const major = Math.max(Math.abs(dx), Math.abs(dy));
       const minor = Math.min(Math.abs(dx), Math.abs(dy));
-      if (major < 10 || major < minor * 1.25) return;
-      this.axis = Math.abs(dx) > Math.abs(dy) ? "lane" : "row";
+      if (major < 10) return;
+      if (this.projection) {
+        const length = Math.hypot(dx, dy);
+        const choices = (Object.keys(this.projection) as DragAxis[])
+          .flatMap((axis) => {
+            const scene = this.projection![axis];
+            const screen =
+              axis === "lane"
+                ? { x: -this.step.lane, y: 0 }
+                : { x: 0, y: -this.step.row };
+            return [
+              { vector: screen, mapping: "screen" as const },
+              { vector: scene, mapping: "scene" as const },
+            ]
+              .filter(
+                ({ vector }) =>
+                  Number.isFinite(vector.x) &&
+                  Number.isFinite(vector.y) &&
+                  Math.hypot(vector.x, vector.y) >= 4,
+              )
+              .map(({ vector, mapping }) => {
+                const span = Math.hypot(vector.x, vector.y);
+                const alignment = Math.abs(
+                  (dx * vector.x + dy * vector.y) / (length * span),
+                );
+                return {
+                  axis,
+                  mapping,
+                  vector,
+                  span,
+                  angle: Math.acos(Math.min(1, alignment)),
+                };
+              });
+          })
+          .sort((a, b) => a.angle - b.angle);
+        const best = choices[0];
+        const other = choices.find((choice) => choice.axis !== best.axis)!;
+        // Wait for a little more travel near two competing directions. The
+        // camera's depth axis can be close to the horizontal shortcut.
+        if (length < 28 && other.angle - best.angle < Math.PI / 60) return;
+        if (best.mapping === "scene" && length < 16) return;
+        this.axis = best.axis;
+        this.mapping = best.mapping;
+        const squared = best.span * best.span;
+        this.direction = {
+          x: best.vector.x / squared,
+          y: best.vector.y / squared,
+        };
+      } else {
+        if (major < minor * 1.25) return;
+        this.axis = Math.abs(dx) > Math.abs(dy) ? "lane" : "row";
+        this.mapping = "screen";
+        this.direction =
+          this.axis === "lane"
+            ? { x: -1 / this.step.lane, y: 0 }
+            : { x: 0, y: -1 / this.step.row };
+      }
     }
-    const value = -(this.axis === "lane" ? dx : dy) / this.step[this.axis];
+    const value = dx * this.direction.x + dy * this.direction.y;
     const previous = this.samples.at(-1);
     if (previous && value !== previous.value) {
       this.lastMotion = time;
       const direction = Math.sign(value - previous.value);
       // A reversal starts a fresh velocity estimate from the turning point.
-      if (
-        this.motionDirection && direction !== this.motionDirection
-      ) {
+      if (this.motionDirection && direction !== this.motionDirection) {
         this.samples = [previous];
       }
       this.motionDirection = direction;
