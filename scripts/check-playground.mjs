@@ -26,3 +26,14 @@ assert.equal(visible('gamepace',{showgame:false}),false);
 assert.equal(visible('openingdetail',{boot:false}),false);
 for(const key of Object.keys(props))visible(key);
 console.log('Six native groups and all display conditions passed.');
+
+const {RhythmMotion,rhythmDisplacement}=await load('src/archive-play-motion.ts');
+const rhythm=new RhythmMotion(); let motion;
+for(let i=0;i<180;i++){const t=i/60;const bass=i%30<5?.5:.015;motion=rhythm.update({low:bass,mid:.08,high:.3,activity:1},t,1/60,'wave');assert.ok(motion.pulses.length<=3);for(let j=1;j<motion.pulses.length;j++)assert.ok(motion.pulses[j].time-motion.pulses[j-1].time>=.22);}
+assert.ok(motion.pulses.length>0,'Bass onsets create coherent waves');
+for(let i=180;i<480;i++)motion=rhythm.update({low:.2,mid:.08,high:.3,activity:1},i/60,1/60,'wave');
+assert.equal(motion.pulses.length,0,'Sustained tone must not repeatedly trigger beats');
+for(let i=480;i<600;i++)motion=rhythm.update({low:.2,mid:.08,high:.3,activity:1},i/60,1/60,'lift');
+const liftA=rhythmDisplacement(0,0,10,quietBands(),1,motion),liftB=rhythmDisplacement(30,5,10,quietBands(),1,motion);assert.ok(Math.abs(liftA-liftB)<.001,'Lift mode moves the array together');
+for(let i=600;i<960;i++)motion=rhythm.update(quietBands(),i/60,1/60,'lift');assert.ok(motion.lift<.0001,'Silence settles to rest');
+console.log('Rhythm onset, cooldown, bounded overlap, steady-tone rejection, coherent lift and silence passed.');

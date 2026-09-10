@@ -290,7 +290,7 @@
         "condition": "desktopmode.value == 'workbench'"
       },
       "reactiveintensity": {
-        "order": 32,
+        "order": 33,
         "text": "音乐律动强度",
         "type": "slider",
         "value": 100,
@@ -301,27 +301,27 @@
         "condition": "desktopmode.value == 'workbench' && audioreactive.value == true"
       },
       "reactivemute": {
-        "order": 33,
+        "order": 34,
         "text": "音乐律动开启时停用壁纸配乐",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench' && audioreactive.value == true"
       },
       "groupgame": {
-        "order": 34,
+        "order": 35,
         "text": "工作台 · 波纹接力",
         "type": "group",
         "condition": "desktopmode.value == 'workbench'"
       },
       "showgame": {
-        "order": 35,
+        "order": 36,
         "text": "显示游戏入口",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "gamepace": {
-        "order": 36,
+        "order": 37,
         "text": "波纹接力节奏（下一目标生效）",
         "type": "combo",
         "value": "normal",
@@ -356,6 +356,27 @@
             "value": "dark"
           }
         ]
+      },
+      "rhythmstyle": {
+        "order": 32,
+        "text": "音乐律动方案",
+        "type": "combo",
+        "value": "legacy",
+        "options": [
+          {
+            "label": "原版 · 多层起伏",
+            "value": "legacy"
+          },
+          {
+            "label": "方案 A · 鼓点宽波",
+            "value": "wave"
+          },
+          {
+            "label": "方案 B · 整组轻抬",
+            "value": "lift"
+          }
+        ],
+        "condition": "desktopmode.value == 'workbench' && audioreactive.value == true"
       }
     }
   }

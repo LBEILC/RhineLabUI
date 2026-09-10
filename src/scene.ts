@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
-import { musicDisplacement, quietBands, type MusicBands } from "./archive-play-motion";
+import { RhythmMotion, rhythmDisplacement, quietBands, type MusicBands, type RhythmStyle } from "./archive-play-motion";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createArchiveLighting, type LightingLook } from "./archive-lighting";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -59,6 +59,9 @@ export class ArchiveScene {
   setTheme(dark: boolean, immediate = false) { this.theme.set(dark, performance.now() / 1000, this.selectedCell, immediate); }
   private playfield = { enabled: false, bands: quietBands(), strength: 1, flatten: 0, target: null as string | null, breathing: true };
   private flatMix = 0;
+  private rhythm = new RhythmMotion();
+  private rhythmStyle: RhythmStyle = "legacy";
+  setRhythmStyle(style: RhythmStyle) { this.rhythmStyle = style; }
   private relayLifts = new Map<string, number>();
   private relayPoints = new Map<string, { cell: ArchiveCell; point: THREE.Vector3 }>();
   private relayActive = false;
@@ -1176,6 +1179,7 @@ export class ArchiveScene {
     );
     const play = this.playfield;
     const activePlay = !cinematic && !this.targetDetail && play.enabled;
+    const rhythm = this.rhythm.update(activePlay && !this.reduced ? play.bands : quietBands(), time, dt, this.rhythmStyle);
     this.flatMix += ((activePlay ? play.flatten : 0) - this.flatMix) * (this.reduced ? 1 : 1 - Math.exp(-dt * 4));
     const gameTarget = activePlay ? play.target : null;
     if (gameTarget && !this.relayLifts.has(gameTarget)) this.relayLifts.set(gameTarget, 0);
@@ -1222,7 +1226,7 @@ export class ArchiveScene {
         (height +
         settlingWave(distance, 26.56) *
           columnStrength(lane, this.laneFocus.value)) * (1 - this.flatMix) + breathing + pulseHeight +
-        (activePlay && !this.reduced ? musicDisplacement(row, lane, time, play.bands, play.strength) : 0) +
+        (activePlay && !this.reduced ? rhythmDisplacement(row, lane, time, play.bands, play.strength, rhythm) : 0) +
         (this.relayLifts.get(cellKey({ row, lane })) ?? 0)
       );
     };

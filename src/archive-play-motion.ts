@@ -66,3 +66,45 @@ export class RelayRound {
   }
   finish(reason: string) { this.status = "over"; this.target = null; this.reason = reason; }
 }
+
+export type RhythmStyle = 'legacy' | 'wave' | 'lift';
+export type RhythmFrame = { style: Record<RhythmStyle, number>; pulses: { time: number; strength: number }[]; lift: number };
+/** Relative bass onsets reject steady tones; all new motion shares the same beat clock. */
+export class RhythmMotion {
+  private average = 0;
+  private previous = 0;
+  private lastBeat = -Infinity;
+  private lastTime = -Infinity;
+  private pulses: RhythmFrame['pulses'] = [];
+  private weights = { legacy: 1, wave: 0, lift: 0 };
+  private lift = 0;
+  update(bands: MusicBands, time: number, dt: number, style: RhythmStyle): RhythmFrame {
+    dt = clamp(dt, 0, .1);
+    if (time - this.lastTime > .6) { this.pulses = []; this.previous = bands.low; this.average = bands.low; }
+    this.lastTime = time;
+    const rise = bands.low - this.previous;
+    if (bands.activity > .05 && bands.low > .018 && bands.low > this.average * 1.16 && rise > Math.max(.003, this.average * .045) && time - this.lastBeat >= .22) {
+      this.lastBeat = time;
+      this.pulses.push({ time, strength: clamp((bands.low - this.average) / Math.max(.055, this.average), .15, 1) });
+      this.pulses = this.pulses.slice(-3);
+    }
+    this.average += (bands.low - this.average) * (1 - Math.exp(-dt * 1.4));
+    this.previous = bands.low;
+    this.pulses = this.pulses.filter(p => time - p.time < 1.8);
+    const beat = this.pulses.reduce((sum, p) => sum + rhythmEnvelope(time - p.time) * p.strength, 0);
+    const target = clamp(beat * .32 + bands.low * .18 + bands.mid * .035, 0, .48);
+    this.lift += (target - this.lift) * (1 - Math.exp(-dt * (target > this.lift ? 18 : 5)));
+    for (const key of ['legacy', 'wave', 'lift'] as const) this.weights[key] += ((style === key ? 1 : 0) - this.weights[key]) * (1 - Math.exp(-dt * 5));
+    return { style: { ...this.weights }, pulses: [...this.pulses], lift: this.lift };
+  }
+}
+export function rhythmEnvelope(age: number) { return age < 0 || age >= 1.8 ? 0 : (1 - Math.exp(-age * 32)) * Math.exp(-age * 3.4) * Math.min(1, (1.8 - age) / .3); }
+export function rhythmDisplacement(row: number, lane: number, time: number, bands: MusicBands, strength: number, frame: RhythmFrame) {
+  const wave = frame.pulses.reduce((sum, p) => {
+    const age = time - p.time;
+    const phase = row * .2 + lane * .16 - age * 4;
+    return sum + rhythmEnvelope(age) * p.strength * (.5 + .5 * Math.cos(phase));
+  }, 0);
+  const modern = frame.style.wave * Math.min(.7, wave * .65 * (1 + bands.mid * .12)) + frame.style.lift * frame.lift;
+  return musicDisplacement(row, lane, time, bands, strength) * frame.style.legacy + modern * clamp(strength, 0, 2);
+}
