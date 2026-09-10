@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { ArchiveVisibility } from "./archive-visibility";
 import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
 import { RhythmMotion, rhythmDisplacement, quietBands, type MusicBands, type RhythmStyle } from "./archive-play-motion";
@@ -22,7 +23,6 @@ import {
   selectionCell,
   fileAtCell,
   poolCell,
-  visibleCell,
   LOOP_COLUMNS,
   LOOP_ROWS,
   COLUMN_SPACING,
@@ -106,13 +106,17 @@ export class ArchiveScene {
   private ao: SSAOPass;
   private bokeh: BokehPass;
   private instances: THREE.InstancedMesh[] = [];
+  private visibility = new ArchiveVisibility();
+  private instanceCapacity = LOOP_COLUMNS * LOOP_ROWS;
+  private drawnCells: ArchiveCell[] = [];
+  private extraCoverage = false;
+  setArchiveCoverage(extra: boolean) { this.extraCoverage = extra; }
   private model = new THREE.Group();
   private appearance = new CardAppearance();
   private decryption = new DecryptionController();
   private cursor = new THREE.Vector2();
   private raycaster = new THREE.Raycaster();
   private dummy = new THREE.Object3D();
-  private positions: THREE.Vector3[] = [];
   private cells: ArchiveCell[] = [];
   private selectedCell: ArchiveCell = { lane: 2, row: 12 };
   private looping = false;
@@ -268,7 +272,6 @@ export class ArchiveScene {
     for (let index = 0; index < count; index++) {
       const cell = poolCell(index);
       this.cells.push(cell);
-      this.positions.push(this.cellPosition(cell));
     }
     for (const mesh of meshes) {
       const geom = mesh.geometry
@@ -413,7 +416,7 @@ export class ArchiveScene {
     this.appearance.apply(this.model, 0);
     this.drawLabel(0);
     this.scene.add(this.model);
-    this.model.position.copy(this.positions[this.selectedSlot]);
+    this.model.position.copy(this.cellPosition(poolCell(this.selectedSlot)));
     this.loaded = true;
   }
 
@@ -692,6 +695,21 @@ export class ArchiveScene {
     c.drawImage(this.labelMark, 790, 242, 210, 98);
     this.labelTexture.needsUpdate = true;
   }
+  private ensureInstanceCapacity(required: number) {
+    if (required <= this.instanceCapacity) return;
+    const capacity = Math.max(required, this.instanceCapacity * 2);
+    for (const inst of this.instances) {
+      inst.dispose();
+      const matrix = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 16), 16).setUsage(THREE.DynamicDrawUsage);
+      matrix.array.set(inst.instanceMatrix.array);
+      inst.instanceMatrix = matrix;
+    }
+    const previousTheme = this.themeAttribute;
+    this.themeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(capacity), 1).setUsage(THREE.DynamicDrawUsage);
+    if (previousTheme) this.themeAttribute.array.set(previousTheme.array);
+    for (const inst of this.instances) inst.geometry.setAttribute("archiveTheme", this.themeAttribute);
+    this.instanceCapacity = capacity;
+  }
   resize() {
     const w = this.container.clientWidth,
       h = this.container.clientHeight;
@@ -760,7 +778,7 @@ export class ArchiveScene {
       true,
     )[0];
     if (!hit) return null;
-    if (hit.instanceId !== undefined) return { ...this.cells[hit.instanceId] };
+    if (hit.instanceId !== undefined) return { ...this.drawnCells[hit.instanceId] };
     let object: THREE.Object3D | null = hit.object;
     while (object) {
       const copy = this.outgoing.find((o) => o.group === object);
@@ -1141,19 +1159,6 @@ export class ArchiveScene {
     // Keep the illuminated set near the origin. Lateral navigation is a track
     // movement of the whole array, just like the existing front/back rail.
     const trackX = cinematic ? 0 : this.columnCamera.value;
-    const center = {
-      lane: this.columnCamera.value / COLUMN_SPACING + 2,
-      row: (-this.rail.value - 2.17) / ROW_SPACING + 15.5,
-    };
-    for (let i = 0; i < this.positions.length; i++) {
-      this.cells[i] =
-        cinematic || !this.looping ? poolCell(i) : visibleCell(i, center);
-      this.positions[i].set(
-        (this.cells[i].lane - 2) * COLUMN_SPACING,
-        -4.6,
-        (this.cells[i].row - 15.5) * ROW_SPACING,
-      );
-    }
     this.pulses = this.pulses.filter((p) => time - p.time < 3.2);
     const aligningCopy = this.outgoing.some((o) => o.returnY !== null);
     const idle =
@@ -1331,34 +1336,6 @@ export class ArchiveScene {
         this.pendingPulse = null;
       }
     }
-    // Resolve returning copies before restoring their array instances, avoiding
-    // a missing file for one frame at the ownership handoff.
-    const hidden = new Set(this.outgoing.map((o) => cellKey(o.cell)));
-    hidden.add(cellKey(this.selectedCell));
-    this.relayPoints.clear();
-    for (let i = 0; i < this.positions.length; i++) {
-      const p = this.positions[i];
-      const { row, lane } = this.cells[i];
-      this.themeAttribute?.setX(i, this.theme.sample(this.cells[i], time));
-      const slope = field(row + 0.5, lane) - field(row - 0.5, lane);
-      this.dummy.position.set(
-        p.x - trackX,
-        p.y + field(row, lane) + hoverLift(this.cells[i]),
-        p.z + entryZ + this.rail.value,
-      );
-      this.dummy.rotation.set(slope * 0.024 * (1 - detail), 0, 0);
-      this.dummy.scale.setScalar(
-        hidden.has(cellKey(this.cells[i])) ||
-          ((cinematic || !this.looping) && i >= 160)
-          ? 0
-          : 1,
-      );
-      this.dummy.updateMatrix();
-      if (play.enabled && !hidden.has(cellKey(this.cells[i]))) this.relayPoints.set(cellKey(this.cells[i]), { cell: { ...this.cells[i] }, point: new THREE.Vector3(0, 3.5, 0).applyMatrix4(this.dummy.matrix) });
-      for (const inst of this.instances) inst.setMatrixAt(i, this.dummy.matrix);
-    }
-    for (const inst of this.instances) inst.instanceMatrix.needsUpdate = true;
-    if (this.themeAttribute) this.themeAttribute.needsUpdate = true;
     this.appearance.setTheme(this.model, this.theme.sample(this.selectedCell, time));
     this.model.position.set(
       chosen.x - trackX,
@@ -1534,11 +1511,48 @@ export class ArchiveScene {
     // fog to the rendered camera, or entry puts the array behind the far plane
     // until the camera catches up (a brief white wash that exit never showed).
     const renderedDistance = this.camera.position.distanceTo(this.cameraAim);
-    fog.near = renderedDistance + THREE.MathUtils.lerp(5, -1, detail);
-    fog.far = renderedDistance + THREE.MathUtils.lerp(25, 12, detail);
+    const fogTheme = this.themeAmount;
+    fog.near = renderedDistance + THREE.MathUtils.lerp(5 - 4 * fogTheme, -1, detail);
+    fog.far = renderedDistance + THREE.MathUtils.lerp(25 - 9 * fogTheme, 12, detail);
 
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
+    // Build and compact the instance set only after the actual damped camera
+    // is final for this frame. Picking uses the same packed index-to-cell map.
+    const fixed = Boolean(cinematic) || !this.looping;
+    this.cells = fixed ? Array.from({ length: 160 }, (_, i) => poolCell(i))
+      : this.visibility.update(this.camera, fog.far, trackX, entryZ + this.rail.value, this.extraCoverage);
+    const hidden = new Set(this.outgoing.map(o => cellKey(o.cell)));
+    hidden.add(cellKey(this.selectedCell));
+    this.drawnCells = [];
+    this.relayPoints.clear();
+    for (const cell of this.cells) {
+      const { row, lane } = cell;
+      if (hidden.has(cellKey(cell))) continue;
+      const x = (lane - 2) * COLUMN_SPACING - trackX;
+      const y = -4.6 + field(row, lane) + hoverLift(cell);
+      const z = (row - 15.5) * ROW_SPACING + entryZ + this.rail.value;
+      if (!fixed && !this.visibility.intersects(x, y, z)) continue;
+      const i = this.drawnCells.length;
+      this.ensureInstanceCapacity(i + 1);
+      this.drawnCells.push(cell);
+      this.themeAttribute?.setX(i, this.theme.sample(cell, time));
+      const slope = field(row + .5, lane) - field(row - .5, lane);
+      this.dummy.position.set(x, y, z);
+      this.dummy.rotation.set(slope * .024 * (1 - detail), 0, 0);
+      this.dummy.scale.setScalar(1);
+      this.dummy.updateMatrix();
+      if (play.enabled) this.relayPoints.set(cellKey(cell), { cell: { ...cell }, point: new THREE.Vector3(0, 3.5, 0).applyMatrix4(this.dummy.matrix) });
+      for (const inst of this.instances) inst.setMatrixAt(i, this.dummy.matrix);
+    }
+    for (const inst of this.instances) {
+      inst.count = this.drawnCells.length;
+      inst.instanceMatrix.needsUpdate = true;
+    }
+    // Picking uses only the first instanced surface. The other batches disable
+    // renderer culling and do not need an O(n) bound recomputation each frame.
+    this.instances[0]?.computeBoundingSphere();
+    if (this.themeAttribute) this.themeAttribute.needsUpdate = true;
     let neighborTop = -Infinity;
     const lane = selectedLane,
       row = selectedRow;
@@ -1618,7 +1632,11 @@ export class ArchiveScene {
       loaded: this.loaded,
       drawCalls: this.renderer.info.render.calls,
       triangles: this.renderer.info.render.triangles,
-      archiveCount: this.positions.length,
+      archiveCount: this.drawnCells.length,
+      archiveCandidates: this.cells.length,
+      archiveCulled: this.cells.length - this.drawnCells.length,
+      archiveCapacity: this.instanceCapacity,
+      archiveCoverage: this.extraCoverage ? "extra" : "standard",
       returningFiles: this.outgoing.length,
       selectionPhase: this.pendingPulse
         ? "lifting"

@@ -62,7 +62,7 @@
         "condition": "boot.value == true"
       },
       "renderquality": {
-        "order": 5,
+        "order": 6,
         "text": "画质",
         "type": "combo",
         "value": "original",
@@ -86,68 +86,68 @@
         ]
       },
       "reduced": {
-        "order": 6,
+        "order": 7,
         "text": "减少动态效果",
         "type": "bool",
         "value": false
       },
       "groupworkbench": {
-        "order": 7,
+        "order": 8,
         "text": "工作台 · 界面显示",
         "type": "group",
         "condition": "desktopmode.value == 'workbench'"
       },
       "showclock": {
-        "order": 8,
+        "order": 9,
         "text": "显示时钟与日期",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "showtasks": {
-        "order": 9,
+        "order": 10,
         "text": "显示今日事项",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "showmodule": {
-        "order": 10,
+        "order": 11,
         "text": "显示右侧功能内容",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "shownavigation": {
-        "order": 11,
+        "order": 12,
         "text": "显示底部功能导航",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "showbrand": {
-        "order": 12,
+        "order": 13,
         "text": "显示品牌文字",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "showfooter": {
-        "order": 13,
+        "order": 14,
         "text": "显示页脚信息",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "showsettings": {
-        "order": 14,
+        "order": 15,
         "text": "显示设置入口",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "selectionstyle": {
-        "order": 15,
+        "order": 16,
         "text": "选中档案高度",
         "type": "combo",
         "value": "music-flat",
@@ -168,55 +168,55 @@
         "condition": "desktopmode.value == 'workbench'"
       },
       "groupcontent": {
-        "order": 17,
+        "order": 18,
         "text": "工作台 · 事项与日程",
         "type": "group",
         "condition": "desktopmode.value == 'workbench'"
       },
       "idlebreathing": {
-        "order": 16,
+        "order": 17,
         "text": "静止时呼吸（始终归齐时也生效）",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "task1": {
-        "order": 18,
+        "order": 19,
         "text": "今日事项 1",
         "type": "textinput",
         "value": "",
         "condition": "desktopmode.value == 'workbench'"
       },
       "task2": {
-        "order": 19,
+        "order": 20,
         "text": "今日事项 2",
         "type": "textinput",
         "value": "",
         "condition": "desktopmode.value == 'workbench'"
       },
       "task3": {
-        "order": 20,
+        "order": 21,
         "text": "今日事项 3",
         "type": "textinput",
         "value": "",
         "condition": "desktopmode.value == 'workbench'"
       },
       "eventname": {
-        "order": 21,
+        "order": 22,
         "text": "重要日程名称",
         "type": "textinput",
         "value": "",
         "condition": "desktopmode.value == 'workbench'"
       },
       "eventdate": {
-        "order": 22,
+        "order": 23,
         "text": "目标日期（YYYY-MM-DD，可加 HH:mm，本地时间）",
         "type": "textinput",
         "value": "",
         "condition": "desktopmode.value == 'workbench'"
       },
       "focusminutes": {
-        "order": 23,
+        "order": 24,
         "text": "专注时长（分钟，下次开始生效）",
         "type": "slider",
         "value": 25,
@@ -227,7 +227,7 @@
         "condition": "desktopmode.value == 'workbench'"
       },
       "breakminutes": {
-        "order": 24,
+        "order": 25,
         "text": "休息时长（分钟，下次开始生效）",
         "type": "slider",
         "value": 5,
@@ -238,18 +238,18 @@
         "condition": "desktopmode.value == 'workbench'"
       },
       "groupaudio": {
-        "order": 25,
+        "order": 26,
         "text": "声音",
         "type": "group"
       },
       "sound": {
-        "order": 26,
+        "order": 27,
         "text": "交互音效",
         "type": "bool",
         "value": true
       },
       "soundvolume": {
-        "order": 27,
+        "order": 28,
         "text": "音效音量",
         "type": "slider",
         "value": 55,
@@ -260,13 +260,13 @@
         "condition": "sound.value == true"
       },
       "music": {
-        "order": 28,
+        "order": 29,
         "text": "背景音乐",
         "type": "bool",
         "value": true
       },
       "musicvolume": {
-        "order": 29,
+        "order": 30,
         "text": "音乐音量",
         "type": "slider",
         "value": 50,
@@ -277,20 +277,20 @@
         "condition": "music.value == true"
       },
       "groupreactive": {
-        "order": 30,
+        "order": 31,
         "text": "工作台 · 音乐律动",
         "type": "group",
         "condition": "desktopmode.value == 'workbench'"
       },
       "audioreactive": {
-        "order": 31,
+        "order": 32,
         "text": "开启音乐律动（跟随系统音频）",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "reactiveintensity": {
-        "order": 33,
+        "order": 34,
         "text": "音乐律动强度",
         "type": "slider",
         "value": 100,
@@ -301,27 +301,27 @@
         "condition": "desktopmode.value == 'workbench' && audioreactive.value == true"
       },
       "reactivemute": {
-        "order": 34,
+        "order": 35,
         "text": "音乐律动开启时停用壁纸配乐",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench' && audioreactive.value == true"
       },
       "groupgame": {
-        "order": 35,
+        "order": 36,
         "text": "工作台 · 波纹接力",
         "type": "group",
         "condition": "desktopmode.value == 'workbench'"
       },
       "showgame": {
-        "order": 36,
+        "order": 37,
         "text": "显示游戏入口",
         "type": "bool",
         "value": true,
         "condition": "desktopmode.value == 'workbench'"
       },
       "gamepace": {
-        "order": 37,
+        "order": 38,
         "text": "波纹接力节奏（下一目标生效）",
         "type": "combo",
         "value": "normal",
@@ -358,7 +358,7 @@
         ]
       },
       "rhythmstyle": {
-        "order": 32,
+        "order": 33,
         "text": "音乐律动方案",
         "type": "combo",
         "value": "legacy",
@@ -377,6 +377,22 @@
           }
         ],
         "condition": "desktopmode.value == 'workbench' && audioreactive.value == true"
+      },
+      "archivecoverage": {
+        "order": 5,
+        "text": "阵列覆盖余量",
+        "type": "combo",
+        "value": "standard",
+        "options": [
+          {
+            "label": "自动 · 标准余量",
+            "value": "standard"
+          },
+          {
+            "label": "自动 · 额外余量",
+            "value": "extra"
+          }
+        ]
       }
     }
   }

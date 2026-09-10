@@ -54,3 +54,7 @@
 [data-dark-surface="true"] .welcome-company .welcome-highlight { background: var(--theme-ink); color: var(--theme-paper); }
 [data-dark-surface="true"] .viewer-surface button { color: var(--theme-muted); }
 [data-dark-surface="true"] .viewer-surface button[aria-pressed="true"] { color: var(--theme-paper); }
+/* Dark edges need a visible slate haze, not only black attenuation. */
+[data-dark-surface="true"] .archive-atmosphere::before {
+  background: linear-gradient(180deg, rgba(var(--theme-paper-rgb), .82), transparent 36%), linear-gradient(0deg, rgba(var(--theme-paper-rgb), .84), transparent 25%), radial-gradient(ellipse at 48% 48%, transparent 42%, rgba(var(--theme-paper-rgb), .48) 90%);
+}

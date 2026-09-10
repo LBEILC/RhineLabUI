@@ -954,6 +954,7 @@ async function start() {
   try {
     scene = new ArchiveScene($("#three-scene"));
     scene.setTheme(prefs.colorTheme === "dark", true);
+    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
     await Promise.all([
       scene.load(),
       // With unicode-range faces, preload the opening's actual characters,
@@ -1049,6 +1050,7 @@ if (isWallpaper) {
   const apply = (properties: WallpaperProperties) => {
     const theme = properties.colortheme?.value;
     if (theme === "light" || theme === "dark") prefs.colorTheme = theme;
+    scene?.setArchiveCoverage(properties.archivecoverage?.value === "extra" || wallpaperHost()?.properties.archivecoverage?.value === "extra");
     for (const key of ["sound", "music", "reduced"] as const)
       if (typeof properties[key]?.value === "boolean") prefs[key] = properties[key].value as boolean;
     for (const key of ["soundVolume", "musicVolume"] as const) {

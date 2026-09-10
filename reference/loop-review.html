@@ -38,8 +38,8 @@ function move(axis,direction){
   step(24);
   const stats=scene.getStats();
   moves.push({axis,direction,file:index+1,cell:stats.selectedCell,rail:stats.rail,track:stats.columnCamera});
-  expect(stats.archiveCount===288,'Pool grew while navigating');
-  expect(new Set(scene.cells.map(cellKey)).size===288,'Duplicate physical cell');
+  expect(stats.archiveCount>0&&stats.archiveCount<=stats.archiveCapacity,'Invalid dynamic draw count');
+  expect(new Set(scene.drawnCells.map(cellKey)).size===stats.archiveCount,'Duplicate physical cell');
 }
 // Cross each seam repeatedly in both directions, including negative cells.
 for(let i=0;i<18;i++)move('row',1);
@@ -51,8 +51,22 @@ const afterLoops=scene.getStats();
 expect(afterLoops.returningFiles===0,'Returning clones did not settle');
 expect(Math.abs(afterLoops.modelPosition[0])<0.001,'Array track did not center the selected column');
 expect(Math.abs(afterLoops.modelPosition[2]+2.17)<0.001,'Depth track did not center the selected row');
-expect(afterLoops.poolBounds.minLane<afterLoops.selectedCell.lane-3&&afterLoops.poolBounds.maxLane>afterLoops.selectedCell.lane+3,'Column margin exhausted');
-expect(afterLoops.poolBounds.minRow<afterLoops.selectedCell.row-14&&afterLoops.poolBounds.maxRow>afterLoops.selectedCell.row+14,'Row margin exhausted');
+
+// Confirm that compacted GPU indices still select their physical cells.
+scene.scene.updateMatrixWorld(true);
+let pickSamples=0;
+for(const x of [-.6,0,.6])for(const y of [-.5,0,.5]) {
+  scene.raycaster.setFromCamera(new THREE.Vector2(x,y),scene.camera);
+  const hit=scene.raycaster.intersectObjects([scene.instances[0],scene.model],true)[0];
+  if(hit?.instanceId===undefined)continue;
+  const matrix=new THREE.Matrix4();scene.instances[0].getMatrixAt(hit.instanceId,matrix);
+  const point=new THREE.Vector3().setFromMatrixPosition(matrix);
+  const expected={lane:Math.round((point.x+scene.columnCamera.value)/COLUMN_SPACING+2),row:Math.round((point.z-scene.rail.value)/ROW_SPACING+15.5)};
+  const rect=scene.renderer.domElement.getBoundingClientRect();
+  const picked=scene.pickCell(rect.left+(x+1)*rect.width/2,rect.top+(1-y)*rect.height/2);
+  expect(picked&&cellKey(picked)===cellKey(expected),'Packed instance picked wrong archive');pickSamples++;
+}
+expect(pickSamples>0,'No packed-array picking samples');
 
 // A large logical origin must be reduced without changing physical positions,
 // spring velocities, current document or idle-motion phase.
@@ -107,14 +121,15 @@ for(const shot of [22.60,24.16,26.56,34]){
   scene.update(time+=1/60,{reveal:1,lift:0,zoom,time:shot});
   const entryZ=-23*(1-Math.min(1,Math.max(0,(shot-21.92)/0.75)))**2;
   let visible=0;
-  for(let i=0;i<288;i++){
+  for(let i=0;i<scene.instances[0].count;i++){
     scene.instances[0].getMatrixAt(i,matrix);
     const scale=new THREE.Vector3().setFromMatrixScale(matrix).length();
     if(scale>0.001)visible++;
     if(i>=160)expect(scale===0,'Extra interactive column entered reference animation');
     if(i<160&&i!==76){
       position.setFromMatrixPosition(matrix);
-      const lane=Math.floor(i/32),row=i%32;
+      const {lane,row}=scene.drawnCells[i];
+      expect(lane>=0&&lane<5&&row>=0&&row<32,'Extra cell entered reference animation');
       const expected=new THREE.Vector3((lane-2)*5.2,-4.6+cinematicField(row,lane,shot,12,2),(row-15.5)*0.62+entryZ);
       referenceError=Math.max(referenceError,position.distanceTo(expected));
     }
@@ -124,7 +139,7 @@ for(const shot of [22.60,24.16,26.56,34]){
 }
 expect(referenceError<1e-5,'Reference animation grid changed');
 draw();
-document.querySelector('#result').textContent=JSON.stringify({passed:errors.length===0,errors,moves:moves.length,initialPool:initial.archiveCount,reference:{visible:referenceVisible,error:referenceError},afterLoops,rebasing:{before:beforeRebase,after:afterRebase},detail:{canInspect:detail.canInspect,lift:detail.extraction},aligning:{phase:aligning.returnPhase,height:aligning.modelPosition[1]},lastMoves:moves.slice(-5),finalStats},null,2);
+document.querySelector('#result').textContent=JSON.stringify({passed:errors.length===0,errors,moves:moves.length,pickSamples,initialPool:initial.archiveCount,reference:{visible:referenceVisible,error:referenceError},afterLoops,rebasing:{before:beforeRebase,after:afterRebase},detail:{canInspect:detail.canInspect,lift:detail.extraction},aligning:{phase:aligning.returnPhase,height:aligning.modelPosition[1]},lastMoves:moves.slice(-5),finalStats},null,2);
 if(errors.length)throw new Error(errors.join('\n'));
 </script>
 </html>
