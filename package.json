@@ -13,6 +13,7 @@
     "review:mobile": "node scripts/serve-mobile-review.mjs",
     "export:archives": "node scripts/export-records.mjs",
     "build": "tsc && vite build && node scripts/build-pwa.mjs",
+    "build:wallpaper": "node scripts/export-records.mjs && tsc && vite build --mode wallpaper --outDir release/wallpaper && node scripts/build-wallpaper.mjs",
     "format": "prettier --write src scripts index.html package.json tsconfig.json",
     "preview": "vite preview --host 127.0.0.1"
   },

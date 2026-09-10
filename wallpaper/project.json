@@ -1,0 +1,29 @@
+{
+  "title": "Rhine Lab · 莱茵生命档案终端（本地测试）",
+  "description": "非官方同人交互壁纸。三维档案阵列、玻璃解密与模型查看器。鼠标点击按钮浏览，拖动阵列，滚轮选档。",
+  "type": "web",
+  "file": "index.html",
+  "preview": "preview.jpg",
+  "visibility": "private",
+  "contentrating": "Everyone",
+  "tags": ["Game", "Technology"],
+  "general": {
+    "properties": {
+      "boot": { "order": 1, "text": "启动时播放开场（下次加载生效）", "type": "bool", "value": true },
+      "sound": { "order": 2, "text": "交互音效", "type": "bool", "value": true },
+      "soundvolume": { "order": 3, "text": "音效音量", "type": "slider", "value": 55, "min": 0, "max": 100, "step": 1, "precision": 0 },
+      "music": { "order": 4, "text": "背景音乐", "type": "bool", "value": true },
+      "musicvolume": { "order": 5, "text": "音乐音量", "type": "slider", "value": 50, "min": 0, "max": 100, "step": 1, "precision": 0 },
+      "reduced": { "order": 6, "text": "减少动态效果", "type": "bool", "value": false },
+      "renderquality": {
+        "order": 7, "text": "画质", "type": "combo", "value": "original",
+        "options": [
+          { "label": "性能", "value": "performance" },
+          { "label": "原始", "value": "original" },
+          { "label": "高", "value": "high" },
+          { "label": "极高", "value": "ultra" }
+        ]
+      }
+    }
+  }
+}

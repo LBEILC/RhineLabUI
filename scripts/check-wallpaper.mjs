@@ -1,0 +1,61 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import vm from "node:vm";
+import ts from "typescript";
+
+const events = [];
+const hostWindow = { dispatchEvent: event => events.push(event) };
+vm.runInNewContext(readFileSync("wallpaper/host.js", "utf8"), {
+  window: hostWindow, Event, CustomEvent,
+});
+const listener = hostWindow.wallpaperPropertyListener;
+listener.applyUserProperties({ sound: { value: false } });
+listener.applyUserProperties({ musicvolume: { value: 15 } });
+assert.equal(hostWindow.rhineWallpaperHost.properties.sound.value, false);
+assert.equal(hostWindow.rhineWallpaperHost.properties.musicvolume.value, 15);
+assert.equal(events.length, 2, "Early and partial callbacks are retained and dispatched");
+listener.applyGeneralProperties({ fps: 30 });
+listener.applyGeneralProperties({ fps: NaN });
+assert.equal(hostWindow.rhineWallpaperHost.fps, 30);
+globalThis.window = hostWindow;
+const documentListeners = {};
+globalThis.document = { documentElement: { dataset: {} }, addEventListener: (type, handler) => { documentListeners[type] = handler; } };
+const source = readFileSync("src/wallpaper.ts", "utf8").replace('import.meta.env.MODE', '"wallpaper"');
+const { outputText } = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } });
+const wallpaperModule = `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`;
+const { wallpaperFrame } = await import(wallpaperModule);
+let rendered = 0;
+for (let i = 0; i < 120; i++) if (wallpaperFrame(i * 1000 / 60)) rendered++;
+assert.ok(rendered >= 59 && rendered <= 61, `30 FPS host limit at 60 Hz: ${rendered} / 2 s`);
+listener.setPaused(true);
+assert.equal(wallpaperFrame(10000), false);
+listener.setPaused(false);
+assert.equal(wallpaperFrame(10001), true, "Resume renders immediately without catch-up frames");
+listener.applyGeneralProperties({ fps: 15 });
+rendered = 0;
+for (let i = 1; i <= 120; i++) if (wallpaperFrame(10001 + i * 1000 / 60)) rendered++;
+assert.ok(rendered >= 29 && rendered <= 31, `Live 15 FPS limit: ${rendered} / 2 s`);
+function moduleUrl(file) {
+  const { outputText } = ts.transpileModule(readFileSync(file, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } });
+  return `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`;
+}
+const qualityModule = moduleUrl("src/render-quality.ts");
+let controls = ts.transpileModule(readFileSync("src/quality-settings.ts", "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext } }).outputText;
+controls = controls.replace('"./wallpaper"', JSON.stringify(wallpaperModule)).replace('"./render-quality"', JSON.stringify(qualityModule)).replace('"./html"', JSON.stringify(moduleUrl("src/html.ts")));
+const { qualityMarkup } = await import(`data:text/javascript;base64,${Buffer.from(controls).toString("base64")}`);
+const { qualityPresets } = await import(qualityModule);
+const markup = qualityMarkup(qualityPresets.original);
+assert.ok(!markup.includes("<select"), "Wallpaper must not instantiate CEF native select controls");
+assert.equal((markup.match(/data-quality-choices=/g) ?? []).length, 8);
+const selectedLabel = { textContent: "" };
+const button = { disabled: false, value: "original", dataset: { qualityChoices: JSON.stringify([["original", "原始"], ["high", "高"]]) }, querySelector: () => selectedLabel, dispatchEvent: event => { assert.equal(event.type, "change"); assert.ok(event.bubbles); } };
+documentListeners.click({ target: { closest: () => button } });
+assert.equal(button.value, "high");
+assert.equal(selectedLabel.textContent, "高");
+documentListeners.click({ target: { closest: () => button } });
+assert.equal(button.value, "original", "All settings wrap to their first option");
+const webModule = `data:text/javascript;base64,${Buffer.from(outputText.replace('"wallpaper" === "wallpaper"', '"production" === "wallpaper"')).toString("base64")}`;
+const webControls = controls.replace(JSON.stringify(wallpaperModule), JSON.stringify(webModule));
+const { qualityMarkup: webQualityMarkup } = await import(`data:text/javascript;base64,${Buffer.from(webControls).toString("base64")}`);
+assert.equal((webQualityMarkup(qualityPresets.original).match(/<select/g) ?? []).length, 8, "Website keeps its native dropdowns");
+console.log("Wallpaper early properties, partial updates, FPS changes, pause/resume and CEF-safe quality controls passed.");

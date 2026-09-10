@@ -1,5 +1,11 @@
 # Rhine Lab UI
 
+## Wallpaper Engine 实验分支
+
+- 用户于 2026-09-10 授权新建 `codex/wallpaper-engine`，在本机 Wallpaper Engine 中试用网页壁纸。当前作为独立实验保留，不合并主分支、不上传创意工坊。
+- 沿用现有原生实现和视觉规范；`npm run build:wallpaper` 输出 `release/wallpaper`，网页正式构建保持原流程。
+- 壁纸资源全部本地打包，关闭 PWA，自动启动，接入宿主设置、帧率和暂停通知。使用说明与实际验证见 `docs/WALLPAPER-ENGINE.md`。
+
 - 用户明确要求：以目录内视频 5–40 秒为视觉与动效参考，尽量逐像素还原；不使用前端 Skill，由代理选择技术栈。
 - 本项目采用参考视频逐帧分析与原生实现流程，不启用主前端设计或动效 Skill。
 - 美术资源必须通过 Blender MCP 制作，保留源文件与可复现脚本。

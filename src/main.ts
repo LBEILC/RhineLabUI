@@ -28,7 +28,9 @@ import {
 import { TerminalAudio } from "./audio";
 import { audioSettingsMarkup } from "./audio-settings";
 import { StartupGate } from "./startup";
+import { isWallpaper, wallpaperHost, wallpaperFrame, type WallpaperProperties } from "./wallpaper";
 import "./startup.css";
+import "./wallpaper.css";
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
@@ -198,7 +200,7 @@ const loading = $("#loading");
 $("#viewport").append(loading);
 $("#stage").inert = true;
 $(".mobile-entry").inert = true;
-const entry = !reviewEntry && (prefs.sound || prefs.music) ? new StartupGate({
+const entry = !isWallpaper && !reviewEntry && (prefs.sound || prefs.music) ? new StartupGate({
   root: loading,
   unlock: () => audio.unlock(),
   cancel: () => audio.cancelEntry(),
@@ -615,7 +617,7 @@ function motionSettingsMarkup() {
     : "当前使用完整动效。"}</p>${prefs.reduced ? '<button data-action="enable-motion">启用完整动效并重播 ↻</button>' : ""}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>跳过开机动画，简化选档、镜头和文字动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${motionSettingsMarkup()}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom">${document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>跳过开机动画，简化选档、镜头和文字动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${motionSettingsMarkup()}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -889,6 +891,7 @@ let lastTime = 0,
   frameStart = performance.now(),
   fps = 0;
 function frame(ms: number) {
+  if (!wallpaperFrame(ms)) { requestAnimationFrame(frame); return; }
   if (document.hidden) { requestAnimationFrame(frame); return; }
   const time = ms / 1000;
   const cinema =
@@ -971,7 +974,13 @@ async function start() {
     ready = true;
     select(0);
     if (entry) entry.ready();
-    else completeStartup(false);
+    else {
+      if (isWallpaper) {
+        // CEF allows automatic audio; never block the visual on audio policy or decoding.
+        await Promise.race([audio.unlock(), new Promise(resolve => setTimeout(resolve, 3000))]);
+      }
+      completeStartup(false);
+    }
   } catch (error) {
     console.error(error);
     $("#loading").innerHTML =
@@ -994,6 +1003,7 @@ function completeStartup(silent: boolean) {
   setMode("boot");
   if (reviewParams.get("scene") === "archive" || (prefs.reduced && !reviewParams.has("time"))) setMode("archive");
   if (reviewParams.get("scene") === "detail") setMode("detail");
+  if (isWallpaper && wallpaperHost()?.properties.boot?.value === false) setMode("archive");
   $("#stage").inert = false;
   $(".mobile-entry").inert = false;
   loading.classList.add("loaded");
@@ -1013,6 +1023,44 @@ function completeStartup(silent: boolean) {
   setTimeout(() => void initPwa(notify), 1500);
 }
 updateSelection();
+if (isWallpaper) {
+  const apply = (properties: WallpaperProperties) => {
+    for (const key of ["sound", "music", "reduced"] as const)
+      if (typeof properties[key]?.value === "boolean") prefs[key] = properties[key].value as boolean;
+    for (const key of ["soundVolume", "musicVolume"] as const) {
+      const value = properties[key.toLowerCase()]?.value;
+      if (typeof value === "number" && Number.isFinite(value)) prefs[key] = Math.max(0, Math.min(1, value / 100));
+    }
+    const quality = properties.renderquality?.value;
+    if (typeof quality === "string" && Object.hasOwn(qualityPresets, quality))
+      prefs.rendering = { ...qualityPresets[quality as QualityPreset] };
+    savePrefs();
+    if (properties.boot?.value === false && started && mode === "boot") setMode("archive");
+    // Keep an already-open settings surface in sync without replacing focused controls.
+    document.querySelectorAll<HTMLInputElement>("[data-pref]").forEach(input => {
+      const key = input.dataset.pref as "sound" | "music" | "reduced";
+      if (key in prefs) input.checked = prefs[key];
+    });
+    for (const key of ["soundVolume", "musicVolume"] as const) {
+      const input = document.querySelector<HTMLInputElement>(`[data-volume="${key}"]`);
+      if (input) { input.value = String(Math.round(prefs[key] * 100)); input.closest("label")?.querySelector("output")?.replaceChildren(`${input.value}%`); }
+    }
+  };
+  window.addEventListener("rhine-wallpaper-properties", event => apply((event as CustomEvent<WallpaperProperties>).detail));
+  let pausedAt: number | undefined;
+  const pause = () => {
+    const paused = wallpaperHost()?.paused ?? false;
+    if (paused && pausedAt === undefined) pausedAt = performance.now();
+    if (!paused && pausedAt !== undefined) {
+      if (started && mode === "boot") bootStart += (performance.now() - pausedAt) / 1000;
+      pausedAt = undefined;
+    }
+    audio.setHostPaused(paused);
+  };
+  window.addEventListener("rhine-wallpaper-pause", pause);
+  apply(wallpaperHost()?.properties ?? {});
+  pause();
+}
 void start();
 // Deterministic review controls: the running application, never a video surrogate.
 Object.assign(window, {
@@ -1052,6 +1100,7 @@ Object.assign(window, {
       selected: records[selected].id,
       saved: [...saved],
       audio: audio.stats(),
+      wallpaper: isWallpaper ? wallpaperHost() : null,
     }),
   },
 });

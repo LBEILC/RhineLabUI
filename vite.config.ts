@@ -9,10 +9,18 @@ const models = ["archive-cassette", "archive-assembly"].map(name => {
   const hash = createHash("sha256").update(source).digest("hex").slice(0,16);
   return { key:`assets/${name}.glb`, fileName:`assets/${name}.${hash}.glb`, source };
 });
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === "wallpaper" ? "./" : "/",
   define: { __RHINE_MODELS__: JSON.stringify(Object.fromEntries(models.map(model => [model.key,model.fileName]))) },
   plugins: [{
     name: "versioned-model-assets", apply: "build",
     buildStart() { for (const model of models) this.emitFile({type:"asset",fileName:model.fileName,source:model.source}); },
-  }],
-});
+  }, ...(mode === "wallpaper" ? [{
+    name: "wallpaper-host",
+    transformIndexHtml(html: string) {
+      return { html: html.replace(/\s*<link rel="manifest"[^>]*>/, ""), tags: [{
+        tag: "script", children: readFileSync("wallpaper/host.js", "utf8"), injectTo: "head-prepend" as const,
+      }] };
+    },
+  }] : [])],
+}));

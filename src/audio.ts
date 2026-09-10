@@ -332,6 +332,12 @@ export class TerminalAudio {
   private bootMix = -1;
   private playedKeys = 0;
   private entryPending = false;
+  private hostPaused = false;
+  setHostPaused(paused: boolean) {
+    this.hostPaused = paused;
+    if (paused) this.hide();
+    else this.visibility();
+  }
   constructor() {
     document.addEventListener("pointerdown", this.gesture, { capture: true });
     document.addEventListener("keydown", this.gesture, { capture: true });
@@ -447,6 +453,7 @@ export class TerminalAudio {
   private async activate() {
     if (
       this.disposed ||
+      this.hostPaused ||
       document.hidden ||
       !this.unlocked ||
       (!this.prefs.sound && !this.prefs.music)
@@ -489,6 +496,7 @@ export class TerminalAudio {
       !c ||
       c.state !== "running" ||
       !this.buffers ||
+      this.hostPaused ||
       this.tracks.length ||
       !this.prefs.music ||
       this.disposed ||
@@ -564,6 +572,7 @@ export class TerminalAudio {
     const c = this.context;
     if (
       !this.prefs.sound ||
+      this.hostPaused ||
       !c ||
       c.state !== "running" ||
       document.hidden ||
