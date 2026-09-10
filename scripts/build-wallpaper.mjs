@@ -2,6 +2,9 @@ import { copyFile, readFile, readdir, rm, stat, writeFile } from "node:fs/promis
 import { resolve, relative, sep } from "node:path";
 
 const root = resolve("release/wallpaper");
+const project = JSON.parse(await readFile("wallpaper/project.json", "utf8"));
+if (project.general?.supportsaudioprocessing !== true || Object.hasOwn(project, "supportsaudioprocessing"))
+  throw new Error("Wallpaper audio requires general.supportsaudioprocessing=true");
 // Only trim generated output, never the source public directory.
 for (const name of ["update.html", "update.js", "manifest.webmanifest", "audio/observatory-preview.mp3", "assets/archive-cassette.glb", "assets/archive-assembly.glb"]) {
   const target = resolve(root, name);

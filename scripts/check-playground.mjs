@@ -16,7 +16,8 @@ let callback;const window={dispatchEvent(){},wallpaperRegisterAudioListener:fn=>
 const {openingShowsDetail,ARRAY_OPENING_END}=await load('src/wallpaper-opening.ts');assert.equal(openingShowsDetail('auto',true),false);assert.equal(openingShowsDetail('auto',false),true);assert.equal(openingShowsDetail('show',true),true);assert.equal(openingShowsDetail('skip',false),false);assert.ok(ARRAY_OPENING_END<26);
 console.log('Spectrum stereo/clamping/decay, relay pause/scoring/retry/timeout, host callback and opening policy passed.');
 const project=JSON.parse(readFileSync('wallpaper/project.json','utf8')),props=project.general.properties;
-assert.equal(project.supportsaudioprocessing,true);
+assert.equal(project.general.supportsaudioprocessing,true,'WE reads audio support from general');
+assert.equal(Object.hasOwn(project,'supportsaudioprocessing'),false,'Root-level flag is not recognized by the host');
 assert.equal(Object.values(props).filter(p=>p.type==='group').length,6);
 function visible(key,override={}){const context=structuredClone(props);for(const [k,v] of Object.entries(override))context[k].value=v;return !props[key].condition||vm.runInNewContext(props[key].condition,context)}
 assert.equal(visible('groupworkbench',{desktopmode:'archive'}),false);

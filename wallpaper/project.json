@@ -11,6 +11,7 @@
     "Technology"
   ],
   "general": {
+    "supportsaudioprocessing": true,
     "properties": {
       "desktopmode": {
         "order": 0,
@@ -350,6 +351,5 @@
         ]
       }
     }
-  },
-  "supportsaudioprocessing": true
+  }
 }
