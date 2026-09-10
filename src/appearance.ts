@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { glassRevealGLSL, frostedTransmissionGLSL, FROSTED_ROUGHNESS } from "./glass-reveal.ts";
 import { internalOpticsFragment } from "./internal-optics.ts";
+import { themeMaterial } from "./theme-material";
 
 type Surface = THREE.MeshPhysicalMaterial;
 type Palette = { high: Surface; low?: Surface };
@@ -19,7 +20,10 @@ export class CardAppearance {
       const mesh = child as THREE.Mesh;
       const name = mesh.userData.surface as string;
       const palette = this.palettes.get(name);
-      if (!palette) continue;
+      if (!palette) {
+        mesh.userData.themeAmount = themeMaterial(mesh.material as THREE.Material, "Printed_Canvas");
+        continue;
+      }
       const mat = palette.high.clone();
       const amount = { value: 0 };
       const clarity = { value: 0 };
@@ -77,6 +81,7 @@ export class CardAppearance {
       };
       mat.customProgramCacheKey = () =>
         `archive-surface-clarity-${name}-${Boolean(palette.low)}`;
+      mesh.userData.themeAmount = themeMaterial(mat, name);
     }
   }
 
@@ -115,6 +120,10 @@ export class CardAppearance {
         clarity,
       );
     });
+  }
+
+  setTheme(group: THREE.Group, value: number) {
+    group.traverse(child => { if (child.userData.themeAmount) child.userData.themeAmount.value = value; });
   }
 
   apply(group: THREE.Group, value: number) {

@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { ThemeWave } from "./theme-motion";
+import { themeMaterial, themeEnvironment } from "./theme-material";
 import { musicDisplacement, quietBands, type MusicBands } from "./archive-play-motion";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createArchiveLighting, type LightingLook } from "./archive-lighting";
@@ -51,6 +53,10 @@ const ease = (t: number) => {
   return t * t * t * (t * (t * 6 - 15) + 10);
 };
 export class ArchiveScene {
+  private theme = new ThemeWave();
+  private themeAttribute?: THREE.InstancedBufferAttribute;
+  get themeAmount() { return this.theme.background(performance.now() / 1000); }
+  setTheme(dark: boolean, immediate = false) { this.theme.set(dark, performance.now() / 1000, this.selectedCell, immediate); }
   private playfield = { enabled: false, bands: quietBands(), strength: 1, flatten: 0, target: null as string | null };
   private flatMix = 0;
   private relayLifts = new Map<string, number>();
@@ -213,6 +219,7 @@ export class ArchiveScene {
       new THREE.MeshStandardMaterial({ color: "#d8c9b9", roughness: 0.95 }),
     );
     floor.rotation.x = -Math.PI / 2;
+    floor.name = "archive-floor";
     floor.position.y = -4.63;
     floor.receiveShadow = true;
     this.scene.add(floor);
@@ -371,6 +378,9 @@ export class ArchiveScene {
         arrayMat.metalness = 0.05;
       }
       this.appearance.register(name, mat, arrayMat);
+      this.themeAttribute ??= new THREE.InstancedBufferAttribute(new Float32Array(count), 1).setUsage(THREE.DynamicDrawUsage);
+      geom.setAttribute("archiveTheme", this.themeAttribute);
+      themeMaterial(arrayMat, name, true);
       const inst = new THREE.InstancedMesh(geom, arrayMat, count);
       inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       inst.castShadow = name === "Optical_Diffuser";
@@ -437,6 +447,7 @@ export class ArchiveScene {
     this.appearance.prepare(model);
     this.appearance.apply(model, 1);
     this.appearance.setClarity(model, this.decryption.clarity);
+    this.appearance.setTheme(model, this.themeAmount);
     const canvas = document.createElement("canvas");
     canvas.width = this.labelCanvas.width;
     canvas.height = this.labelCanvas.height;
@@ -455,6 +466,8 @@ export class ArchiveScene {
     );
     label.position.set(-1.36, 3.04, 0.255);
     label.userData.assemblyPart = "cover";
+    label.userData.themeAmount = themeMaterial(label.material, "Printed_Canvas");
+    label.userData.themeAmount.value = this.themeAmount;
     model.add(label);
     meshes.push(label);
     return {
@@ -1051,6 +1064,8 @@ export class ArchiveScene {
     this.last = time;
     this.clock = time;
     if (!this.loaded) return;
+    this.theme.beginFrame();
+    themeEnvironment(this.scene, this.renderer, this.themeAmount);
     const blend = 1 - Math.exp(-dt * (this.reduced ? 35 : 2.8));
     this.reveal = cinematic
       ? cinematic.reveal
@@ -1277,6 +1292,7 @@ export class ArchiveScene {
       );
       const quality = ease(o.lift.value / 0.4);
       this.appearance.apply(o.group, quality);
+      this.appearance.setTheme(o.group, this.theme.sample(o.cell, time));
       o.clarity = this.reduced ? 0 : o.clarity * Math.exp(-dt * 9);
       this.appearance.setClarity(o.group, o.clarity);
       const { row, lane } = o.cell;
@@ -1319,6 +1335,7 @@ export class ArchiveScene {
     for (let i = 0; i < this.positions.length; i++) {
       const p = this.positions[i];
       const { row, lane } = this.cells[i];
+      this.themeAttribute?.setX(i, this.theme.sample(this.cells[i], time));
       const slope = field(row + 0.5, lane) - field(row - 0.5, lane);
       this.dummy.position.set(
         p.x - trackX,
@@ -1337,6 +1354,8 @@ export class ArchiveScene {
       for (const inst of this.instances) inst.setMatrixAt(i, this.dummy.matrix);
     }
     for (const inst of this.instances) inst.instanceMatrix.needsUpdate = true;
+    if (this.themeAttribute) this.themeAttribute.needsUpdate = true;
+    this.appearance.setTheme(this.model, this.theme.sample(this.selectedCell, time));
     this.model.position.set(
       chosen.x - trackX,
       chosen.y + field(selectedRow, selectedLane) + this.lift.value + hoverLift(this.selectedCell),

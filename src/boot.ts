@@ -1,5 +1,6 @@
 import { bootMotion } from "./boot-motion";
 import { bootMarkContour } from "./brand";
+import { themeAmount } from "./theme-ui";
 
 const ns = "http://www.w3.org/2000/svg";
 const arc = (r: number, start: number, sweep: number, x = 960, y = 540) => {
@@ -154,7 +155,7 @@ export class BootSequence {
     this.opacity(".welcome-panel", s.welcomePanel);
     this.opacity(".welcome-heading", 1);
     this.el(".welcome-heading").style.color =
-      `rgb(${255 * (1 - s.welcomeInk)} ${255 * (1 - s.welcomeInk)} ${255 * (1 - s.welcomeInk)})`;
+      themeAmount > .0001 ? "var(--theme-ink)" : `rgb(${255 * (1 - s.welcomeInk)} ${255 * (1 - s.welcomeInk)} ${255 * (1 - s.welcomeInk)})`;
     this.opacity(".welcome-company", s.companyVisible);
     this.el(".welcome-company").style.opacity = String(
       s.companyVisible ? (s.companyMask ? 0.65 : 1) : 0,
