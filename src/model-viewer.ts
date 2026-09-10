@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { disposeThreeTree } from "./three-resources";
 import { themeEnvironment } from "./theme-material";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { createArchiveLighting } from "./archive-lighting";
@@ -35,6 +36,17 @@ export class ModelViewer {
   private pipeline: ReturnType<typeof createViewerPipeline>;
   private quality = normalizeQuality(undefined);
   private superPerformance = false;
+  dispose() {
+    this.request++;
+    if (this.isOpen) this.finishClose();
+    this.controls.dispose();
+    disposeThreeTree(this.scene);
+    for (const pass of this.pipeline.composer.passes) pass.dispose();
+    this.pipeline.composer.dispose();
+    this.renderer.dispose();
+    this.renderer.forceContextLoss();
+    this.root.remove();
+  }
   setSuperPerformance(enabled: boolean) {
     if (this.superPerformance === enabled) return;
     this.superPerformance = enabled;

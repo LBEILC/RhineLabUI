@@ -39,6 +39,7 @@ import { ARRAY_OPENING_END, openingShowsDetail } from "./wallpaper-opening";
 import { paintTheme, themeSettingsMarkup } from "./theme-ui";
 let playground: ArchivePlayground | undefined;
 import { WallpaperEffects } from "./wallpaper-effects";
+import { WallpaperBackground } from "./wallpaper-background";
 let wallpaperEffects: WallpaperEffects | undefined;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
@@ -79,7 +80,7 @@ $("#stage").innerHTML = `
     <article id="detail-content" class="detail-content"></article>
   </section>
   <div class="powered">POWERED BY <b>RHINE LAB</b><i></i></div>
-  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
+  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED${isWallpaper ? '<button type="button" class="three-toggle" data-action="toggle-three" aria-pressed="true" title="卸载三维模型，保留 2D 界面">3D 开启</button>' : ''}</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="pwa-update-notice" class="pwa-update-notice" role="status" hidden><span>新版本已就绪</span><button data-pwa-action="update">更新并重启 ↻</button></div>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
   <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i></div>
@@ -223,7 +224,10 @@ if (entry) {
   if (prefs.music) void audio.prepareMusic().catch(() => { /* Entry offers retry. */ });
 }
 let audioPreview = false, audioPreviewRequest = 0;
-let scene: ArchiveScene;
+let scene: ArchiveScene | undefined;
+let threeState: "on" | "closing" | "off" | "loading" = "on";
+let resumeCell: { lane: number; row: number } | undefined;
+let resumeSelection = -1;
 let viewer: ModelViewer | undefined;
 const accessLog: { id: string; time: string }[] = [];
 const columnMemory = archiveColumns.map((_, lane) => columnFiles(lane)[0]);
@@ -265,6 +269,7 @@ function savePrefs() {
   selectedCode.update({ animated: !prefs.reduced && mode === "archive" });
   hoverCode.update({ animated: !prefs.reduced && mode === "archive" });
   $("#stage").classList.toggle("reduce-motion", prefs.reduced);
+  syncWallpaperBackground();
 }
 let previousLayout = "";
 function fit() {
@@ -365,6 +370,11 @@ function setMode(next: Mode) {
   if (next === "detail" && previousMode !== "detail") {
     renderDetail();
     pendingDetailFocus = true;
+    if (!scene) {
+      $("#detail-content").style.opacity = "1";
+      $("#detail-content").style.translate = "0 0";
+      $("#detail-content").inert = false;
+    }
   }
 }
 function select(index: number, navigation?: ArchiveNavigation) {
@@ -448,7 +458,7 @@ function replayBootAfterModal(forcePreview: boolean) {
   lastStep = "";
   setMode(prefs.reduced && !forcePreview ? "archive" : "boot");
   audio.restartBoot();
-  scene.select(0);
+  scene?.select(0);
   selected = 0;
   updateSelection();
   if (!forcePreview) audio.play("ui-tick");
@@ -496,7 +506,7 @@ function renderDetail() {
   <div class="detail-footnote"><a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">设定参考 ↗</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
   $("#detail-content").setAttribute("tabindex", "-1");
   $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.id)));
-  documentDecryption.reset($("#detail-content"), prefs.reduced || scene.decryptionFrame.phase === "clear");
+  documentDecryption.reset($("#detail-content"), prefs.reduced || !scene || scene.decryptionFrame.phase === "clear");
   setTab(activeTab, false);
 }
 function overview() {
@@ -632,7 +642,8 @@ function renderResults() {
 }
 function updateQualitySummary() {
   const summary = document.querySelector("#quality-summary");
-  if (!summary || !scene) return;
+  if (!summary) return;
+  if (!scene) { summary.textContent = "3D 已关闭 · 三维模型与渲染资源已释放"; return; }
   const canvas = scene.renderer.domElement;
   const metrics = JSON.parse(canvas.parentElement?.dataset.renderQuality ?? "{}");
   summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
@@ -718,6 +729,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   const action = el.dataset.action;
+  if (action === "toggle-three") { void toggleThree(); return; }
   if (action === "sound-preview") audio.play("confirm");
   if (action === "skip") {
     setMode("archive");
@@ -728,7 +740,8 @@ document.addEventListener("click", (e) => {
   if (action === "column-prev") stepColumn(-1);
   if (action === "column-next") stepColumn(1);
   if (action === "open") openFile();
-  if (action === "model-viewer" && mode === "detail") {
+  if (action === "model-viewer" && mode === "detail" && scene) {
+    const activeScene = scene;
     // Safari does not always focus a button when it is tapped. Capture the
     // actual opener so closing the modal reliably restores the right control.
     el.focus({ preventScroll: true });
@@ -740,7 +753,7 @@ document.addEventListener("click", (e) => {
     viewer.open(
       records[selected].id,
       records[selected].title,
-      () => scene.createAssemblyModel(),
+      () => activeScene.createAssemblyModel(),
       prefs.reduced,
     );
     audio.play("page-open");
@@ -934,6 +947,7 @@ function frame(ms: number) {
   // The calibrated 2D opening fully covers the scene until array entry.
   if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
   viewer?.update(time);
+  if (threeState === "closing" && scene?.presentationHidden) releaseThree();
   playground?.position();
   if (scene && mode === "detail") {
     documentDecryption.update(time, scene.decryptionFrame, prefs.reduced);
@@ -947,8 +961,9 @@ function frame(ms: number) {
     }
   }
   $("#stage").style.setProperty("--detail-shade", String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0));
-  if (scene) inspectionOverlay.render(scene.decryptionFrame,
-    (x, y) => scene.projectCard(x, y), Boolean(cinema));
+  const currentScene = scene;
+  if (currentScene) inspectionOverlay.render(currentScene.decryptionFrame,
+    (x, y) => currentScene.projectCard(x, y), Boolean(cinema));
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
     $("#clock").textContent = new Date().toLocaleTimeString("en-GB");
@@ -959,25 +974,12 @@ function frame(ms: number) {
     frameStart = ms;
     frameCount = 0;
     $("#three-scene").dataset.fps = String(Math.round(fps));
-    $("#three-scene").dataset.renderStats = JSON.stringify(scene?.getStats());
+    $("#three-scene").dataset.renderStats = JSON.stringify(scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 });
   }
   requestAnimationFrame(frame);
 }
-async function start() {
-  try {
-    scene = new ArchiveScene($("#three-scene"));
-    scene.setTheme(prefs.colorTheme === "dark", true);
-    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
-    await Promise.all([
-      scene.load(),
-      // With unicode-range faces, preload the opening's actual characters,
-      // not every font shard. Other archive text loads on demand.
-      document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
-      document.fonts.load("400 20px MiSans", "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE"),
-      document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
-      document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
-    ]);
-    scene.select(selected);
+function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
+    scene.select(selected, cell ? { cell } : undefined);
     scene.onSelect = (i, cell) => {
       if (mode !== "archive" || modal || viewer?.isOpen) return;
       select(i, cell ? { cell } : undefined);
@@ -1006,6 +1008,85 @@ async function start() {
       hoverCode.update({ animated });
       hoverTitle.update({ animated });
     };
+}
+function syncThreeButton() {
+  $("#stage").dataset.threeState = threeState;
+  syncWallpaperBackground();
+  const button = document.querySelector<HTMLButtonElement>('[data-action="toggle-three"]');
+  if (!button) return;
+  button.textContent = threeState === "loading" ? "3D 载入中…" : threeState === "closing" ? "3D 关闭中…" : threeState === "off" ? "3D 关闭" : "3D 开启";
+  button.disabled = threeState === "loading";
+  button.setAttribute("aria-pressed", String(threeState === "on"));
+  button.title = threeState === "off" ? "重新载入三维模型" : threeState === "closing" ? "取消关闭，恢复三维画面" : "卸载三维模型，保留 2D 界面";
+}
+function releaseThree() {
+  if (!scene) return;
+  resumeCell = { ...scene.getStats().selectedCell }; resumeSelection = selected;
+  viewer?.dispose(); viewer = undefined;
+  scene.dispose(); scene = undefined;
+  if (mode === "detail") {
+    $("#detail-content").style.opacity = "1";
+    $("#detail-content").style.translate = "0 0";
+    $("#detail-content").inert = false;
+    documentDecryption.reset($("#detail-content"), true);
+  }
+  threeState = "off"; syncThreeButton();
+  $("#hover-label").hidden = true;
+  delete $("#three-scene").dataset.renderQuality;
+  updateQualitySummary();
+}
+async function toggleThree() {
+  if (!isWallpaper || !ready || threeState === "loading") return;
+  if (threeState === "closing") {
+    scene?.setPresentationVisible(true, prefs.reduced);
+    threeState = "on"; syncThreeButton(); return;
+  }
+  if (scene) {
+    playground?.stop();
+    threeState = "closing"; syncThreeButton();
+    scene.setPresentationVisible(false, prefs.reduced);
+    if (prefs.reduced) releaseThree();
+    return;
+  }
+  threeState = "loading"; syncThreeButton();
+  let next: ArchiveScene | undefined;
+  try {
+    next = new ArchiveScene($("#three-scene"));
+    next.renderer.domElement.style.opacity = "0";
+    next.setPresentationVisible(false, true);
+    await next.load();
+    next.setMode(mode === "detail" ? "detail" : "archive");
+    bindScene(next, resumeSelection === selected ? resumeCell : undefined);
+    next.revealImmediately();
+    scene = next;
+    scene.setTheme(prefs.colorTheme === "dark", true);
+    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    savePrefs();
+    scene.setPresentationVisible(true, prefs.reduced);
+    threeState = "on"; syncThreeButton();
+  } catch (error) {
+    next?.dispose(); scene = undefined;
+    threeState = "off"; syncThreeButton();
+    notify("三维模型载入失败，请点击 3D 关闭重试。");
+    console.error(error);
+  }
+}
+
+async function start() {
+  try {
+    scene = new ArchiveScene($("#three-scene"));
+    scene.setTheme(prefs.colorTheme === "dark", true);
+    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    await Promise.all([
+      scene.load(),
+      // With unicode-range faces, preload the opening's actual characters,
+      // not every font shard. Other archive text loads on demand.
+      document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
+      document.fonts.load("400 20px MiSans", "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE"),
+      document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
+      document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
+    ]);
+    bindScene(scene);
     savePrefs();
     ready = true;
     select(0);
@@ -1059,6 +1140,10 @@ function completeStartup(silent: boolean) {
   setTimeout(() => void initPwa(notify), 1500);
 }
 updateSelection();
+const customBackground = isWallpaper ? new WallpaperBackground($("#stage"), notify) : undefined;
+function syncWallpaperBackground() {
+  customBackground?.update(wallpaperHost()?.properties ?? {}, threeState === "off" || threeState === "loading", prefs.reduced);
+}
 if (isWallpaper) {
   const apply = (properties: WallpaperProperties) => {
     const theme = properties.colortheme?.value;
@@ -1145,6 +1230,7 @@ Object.assign(window, {
     select: (i: number) => select(i),
     stats: () => ({
       ...scene?.getStats(),
+      threeState,
       fps: Math.round(fps),
       mode,
       ready,

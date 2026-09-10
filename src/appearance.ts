@@ -10,6 +10,10 @@ type Palette = { high: Surface; low?: Surface };
 // on one mesh so transparent shells never overlap during a quality change.
 export class CardAppearance {
   private palettes = new Map<string, Palette>();
+  disposeSources() {
+    for (const palette of this.palettes.values()) { palette.high.dispose(); palette.low?.dispose(); }
+    this.palettes.clear();
+  }
 
   register(name: string, high: Surface, low?: Surface) {
     this.palettes.set(name, { high, low });
@@ -123,10 +127,10 @@ export class CardAppearance {
     });
   }
 
-  setTheme(group: THREE.Group, value: number, subduedIndex = false) {
+  setTheme(group: THREE.Group, value: number, subduedIndex: boolean | number = false) {
     group.traverse(child => {
       if (child.userData.themeAmount) child.userData.themeAmount.value = value;
-      if (child.userData.subduedIndex) child.userData.subduedIndex.value = Number(subduedIndex);
+      if (child.userData.subduedIndex) child.userData.subduedIndex.value = THREE.MathUtils.clamp(Number(subduedIndex), 0, 1);
     });
   }
 

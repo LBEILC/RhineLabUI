@@ -6,8 +6,15 @@ export class SpectrumEnvelope {
   private target = quietBands();
   private received = -Infinity;
   private audible = -Infinity;
+  private localSoundUntil = -Infinity;
+  ignoreLocalSound(until: number) {
+    if (Number.isFinite(until)) this.localSoundUntil = Math.max(this.localSoundUntil, until);
+  }
   ingest(samples: ArrayLike<number>, time: number) {
     if (samples.length !== 128) return;
+    // WE captures the wallpaper's own interaction sounds too. They cannot
+    // start music mode from silence; already-established music keeps flowing.
+    if (time <= this.localSoundUntil && this.bands.activity < .1) return;
     const band = (start: number, end: number) => {
       let energy = 0;
       for (let i = start; i < end; i++) {

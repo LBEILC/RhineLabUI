@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { ArchiveVisibility } from "./archive-visibility";
+import { disposeThreeTree } from "./three-resources";
 import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
 import { RhythmMotion, rhythmDisplacement, quietBands, type MusicBands, type RhythmStyle } from "./archive-play-motion";
@@ -53,9 +54,42 @@ const ease = (t: number) => {
   return t * t * t * (t * (t * 6 - 15) + 10);
 };
 export class ArchiveScene {
+  private inputEvents = new AbortController();
+  private presence = 1;
+  private presenceTarget = 1;
+  setPresentationVisible(visible: boolean, immediate = false) {
+    this.presenceTarget = Number(visible);
+    if (immediate) this.presence = this.presenceTarget;
+    if (!visible) this.cancelPointer();
+  }
+  get presentationHidden() { return this.presenceTarget === 0 && this.presence === 0; }
+  private presentationDrop(cell: ArchiveCell) {
+    const delay = .15 * (1 + Math.tanh((cell.row - this.selectedCell.row) * .1 + (cell.lane - this.selectedCell.lane) * .25));
+    return 35 * Math.pow(THREE.MathUtils.clamp((1 - this.presence - delay) / .7, 0, 1), 2);
+  }
+  revealImmediately() { this.reveal = this.targetReveal; }
+  dispose() {
+    this.inputEvents.abort();
+    this.cancelPointer();
+    disposeThreeTree(this.scene);
+    this.appearance.disposeSources();
+    this.model.clear();
+    this.outgoing = [];
+    this.instances = [];
+    this.assemblyTemplate?.then(disposeThreeTree).catch(() => {});
+    this.assemblyTemplate = undefined;
+    this.light.shadow.map?.dispose();
+    for (const pass of this.composer.passes) pass.dispose();
+    this.composer.dispose();
+    this.renderer.dispose();
+    this.renderer.forceContextLoss();
+    this.renderer.domElement.remove();
+    this.loaded = false;
+  }
   uiOnlyParallax = false;
   private theme = new ThemeWave();
   private subduedIndex = { value: 0 };
+  private selectedIndexOnly = false;
   private superPerformance = false;
   setSuperPerformance(enabled: boolean) {
     if (this.superPerformance === enabled) return;
@@ -76,7 +110,7 @@ export class ArchiveScene {
     }
     this.resize();
   }
-  setSelectedIndexAccent(onlySelected: boolean) { this.subduedIndex.value = Number(onlySelected); }
+  setSelectedIndexAccent(onlySelected: boolean) { this.selectedIndexOnly = onlySelected; }
   private themeAttribute?: THREE.InstancedBufferAttribute;
   get themeAmount() { return this.theme.background(performance.now() / 1000); }
   setTheme(dark: boolean, immediate = false) { this.theme.set(dark, performance.now() / 1000, this.selectedCell, immediate); }
@@ -776,6 +810,7 @@ export class ArchiveScene {
   }
   private canBrowse() {
     return (
+      this.presenceTarget === 1 &&
       this.looping &&
       !this.targetDetail &&
       this.detail < 0.2 &&
@@ -977,7 +1012,7 @@ export class ArchiveScene {
       this.setHover(null);
       canvas.setPointerCapture(e.pointerId);
       if (this.relayActive) { this.holdingArchive = false; this.dragging = false; }
-    });
+    }, { signal: this.inputEvents.signal });
     canvas.addEventListener("pointermove", (e) => {
       if (this.relayActive) {
         if (e.pointerId === activePointer) moved ||= Math.hypot(e.clientX - startX, e.clientY - startY) > 7;
@@ -1006,7 +1041,7 @@ export class ArchiveScene {
         );
         previousX = e.clientX;
       }
-    });
+    }, { signal: this.inputEvents.signal });
     canvas.addEventListener("pointerup", (e) => {
       pointers.delete(e.pointerId);
       if (e.pointerId !== activePointer) return;
@@ -1032,25 +1067,25 @@ export class ArchiveScene {
         }
       }
       reset();
-    });
+    }, { signal: this.inputEvents.signal });
     canvas.addEventListener("pointercancel", (e) => {
       pointers.delete(e.pointerId);
       if (e.pointerId === activePointer) {
         cancelled = true;
         reset();
       }
-    });
+    }, { signal: this.inputEvents.signal });
     canvas.addEventListener("lostpointercapture", (e) => {
       pointers.delete(e.pointerId);
       if (e.pointerId === activePointer) {
         cancelled = true;
         reset();
       }
-    });
+    }, { signal: this.inputEvents.signal });
     canvas.addEventListener("pointerleave", () => {
       this.pointer.set(0, 0);
       this.setHover(null);
-    });
+    }, { signal: this.inputEvents.signal });
     canvas.addEventListener(
       "wheel",
       (e) => {
@@ -1090,17 +1125,17 @@ export class ArchiveScene {
           this.navigatingDrag = false;
         }
       },
-      { passive: false },
+      { ...{ passive: false }, signal: this.inputEvents.signal },
     );
-    window.addEventListener("blur", () => this.cancelPointer());
+    window.addEventListener("blur", () => this.cancelPointer(), { signal: this.inputEvents.signal });
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) this.cancelPointer();
-    });
-    window.addEventListener("resize", () => this.cancelPointer());
+    }, { signal: this.inputEvents.signal });
+    window.addEventListener("resize", () => this.cancelPointer(), { signal: this.inputEvents.signal });
     // After multi-touch cancels capture, a finger can finish outside the canvas.
-    window.addEventListener("pointerup", (e) => pointers.delete(e.pointerId));
+    window.addEventListener("pointerup", (e) => pointers.delete(e.pointerId), { signal: this.inputEvents.signal });
     window.addEventListener("pointercancel", (e) =>
-      pointers.delete(e.pointerId),
+      pointers.delete(e.pointerId), { signal: this.inputEvents.signal }
     );
   }
   update(
@@ -1112,6 +1147,9 @@ export class ArchiveScene {
     this.last = time;
     this.clock = time;
     if (!this.loaded) return;
+    const step = this.reduced ? 1 : Math.min(elapsed, .25) / 1.1;
+    this.presence += Math.sign(this.presenceTarget - this.presence) * Math.min(step, Math.abs(this.presenceTarget - this.presence));
+    this.renderer.domElement.style.opacity = String(THREE.MathUtils.clamp(this.presence / .16, 0, 1));
     this.theme.beginFrame();
     themeEnvironment(this.scene, this.renderer, this.themeAmount);
     const blend = 1 - Math.exp(-dt * (this.reduced ? 35 : 2.8));
@@ -1213,6 +1251,10 @@ export class ArchiveScene {
     const activePlay = !cinematic && !this.targetDetail && play.enabled;
     const rhythm = this.rhythm.update(activePlay && !this.reduced ? play.bands : quietBands(), time, dt, this.rhythmStyle);
     this.flatMix += ((activePlay ? play.flatten : 0) - this.flatMix) * (this.reduced ? 1 : 1 - Math.exp(-dt * 4));
+    this.subduedIndex.value = Math.max(Number(this.selectedIndexOnly), this.flatMix);
+    const indexDim = (lift: number) => this.selectedIndexOnly
+      ? 1 - ease(lift / .4) * (1 - this.flatMix)
+      : this.flatMix;
     const gameTarget = activePlay ? play.target : null;
     if (gameTarget && !this.relayLifts.has(gameTarget)) this.relayLifts.set(gameTarget, 0);
     for (const [key, height] of this.relayLifts) {
@@ -1328,12 +1370,12 @@ export class ArchiveScene {
       } else damp(o.lift, 0, this.reduced ? 35 : 4.5, dt);
       o.group.position.set(
         p.x - trackX,
-        baseY + o.lift.value + hoverLift(o.cell),
+        baseY + o.lift.value + hoverLift(o.cell) - this.presentationDrop(o.cell),
         p.z + entryZ + this.rail.value,
       );
       const quality = ease(o.lift.value / 0.4);
       this.appearance.apply(o.group, quality);
-      this.appearance.setTheme(o.group, this.theme.sample(o.cell, time), this.subduedIndex.value > 0);
+      this.appearance.setTheme(o.group, this.theme.sample(o.cell, time), indexDim(o.lift.value));
       o.clarity = this.reduced ? 0 : o.clarity * Math.exp(-dt * 9);
       this.appearance.setClarity(o.group, o.clarity);
       const { row, lane } = o.cell;
@@ -1368,10 +1410,10 @@ export class ArchiveScene {
         this.pendingPulse = null;
       }
     }
-    this.appearance.setTheme(this.model, this.theme.sample(this.selectedCell, time));
+    this.appearance.setTheme(this.model, this.theme.sample(this.selectedCell, time), indexDim(this.lift.value));
     this.model.position.set(
       chosen.x - trackX,
-      chosen.y + field(selectedRow, selectedLane) + this.lift.value + hoverLift(this.selectedCell),
+      chosen.y + field(selectedRow, selectedLane) + this.lift.value + hoverLift(this.selectedCell) - this.presentationDrop(this.selectedCell),
       chosen.z + entryZ + this.rail.value,
     );
     // Extraction only changes elevation. Reframing belongs to the camera.
@@ -1562,7 +1604,7 @@ export class ArchiveScene {
       const { row, lane } = cell;
       if (hidden.has(cellKey(cell))) continue;
       const x = (lane - 2) * COLUMN_SPACING - trackX;
-      const y = -4.6 + field(row, lane) + hoverLift(cell);
+      const y = -4.6 + field(row, lane) + hoverLift(cell) - this.presentationDrop(cell);
       const z = (row - 15.5) * ROW_SPACING + entryZ + this.rail.value;
       if (!fixed && !this.visibility.intersects(x, y, z)) continue;
       const i = this.drawnCells.length;
@@ -1665,6 +1707,7 @@ export class ArchiveScene {
       loaded: this.loaded,
       drawCalls: this.renderer.info.render.calls,
       superPerformance: this.superPerformance,
+      presentation: this.presence,
       triangles: this.renderer.info.render.triangles,
       archiveCount: this.drawnCells.length,
       archiveCandidates: this.cells.length,
@@ -1711,6 +1754,10 @@ export class ArchiveScene {
       appearance: Math.round(ease(this.lift.value / 0.4) * 1000) / 1000,
       cameraDetail: Math.round(this.detail * 1000) / 1000,
       idleGain: this.idleGain,
+      flatten: this.flatMix,
+      spectrumActivity: this.playfield.bands.activity,
+      selectedIndexDim: this.model.children.find(child => child.userData.surface === "Index_Inlay")?.userData.subduedIndex?.value,
+      returningIndexDims: this.outgoing.map(o => ({ cell: o.cell, dim: o.group.children.find(child => child.userData.surface === "Index_Inlay")?.userData.subduedIndex?.value })),
       cameraDistance: this.camera.position.distanceTo(this.cameraAim),
       cameraNear: this.camera.near,
       cameraFar: this.camera.far,

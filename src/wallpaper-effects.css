@@ -10,6 +10,13 @@
   transform: var(--hud-projection, none) !important;
 }
 .screen-finish-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
+.system-footer .three-toggle { margin-left: 12px; padding: 2px 0 2px 14px; border-left: 1px solid currentColor; pointer-events: auto; white-space: nowrap; }
+.system-footer .three-toggle[aria-pressed="false"] { opacity: .65; }
+.wallpaper-background { position: absolute; inset: 0; opacity: 0; pointer-events: none; overflow: hidden; transition: opacity 650ms ease; }
+.wallpaper-background img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 650ms ease; }
+.wallpaper-background[data-reduced="true"] img { transition: none; }
+#stage:is([data-three-state="closing"], [data-three-state="off"], [data-three-state="loading"]) :is(.relay-entry, [data-action="model-viewer"], .inspection-overlay, .object-caption, #inspection-marks, #inspection-text, #hover-label) { visibility: hidden; pointer-events: none; }
+#stage:is([data-three-state="closing"], [data-three-state="loading"]) #three-scene { pointer-events: none; }
 [data-ui-frost="true"] .frost-surface { isolation: isolate; }
 .wb-time, .wb-today, .relay-heading, .relay-actions { position: relative; }
 .system-footer > .frost-surface { position: relative; }

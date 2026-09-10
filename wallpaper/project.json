@@ -770,6 +770,19 @@
           }
         ],
         "condition": "renderquality.value == 'custom' && superperformance.value == false"
+      },
+      "customwallpaper": {
+        "order": 6.2,
+        "text": "关闭 3D 后显示自定义壁纸",
+        "type": "bool",
+        "value": false
+      },
+      "customwallpaperfile": {
+        "order": 6.21,
+        "text": "自定义壁纸图片",
+        "type": "file",
+        "value": "",
+        "condition": "customwallpaper.value == true"
       }
     }
   }

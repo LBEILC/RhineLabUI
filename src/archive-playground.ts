@@ -46,12 +46,15 @@ export class ArchivePlayground {
     this.marker.onclick = () => this.hit(this.round.target);
     window.addEventListener("rhine-wallpaper-properties", e => Object.assign(this.props, (e as CustomEvent<WallpaperProperties>).detail));
     Object.assign(this.props, wallpaperHost()?.properties ?? {});
+    window.addEventListener("rhine-local-sound", event => {
+      this.envelope.ignoreLocalSound((event as CustomEvent<{ until: number }>).detail.until);
+    });
     window.addEventListener("rhine-wallpaper-pause", () => { this.last = 0; });
     document.addEventListener("visibilitychange", () => { this.last = 0; });
   }
   private bool(key: string, fallback: boolean) { const v = this.props[key]?.value; return typeof v === "boolean" ? v : fallback; }
   private start() {
-    if (!this.context().enabled || !this.scene()) return;
+    if (!this.context().enabled || !this.scene() || (this.stage.dataset.threeState && this.stage.dataset.threeState !== "on")) return;
     this.closing = false;
     this.round.start(); this.previousTarget = "";
     this.score.textContent = "00";
@@ -88,7 +91,7 @@ export class ArchivePlayground {
     });
   }
   private updateEntry() {
-    const visible = this.context().enabled && !this.active && !this.closing && this.bool("showgame", true);
+    const visible = this.context().enabled && (!this.stage.dataset.threeState || this.stage.dataset.threeState === "on") && !this.active && !this.closing && this.bool("showgame", true);
     if (visible === this.entryVisible) return;
     this.entryVisible = visible;
     this.entry.inert = !visible;
@@ -138,7 +141,7 @@ export class ArchivePlayground {
     const style = this.props.selectionstyle?.value ?? "music-flat";
     const rhythm = this.props.rhythmstyle?.value;
     scene?.setRhythmStyle(rhythm === "wave" || rhythm === "lift" ? rhythm : "legacy");
-    const flatten = playing || style === "flat" ? 1 : style === "music-flat" && reactive ? bands.activity : 0;
+    const flatten = playing || style === "flat" ? 1 : style === "music-flat" && reactive && strength > 0 ? bands.activity : 0;
     scene?.setPlayfield(context.enabled, { ...bands, low: bands.low * this.musicGain, mid: bands.mid * this.musicGain, high: bands.high * this.musicGain }, strength, flatten, this.round.target, this.bool("idlebreathing", true));
     if (scene) scene.onRelayPick = key => this.hit(key);
     this.round.tick(elapsed, context.paused);

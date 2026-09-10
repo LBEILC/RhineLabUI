@@ -590,7 +590,11 @@ export class TerminalAudio {
     this.lastSound.set(type, now);
     this.voices = this.voices.filter((v) => v.end > now);
     if (this.voices.length >= 10) this.voices.shift()!.stop(now);
-    this.voices.push(synthesizeSound(c, this.effects!, type, now + 0.004, pan));
+    const voice = synthesizeSound(c, this.effects!, type, now + 0.004, pan);
+    this.voices.push(voice);
+    if (this.prefs.soundVolume > 0) window.dispatchEvent(new CustomEvent("rhine-local-sound", {
+      detail: { until: performance.now() / 1000 + Math.max(0, voice.end - now) + .2 },
+    }));
     if (type === "key") this.playedKeys++;
     if (
       ["open", "brand", "welcome", "array", "explode", "assemble"].includes(
