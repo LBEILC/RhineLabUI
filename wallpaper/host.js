@@ -1,9 +1,12 @@
 // Classic script runs before deferred modules, retaining initial host callbacks.
 window.rhineWallpaperHost = { properties: {}, fps: 30, paused: false };
+let resolveInitialWallpaperProperties;
+window.rhineWallpaperPropertiesReady = new Promise(resolve => { resolveInitialWallpaperProperties = resolve; });
 window.wallpaperPropertyListener = {
   applyUserProperties(properties) {
     Object.assign(window.rhineWallpaperHost.properties, properties);
     window.dispatchEvent(new CustomEvent("rhine-wallpaper-properties", { detail: properties }));
+    resolveInitialWallpaperProperties();
   },
   applyGeneralProperties(properties) {
     if (Number.isFinite(properties.fps) && properties.fps > 0)
@@ -14,6 +17,11 @@ window.wallpaperPropertyListener = {
     window.dispatchEvent(new Event("rhine-wallpaper-pause"));
   },
 };
+
+// A normal HTTP preview has no native property callback. The actual file-based
+// wallpaper must wait for the host, regardless of how late its callback arrives.
+if (location.protocol !== "file:" && typeof window.wallpaperRegisterAudioListener !== "function")
+  setTimeout(() => resolveInitialWallpaperProperties(), 0);
 
 // Register immediately: the host may deliver media before the module is ready.
 window.rhineWallpaperMedia = {};

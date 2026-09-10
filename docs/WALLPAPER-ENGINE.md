@@ -230,3 +230,7 @@ WE「入场与画面」新增「启动时加载 3D（下次加载生效）」，
 自定义图片路径修复了宿主将盘符编码为 E%3A 后再次编码导致的读取失败；支持原始路径、编码路径与 file URL。同一路径读取失败后重新选择可重试。真实 WE 宿主验证提取的 wallpaper-2.jpg 为 3200×2000 并成功解码。
 
 验证：scripts/check-startup-2d.mjs 检查初始无 canvas/GLB 请求、2D 开场结束、手动载入、属性仅下次启动生效、默认开启与无页面异常；scripts/check-wallpaper-image.mjs 验证路径与同路径重试；scripts/check-wallpaper-image-host.mjs 验证真实宿主回调。结果位于 verification/startup-2d 和 verification/wallpaper-image。
+
+### 宿主属性到达时序修复
+
+启动必须等待 WE 首次 applyUserProperties 回调后再判断是否创建三维场景，不能将尚未收到的属性当作默认开启。真实 file 壁纸没有超时后强行加载的回退；普通 HTTP 预览无宿主时继续正常启动。此前测试只覆盖提前注入属性，现补充 1800ms 延迟回调；真实 WE 独立窗口验证关闭属性后进入 archive，canvas 与 GLB 请求均为 0（scripts/check-startup-2d-host.mjs，verification/startup-2d/host-results.json）。

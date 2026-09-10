@@ -1079,6 +1079,7 @@ async function toggleThree() {
 
 async function start() {
   try {
+    if (isWallpaper) await window.rhineWallpaperPropertiesReady;
     if (!isWallpaper || wallpaperHost()?.properties.load3donstartup?.value !== false) {
       scene = new ArchiveScene($("#three-scene"));
       scene.setTheme(prefs.colorTheme === "dark", true);

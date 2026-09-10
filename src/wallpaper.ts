@@ -3,6 +3,7 @@ if (isWallpaper) document.documentElement.dataset.wallpaper = "true";
 export type WallpaperProperties = Record<string, { value: unknown }>;
 declare global {
   interface Window {
+    rhineWallpaperPropertiesReady?: Promise<void>;
     rhineWallpaperHost?: { properties: WallpaperProperties; fps: number; paused: boolean };
   }
 }

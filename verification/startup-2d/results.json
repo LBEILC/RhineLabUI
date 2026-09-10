@@ -1,4 +1,5 @@
 {
+  "delayedHostCallbackMs": 1800,
   "noInitialCanvas": true,
   "noInitialModelRequests": true,
   "bootTo2d": true,
