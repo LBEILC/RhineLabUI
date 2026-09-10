@@ -222,3 +222,11 @@ WE 画质下拉增加「自定义」，仅此选择且超级模式关闭时显�
 - 正式名称为 Rhine Lab · 莱茵生命交互桌面，去掉“本地测试”。独立正式工程放在 Wallpaper Engine 的 myprojects/rhine-lab-workshop，保留之前本地试用工程。
 - 预览参照用户指定的 3088099655 预览的全景／局部剪辑方法，素材全部来自本工程工作台实际运行画面。最终 GIF 256×256、13.2 秒，含时钟事项、专注与明暗切换；没有将参考壁纸的图片放入发行包。
 - 发布操作和后续更新须保留 workshopid，见 docs/WORKSHOP-PUBLISH.md；预览来源与验证见 verification/WORKSHOP-PREVIEW.md。
+
+## 仅加载 2D 启动与图片路径修复
+
+WE「入场与画面」新增「启动时加载 3D（下次加载生效）」，默认开启。关闭后不创建 WebGL 场景或下载模型，2D 开场到原片 26.9 秒处直接进入组件页面；左下 3D 开关可手动加载。改变属性不会卸载当前场景。自定义图片在开场结束后出现。
+
+自定义图片路径修复了宿主将盘符编码为 E%3A 后再次编码导致的读取失败；支持原始路径、编码路径与 file URL。同一路径读取失败后重新选择可重试。真实 WE 宿主验证提取的 wallpaper-2.jpg 为 3200×2000 并成功解码。
+
+验证：scripts/check-startup-2d.mjs 检查初始无 canvas/GLB 请求、2D 开场结束、手动载入、属性仅下次启动生效、默认开启与无页面异常；scripts/check-wallpaper-image.mjs 验证路径与同路径重试；scripts/check-wallpaper-image-host.mjs 验证真实宿主回调。结果位于 verification/startup-2d 和 verification/wallpaper-image。

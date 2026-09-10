@@ -7,7 +7,6 @@
   "visibility": "public",
   "contentrating": "Everyone",
   "tags": [
-    "Game",
     "Technology"
   ],
   "general": {
@@ -37,6 +36,12 @@
       "boot": {
         "order": 2,
         "text": "启动时播放开场（下次加载生效）",
+        "type": "bool",
+        "value": true
+      },
+      "load3donstartup": {
+        "order": 2.5,
+        "text": "启动时加载 3D（下次加载生效）",
         "type": "bool",
         "value": true
       },
@@ -785,5 +790,10 @@
         "condition": "customwallpaper.value == true"
       }
     }
-  }
+  },
+  "workshopid": "3799142774",
+  "workshopurl": "steam://url/CommunityFilePage/3799142774",
+  "ratingsex": "none",
+  "ratingviolence": "none",
+  "version": 1
 }

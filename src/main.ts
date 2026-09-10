@@ -337,6 +337,7 @@ function setMode(next: Mode) {
   }
   if (next === "detail" && mode !== "detail") recordAccess();
   mode = next;
+  syncWallpaperBackground();
   audio.setScene(next);
   if (next !== "boot" && audioPreview) {
     audioPreview = false;
@@ -876,6 +877,10 @@ const ease = (t: number) => {
   return t * t * (3 - 2 * t);
 };
 function bootFrame(t: number) {
+  if (isWallpaper && !scene && frozenTime === null && t >= 21.9) {
+    setMode("archive");
+    return undefined;
+  }
   if (isWallpaper && frozenTime === null && t >= ARRAY_OPENING_END &&
       !openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, !!workbench?.enabled)) {
     setMode("archive");
@@ -1074,11 +1079,16 @@ async function toggleThree() {
 
 async function start() {
   try {
-    scene = new ArchiveScene($("#three-scene"));
-    scene.setTheme(prefs.colorTheme === "dark", true);
-    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    if (!isWallpaper || wallpaperHost()?.properties.load3donstartup?.value !== false) {
+      scene = new ArchiveScene($("#three-scene"));
+      scene.setTheme(prefs.colorTheme === "dark", true);
+      scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    } else {
+      threeState = "off";
+      syncThreeButton();
+    }
     await Promise.all([
-      scene.load(),
+      scene?.load(),
       // With unicode-range faces, preload the opening's actual characters,
       // not every font shard. Other archive text loads on demand.
       document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
@@ -1086,7 +1096,7 @@ async function start() {
       document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
       document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
     ]);
-    bindScene(scene);
+    if (scene) bindScene(scene);
     savePrefs();
     ready = true;
     select(0);
@@ -1141,8 +1151,8 @@ function completeStartup(silent: boolean) {
 }
 updateSelection();
 const customBackground = isWallpaper ? new WallpaperBackground($("#stage"), notify) : undefined;
-function syncWallpaperBackground() {
-  customBackground?.update(wallpaperHost()?.properties ?? {}, threeState === "off" || threeState === "loading", prefs.reduced);
+function syncWallpaperBackground(retry = false) {
+  customBackground?.update(wallpaperHost()?.properties ?? {}, mode !== "boot" && (threeState === "off" || threeState === "loading"), prefs.reduced, retry);
 }
 if (isWallpaper) {
   const apply = (properties: WallpaperProperties) => {
@@ -1159,6 +1169,7 @@ if (isWallpaper) {
     if (Object.keys(properties).some(key => key === "renderquality" || key.startsWith("quality")))
       prefs.rendering = wallpaperQuality(qualityProperties, prefs.rendering);
     savePrefs();
+    if (properties.customwallpaperfile || properties.customwallpaper?.value === true) syncWallpaperBackground(true);
     if (properties.boot?.value === false && started && mode === "boot") setMode("archive");
     // Keep an already-open settings surface in sync without replacing focused controls.
     document.querySelectorAll<HTMLInputElement>("[data-pref]").forEach(input => {

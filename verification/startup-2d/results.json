@@ -1,0 +1,9 @@
+{
+  "noInitialCanvas": true,
+  "noInitialModelRequests": true,
+  "bootTo2d": true,
+  "manualLoad": true,
+  "startupOnly": true,
+  "default3d": true,
+  "errors": []
+}

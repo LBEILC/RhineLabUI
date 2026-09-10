@@ -1,4 +1,5 @@
 import type { WallpaperProperties } from "./wallpaper";
+import { wallpaperImageUrl } from "./wallpaper-image-url";
 
 /** A DOM image remains available after the WebGL contexts have been released. */
 export class WallpaperBackground {
@@ -8,6 +9,7 @@ export class WallpaperBackground {
   private released = false;
   private reduced = false;
   private image?: HTMLImageElement;
+  private failed = false;
   private root = document.createElement("div");
   constructor(parent: HTMLElement, private notify: (message: string) => void) {
     this.root.className = "wallpaper-background";
@@ -16,14 +18,15 @@ export class WallpaperBackground {
     // beneath the atmosphere and all normal interface elements.
     parent.querySelector("#three-scene")!.after(this.root);
   }
-  update(properties: WallpaperProperties, released: boolean, reduced: boolean) {
+  update(properties: WallpaperProperties, released: boolean, reduced: boolean, retry = false) {
     this.enabled = properties.customwallpaper?.value === true;
     this.released = released;
     this.reduced = reduced;
     this.root.style.transitionDuration = reduced ? "0s" : "650ms";
     const path = String(properties.customwallpaperfile?.value || "");
-    if (path !== this.path) {
+    if (path !== this.path || (retry && this.failed && path)) {
       this.path = path;
+      this.failed = false;
       const ticket = ++this.ticket;
       if (!path) { this.image?.remove(); this.image = undefined; }
       else {
@@ -47,12 +50,11 @@ export class WallpaperBackground {
         };
         next.onerror = () => {
           if (ticket !== this.ticket) return;
+          this.failed = true;
           this.image?.remove(); this.image = undefined; this.paint();
           this.notify("自定义壁纸无法读取，请在 Wallpaper Engine 属性中重新选择图片。");
         };
-        const normalized = path.replaceAll("\\", "/");
-        next.src = /^(https?:|data:|file:)/i.test(normalized) ? normalized
-          : "file:///" + normalized.replace(/^\/+/, "").split("/").map(encodeURIComponent).join("/").replace(/^([A-Za-z])%3A/, "$1:");
+        next.src = wallpaperImageUrl(path);
       }
     }
     this.paint();

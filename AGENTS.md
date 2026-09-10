@@ -230,3 +230,5 @@ WE 画质下拉增加「自定义」，仅此选择且超级模式关闭时显�
 - 正式名称为 Rhine Lab · 莱茵生命交互桌面，去掉“本地测试”。独立正式工程放在 Wallpaper Engine 的 myprojects/rhine-lab-workshop，保留之前本地试用工程。
 - 预览参照用户指定的 3088099655 预览的全景／局部剪辑方法，素材全部来自本工程工作台实际运行画面。最终 GIF 256×256、13.2 秒，含时钟事项、专注与明暗切换；没有将参考壁纸的图片放入发行包。
 - 发布操作和后续更新须保留 workshopid，见 docs/WORKSHOP-PUBLISH.md；预览来源与验证见 verification/WORKSHOP-PREVIEW.md。
+
+- 用户要求增加「启动时加载 3D」WE 属性，默认开启；关闭时只播放前段 2D 入场并进入组件页，不创建三维场景，左下可手动加载。属性下次加载生效。自定义图片在 2D 开场后显示，支持 WE 编码盘符和失败后同路径重试。见 docs/WALLPAPER-ENGINE.md。
