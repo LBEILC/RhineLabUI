@@ -71,7 +71,20 @@ export class Workbench {
     this.syncVisibility();
     this.syncElements();
   }
-  syncVisibility() { this.root.hidden = !this.enabled || this.stage.dataset.mode === "boot"; }
+  syncVisibility() {
+    const hidden = !this.enabled || this.stage.dataset.mode === "boot";
+    const entering = this.root.hidden && !hidden;
+    this.root.hidden = hidden;
+    if (entering) {
+      const reduced = this.stage.classList.contains("reduce-motion");
+      [".wb-time", ".wb-today", ".wb-module", ".wb-nav"].forEach((selector, i) => {
+        const element = this.root.querySelector<HTMLElement>(selector)!;
+        element.getAnimations().forEach(a => a.cancel());
+        if (!reduced) element.animate([{ opacity: 0, transform: "translateY(9px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: 460, delay: 60 + i * 65, easing: "cubic-bezier(.22,.7,.2,1)", fill: "backwards" });
+      });
+    }
+  }
   select(lane: number) {
     this.lane = Math.max(0, Math.min(4, lane));
     this.renderPanel();

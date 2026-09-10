@@ -1,0 +1,10 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>入场比例验证</title><style>body{font:14px system-ui;background:#b6b3ad;margin:10px}header{display:flex;gap:8px;margin-bottom:10px}button{padding:8px}iframe{display:block;border:0;width:960px;height:540px}output{display:block;margin:8px}</style>
+<header><button data-size="960,540">16:9</button><button data-size="1050,450">超宽屏</button><button data-size="800,600">4:3</button><button data-size="360,640">竖屏</button><button data-shot="11">身份验证</button><button data-shot="15">圆环</button><button data-shot="20">欢迎</button><button data-shot="25.6">阵列</button><button id="short">播放短入场衔接</button></header><output></output><iframe src="/?scene=archive" title="自适应入场"></iframe>
+<script>
+const f=document.querySelector('iframe'),o=document.querySelector('output');let timer;
+function show(time=15){const w=f.contentWindow;clearTimeout(timer);w.wallpaperPropertyListener.setPaused(false);w.rhine.seek(time);timer=setTimeout(()=>{w.wallpaperPropertyListener.setPaused(true);report()},450)}
+function report(){const d=f.contentDocument,s=d.querySelector('#stage'),r=s.getBoundingClientRect();o.textContent=`画布 ${Math.round(r.width)}×${Math.round(r.height)} / 视口 ${f.clientWidth}×${f.clientHeight} · ${s.dataset.layout} · 字幕 ${!!d.querySelector('#cinema-caption')} · ${s.dataset.mode}`}
+f.onload=()=>{f.contentWindow.wallpaperPropertyListener.applyUserProperties({desktopmode:{value:'workbench'},music:{value:false},sound:{value:false},reduced:{value:false}});setTimeout(()=>show(),1000)};
+document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{const [w,h]=b.dataset.size.split(',');f.style.width=w+'px';f.style.height=h+'px';show()});document.querySelectorAll('[data-shot]').forEach(b=>b.onclick=()=>show(+b.dataset.shot));
+document.querySelector('#short').onclick=()=>{clearTimeout(timer);const w=f.contentWindow;w.wallpaperPropertyListener.setPaused(false);w.rhine.seek(24.8);timer=setTimeout(report,3500)};
+</script></html>

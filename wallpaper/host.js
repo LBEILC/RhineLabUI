@@ -17,6 +17,16 @@ window.wallpaperPropertyListener = {
 
 // Register immediately: the host may deliver media before the module is ready.
 window.rhineWallpaperMedia = {};
+window.rhineWallpaperSpectrum = { samples: [], time: 0 };
+if (typeof window.wallpaperRegisterAudioListener === "function") {
+  window.wallpaperRegisterAudioListener(function wallpaperAudioListener(samples) {
+    if (!samples || samples.length !== 128) return;
+    window.rhineWallpaperSpectrum = {
+      samples: Array.from(samples, function (value) { return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0; }),
+      time: performance.now() / 1000,
+    };
+  });
+}
 for (const kind of ["Status", "Properties", "Thumbnail", "Playback", "Timeline"]) {
   const register = window["wallpaperRegisterMedia" + kind + "Listener"];
   if (typeof register === "function") register(function (event) {

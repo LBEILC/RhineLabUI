@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { musicDisplacement, quietBands, type MusicBands } from "./archive-play-motion";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createArchiveLighting, type LightingLook } from "./archive-lighting";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -50,6 +51,42 @@ const ease = (t: number) => {
   return t * t * t * (t * (t * 6 - 15) + 10);
 };
 export class ArchiveScene {
+  private playfield = { enabled: false, bands: quietBands(), strength: 1, flatten: 0, target: null as string | null };
+  private flatMix = 0;
+  private relayLifts = new Map<string, number>();
+  private relayPoints = new Map<string, { cell: ArchiveCell; point: THREE.Vector3 }>();
+  private relayActive = false;
+  onRelayPick?: (key: string | null) => void;
+  setPlayfield(enabled: boolean, bands: MusicBands, strength: number, flatten: number, target: string | null) {
+    this.playfield = { enabled, bands, strength, flatten, target };
+  }
+  setRelayActive(active: boolean) {
+    if (active === this.relayActive) return;
+    this.cancelPointer(); this.setHover(null); this.relayActive = active;
+    this.pointer.set(0, 0);
+  }
+  relayPulse(key: string) {
+    const cell = this.relayPoints.get(key)?.cell;
+    if (cell && !this.reduced) this.emitPulse(cell);
+  }
+  projectRelay(key: string) {
+    const item = this.relayPoints.get(key);
+    if (!item) return null;
+    const point = item.point.clone().project(this.camera);
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    return { x: rect.left + (point.x + 1) * rect.width / 2, y: rect.top + (1 - point.y) * rect.height / 2 };
+  }
+  relayCandidates() {
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    this.scene.updateMatrixWorld(true);
+    return [...this.relayPoints.keys()].filter(key => {
+      const p = this.projectRelay(key)!;
+      const x = (p.x - rect.left) / rect.width, y = (p.y - rect.top) / rect.height;
+      if (x < .18 || x > .82 || y < .32 || y > .76) return false;
+      const hit = this.pickCell(p.x, p.y);
+      return hit && cellKey(hit) === key;
+    });
+  }
   readonly renderer: THREE.WebGLRenderer;
   readonly scene = new THREE.Scene();
   // The reference uses a long lens 72–140 units from the cassette. A 0.1 near
@@ -878,8 +915,13 @@ export class ArchiveScene {
       this.archiveDrag.start(e.clientX, e.clientY, this.dragProjection(), e.timeStamp);
       this.setHover(null);
       canvas.setPointerCapture(e.pointerId);
+      if (this.relayActive) { this.holdingArchive = false; this.dragging = false; }
     });
     canvas.addEventListener("pointermove", (e) => {
+      if (this.relayActive) {
+        if (e.pointerId === activePointer) moved ||= Math.hypot(e.clientX - startX, e.clientY - startY) > 7;
+        return;
+      }
       if (activePointer !== null && e.pointerId !== activePointer) return;
       if (activePointer === null) {
         hover(e);
@@ -907,6 +949,10 @@ export class ArchiveScene {
     canvas.addEventListener("pointerup", (e) => {
       pointers.delete(e.pointerId);
       if (e.pointerId !== activePointer) return;
+      if (this.relayActive) {
+        if (!cancelled && !moved) { const cell = this.pickCell(e.clientX, e.clientY); this.onRelayPick?.(cell ? cellKey(cell) : null); }
+        reset(); return;
+      }
       if (!cancelled && browse && this.canBrowse()) {
         moveArchive(e);
         if (this.archiveDrag.active) {
@@ -947,6 +993,7 @@ export class ArchiveScene {
     canvas.addEventListener(
       "wheel",
       (e) => {
+        if (this.relayActive) { e.preventDefault(); return; }
         if (
           !this.canBrowse() ||
           activePointer !== null ||
@@ -1112,6 +1159,15 @@ export class ArchiveScene {
       this.targetDetail || this.returnY !== null || aligningCopy ? 0 : 1,
       1 - Math.exp(-dt * 8),
     );
+    const play = this.playfield;
+    const activePlay = !cinematic && !this.targetDetail && play.enabled;
+    this.flatMix += ((activePlay ? play.flatten : 0) - this.flatMix) * (this.reduced ? 1 : 1 - Math.exp(-dt * 4));
+    const gameTarget = activePlay ? play.target : null;
+    if (gameTarget && !this.relayLifts.has(gameTarget)) this.relayLifts.set(gameTarget, 0);
+    for (const [key, height] of this.relayLifts) {
+      const next = height + ((key === gameTarget ? .95 : 0) - height) * (this.reduced ? 1 : 1 - Math.exp(-dt * 8));
+      if (next < .001 && key !== gameTarget) this.relayLifts.delete(key); else this.relayLifts.set(key, next);
+    }
     const field = (row: number, lane: number) => {
       if (cinematic)
         return cinematicField(
@@ -1134,6 +1190,7 @@ export class ArchiveScene {
           time,
         ) *
           this.idleGain;
+      let pulseHeight = 0;
       if (!cinematic && !this.reduced) {
         let ripple = 0;
         for (const p of this.pulses) {
@@ -1143,13 +1200,15 @@ export class ArchiveScene {
             this.selectionPulse(distance, age) *
             (this.deferSelectionPulse ? rippleEnvelope(distance, age) : 1);
         }
-        height += THREE.MathUtils.clamp(ripple, -0.6, 0.6) * this.pulseGain;
+        pulseHeight = THREE.MathUtils.clamp(ripple, -0.6, 0.6) * this.pulseGain;
       }
       const distance = row - this.shoulder.value;
       return (
-        height +
+        (height +
         settlingWave(distance, 26.56) *
-          columnStrength(lane, this.laneFocus.value)
+          columnStrength(lane, this.laneFocus.value)) * (1 - this.flatMix) + pulseHeight +
+        (activePlay && !this.reduced ? musicDisplacement(row, lane, time, play.bands, play.strength) : 0) +
+        (this.relayLifts.get(cellKey({ row, lane })) ?? 0)
       );
     };
     const selectedBase = chosen.y + field(selectedRow, selectedLane);
@@ -1170,7 +1229,7 @@ export class ArchiveScene {
                     Math.abs(o.cell.row - selectedRow) < 5,
                 )
               ? 0
-              : 0.4 * this.targetReveal,
+              : 0.4 * this.targetReveal * (1 - this.flatMix),
           this.reduced
             ? 35
             : this.deferSelectionPulse &&
@@ -1256,6 +1315,7 @@ export class ArchiveScene {
     // a missing file for one frame at the ownership handoff.
     const hidden = new Set(this.outgoing.map((o) => cellKey(o.cell)));
     hidden.add(cellKey(this.selectedCell));
+    this.relayPoints.clear();
     for (let i = 0; i < this.positions.length; i++) {
       const p = this.positions[i];
       const { row, lane } = this.cells[i];
@@ -1273,6 +1333,7 @@ export class ArchiveScene {
           : 1,
       );
       this.dummy.updateMatrix();
+      if (play.enabled && !hidden.has(cellKey(this.cells[i]))) this.relayPoints.set(cellKey(this.cells[i]), { cell: { ...this.cells[i] }, point: new THREE.Vector3(0, 3.5, 0).applyMatrix4(this.dummy.matrix) });
       for (const inst of this.instances) inst.setMatrixAt(i, this.dummy.matrix);
     }
     for (const inst of this.instances) inst.instanceMatrix.needsUpdate = true;
@@ -1305,6 +1366,9 @@ export class ArchiveScene {
       7.33,
       settle,
     );
+    const responsiveOpening = Boolean(cinematic) && this.container.closest<HTMLElement>("[data-layout]")?.dataset.layout === "opening";
+    const openingAspect = responsiveOpening ? this.container.clientWidth / this.container.clientHeight / (16 / 9) : 1;
+    const openingSpan = (value: number) => value / Math.min(1, openingAspect);
     const distance = THREE.MathUtils.lerp(
       THREE.MathUtils.lerp(28 + 7 * orbit, 140, settle),
       72,
@@ -1358,13 +1422,13 @@ export class ArchiveScene {
       const up = new THREE.Vector3()
         .crossVectors(viewDirection, right)
         .normalize();
-      const pixelScale = 1080 / span;
+      const pixelScale = 1080 / openingSpan(span);
       const anchorAim = this.model.position
         .clone()
         .add(new THREE.Vector3(-2.5, 3.7, 0));
       anchorAim.addScaledVector(
         right,
-        -(THREE.MathUtils.lerp(840, 518, pan) - 960) / pixelScale,
+        -(THREE.MathUtils.lerp(840, 518, pan) - 960) * openingAspect / pixelScale,
       );
       anchorAim.addScaledVector(
         up,
@@ -1385,7 +1449,7 @@ export class ArchiveScene {
         287,
         close,
       );
-      const pixelScale = 1080 / THREE.MathUtils.lerp(span, 5.9, detail);
+      const pixelScale = 1080 / openingSpan(THREE.MathUtils.lerp(span, 5.9, detail));
       const right = new THREE.Vector3()
         .crossVectors(new THREE.Vector3(0, 1, 0), viewDirection)
         .normalize();
@@ -1395,7 +1459,7 @@ export class ArchiveScene {
       const anchorAim = this.model.position
         .clone()
         .add(new THREE.Vector3(-2.5, 3.7, 0));
-      anchorAim.addScaledVector(right, -(screenX - 960) / pixelScale);
+      anchorAim.addScaledVector(right, -(screenX - 960) * openingAspect / pixelScale);
       anchorAim.addScaledVector(up, -(540 - screenY) / pixelScale);
       cameraAim.lerp(anchorAim, ease((shot - 27.3) / 0.5));
     }
@@ -1438,7 +1502,7 @@ export class ArchiveScene {
     this.camera.fov = THREE.MathUtils.lerp(
       this.camera.fov,
       THREE.MathUtils.radToDeg(
-        2 * Math.atan((cinematic ? THREE.MathUtils.lerp(span, 5.9, detail) : framing.span) / (2 * distance)),
+        2 * Math.atan((cinematic ? openingSpan(THREE.MathUtils.lerp(span, 5.9, detail)) : framing.span) / (2 * distance)),
       ),
       cameraBlend,
     );

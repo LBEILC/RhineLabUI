@@ -9,7 +9,7 @@ import "@kitlangton/rolling-number/styles.css";
 import "./style.css";
 import "./quality-settings.css";
 import "./responsive.css";
-import { viewportLayout } from "./viewport-layout";
+import { viewportLayout, openingLayout } from "./viewport-layout";
 import { assetUrl } from "./asset-url";
 import { initPwa, pwaSettingsMarkup } from "./pwa";
 import { createRollingNumber, createRollingText } from "@kitlangton/rolling-number";
@@ -33,6 +33,9 @@ import "./startup.css";
 import "./wallpaper.css";
 import { Workbench } from "./workbench";
 let workbench: Workbench | undefined;
+import { ArchivePlayground } from "./archive-playground";
+import { ARRAY_OPENING_END, openingShowsDetail } from "./wallpaper-opening";
+let playground: ArchivePlayground | undefined;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
@@ -56,7 +59,6 @@ $("#stage").innerHTML = `
     <div class="scan"><svg viewBox="0 0 1920 1080" aria-hidden="true"><g fill="none" stroke="#080a08" stroke-width="2" stroke-linecap="round"><path/><path stroke="#fff"/><path/><path/><path/><path/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="scan-core" cx="960" cy="540" r="5" fill="#080a08" stroke="none"/></g></svg><span>PERMISSION AUTHORIZED</span></div>
     <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>RHINE LAB.LLC.</strong><strong class="welcome-highlight" aria-hidden="true">RHINE LAB.LLC.</strong></div><div class="welcome-database">INTERNAL DATABASE</div><div class="welcome-logo">${logo}</div></div>
   </section>
-  <div id="cinema-caption" class="cinema-caption"></div>
   <svg id="inspection-marks" viewBox="0 0 1920 1080" aria-hidden="true"><path id="inspection-lines"/><g id="inspection-corners"></g><circle id="inspection-point" r="1.8"/></svg>
   <div id="inspection-text" aria-hidden="true">CONFIDENTIALITY:<strong>GENERAL BUSINESS USE</strong></div>
   <section id="archive-ui" class="archive-ui" aria-label="档案选择">
@@ -193,7 +195,9 @@ const rollingTitles = [selectionTitle, columnTitle, hoverTitle, categoryTitle, c
 const selectedCode = createRollingNumber($("#selected-code"), codeOptions);
 const hoverCode = createRollingNumber($("#hover-code"), codeOptions);
 const audio = new TerminalAudio();
-audio.configure(prefs);
+let musicSuppressed = false;
+function configureAudio() { audio.configure({ ...prefs, music: prefs.music && !musicSuppressed }); }
+configureAudio();
 const reviewEntry = reviewParams.has("scene") || reviewParams.has("time") || reviewParams.get("review") === "1";
 let started = false;
 const loading = $("#loading");
@@ -227,7 +231,7 @@ function saveAudioPrefs() {
   try {
     localStorage.setItem("rhine-settings", JSON.stringify(prefs));
   } catch {}
-  audio.configure(prefs);
+  configureAudio();
 }
 function savePrefs() {
   saveAudioPrefs();
@@ -255,7 +259,10 @@ function fit() {
   const stage = $("#stage");
   const viewport = $("#viewport");
   const coarse = matchMedia("(pointer: coarse)").matches;
-  const { width, height, scale, kind } = viewportLayout(viewport.clientWidth, viewport.clientHeight, coarse, mode === "boot");
+  const reference = reviewParams.has("time") || reviewParams.get("review") === "1";
+  const { width, height, scale, kind } = mode === "boot" && !reference
+    ? openingLayout(viewport.clientWidth, viewport.clientHeight)
+    : viewportLayout(viewport.clientWidth, viewport.clientHeight, coarse, mode === "boot");
   stage.style.width = `${width}px`;
   stage.style.height = `${height}px`;
   stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
@@ -263,6 +270,10 @@ function fit() {
   stage.dataset.touch = String(coarse);
   viewport.dataset.mobileBoot = String(mode === "boot" && (coarse || viewport.clientWidth < 1100));
   stage.style.setProperty("--stage-scale", String(scale));
+  stage.style.setProperty("--opening-width", `${width}px`);
+  stage.style.setProperty("--opening-height", `${height}px`);
+  stage.style.setProperty("--opening-scan-scale", String(Math.min(1, width / 1920)));
+  stage.dataset.openingPortrait = String(width < height);
   // The software keyboard resizes dialogs without recomposing the 3D scene.
   const visible = window.visualViewport;
   const stageTop = (viewport.clientHeight - height * scale) / 2;
@@ -313,7 +324,7 @@ function setMode(next: Mode) {
   if (next !== "boot" && audioPreview) {
     audioPreview = false;
     audioPreviewRequest++;
-    audio.configure(prefs);
+    configureAudio();
   }
   $("#stage").dataset.mode = next;
   workbench?.syncVisibility();
@@ -338,7 +349,6 @@ function setMode(next: Mode) {
     bootSequence.reset();
     $(".file-title").firstChild!.textContent = "FILE NUMBER: ";
     $("#stage").dataset.boot = "done";
-    $("#cinema-caption").textContent = "";
   }
   if (next === "detail" && previousMode !== "detail") {
     renderDetail();
@@ -755,6 +765,11 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (!started) return;
   if (viewer?.isOpen) return;
+  if (playground?.active && !modal) {
+    if (e.key === "Escape") { e.preventDefault(); playground.stop(); }
+    else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "/"].includes(e.key) && !(e.target instanceof HTMLButtonElement)) e.preventDefault();
+    return;
+  }
   if (modalClosing) {
     e.preventDefault();
     return;
@@ -833,38 +848,27 @@ const ease = (t: number) => {
   return t * t * (3 - 2 * t);
 };
 function bootFrame(t: number) {
+  if (isWallpaper && frozenTime === null && t >= ARRAY_OPENING_END &&
+      !openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, !!workbench?.enabled)) {
+    setMode("archive");
+    return undefined;
+  }
   audio.updateBoot(t, frozenTime !== null);
   const motion = bootSequence.update(t);
   let step: string = motion.step;
-  let caption =
-    motion.step === "auth"
-      ? t < 9.52
-        ? "身份信息确认：JOYCE MOORE"
-        : t < 11.84
-          ? "请求已接收"
-          : "开始处理"
-      : motion.step === "scan"
-        ? "权限验证通过"
-        : motion.step === "welcome"
-          ? "欢迎访问莱茵生命内部资料档案"
-          : "";
   if (t >= 22) {
     step = "array";
-    caption = "选择档案";
   }
   if (t >= 25.68) {
     step = "select";
-    caption = "编号：X-001";
   }
   if (t >= 28.3) {
     step = "inspect";
-    caption = t >= 29.3 ? "保密级别：商业区" : "编号：X-001";
   }
   if (step !== lastStep) {
     $("#stage").dataset.boot = step;
     lastStep = step;
   }
-  $("#cinema-caption").textContent = caption;
   $(".file-title").firstChild!.textContent =
     step === "array"
       ? "SELECTING FILES...".slice(0, Math.max(0, Math.floor((t - 21.94) * 18)))
@@ -899,6 +903,7 @@ function frame(ms: number) {
   if (document.hidden) { requestAnimationFrame(frame); return; }
   workbench?.tick();
   const time = ms / 1000;
+  playground?.tick(time);
   const cinema =
     mode === "boot" && ready
       ? bootFrame(frozenTime ?? time - bootStart)
@@ -906,6 +911,7 @@ function frame(ms: number) {
   // The calibrated 2D opening fully covers the scene until array entry.
   if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
   viewer?.update(time);
+  playground?.position();
   if (scene && mode === "detail") {
     documentDecryption.update(time, scene.decryptionFrame, prefs.reduced);
     $("#detail-content").style.opacity = String(scene.detailVisibility);
@@ -1072,6 +1078,9 @@ if (isWallpaper) {
   }, lane => {
     if (ready && !modal) select(columnMemory[lane]);
   });
+  playground = new ArchivePlayground($("#stage"), () => scene,
+    () => ({ enabled: !!workbench?.enabled && mode === "archive" && ready, paused: Boolean(modal) || modalClosing || Boolean(wallpaperHost()?.paused) || document.hidden, reduced: prefs.reduced }),
+    value => { musicSuppressed = value; configureAudio(); }, () => audio.play("tick"));
   document.addEventListener("click", event => {
     const button = (event.target as Element).closest<HTMLElement>("[data-workbench-mode]");
     if (button) closeModal(() => { workbench!.setEnabled(button.dataset.workbenchMode === "workbench"); });
@@ -1091,7 +1100,7 @@ Object.assign(window, {
       if (request !== audioPreviewRequest) return false;
       if (!unlocked) {
         audioPreview = false;
-        audio.configure(prefs);
+        configureAudio();
         return false;
       }
       replayBoot(true);
