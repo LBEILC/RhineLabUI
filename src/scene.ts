@@ -28,7 +28,8 @@ import {
   type ArchiveNavigation,
 } from "./archive-loop";
 import { labelMarkSvg } from "./brand";
-import { archiveFraming, swipeDirection } from "./viewport-layout";
+import { archiveFraming } from "./viewport-layout";
+import { ArchiveDrag, type DragAxis } from "./archive-drag";
 import { assetUrl as publicAsset } from "./asset-url";
 import {
   archiveWave,
@@ -102,6 +103,12 @@ export class ArchiveScene {
   private last = 0;
   private pointer = new THREE.Vector2();
   private dragging = false;
+  private hoverCell: ArchiveCell | null = null;
+  private hoverLifts = new Map<string, number>();
+  private archiveDrag = new ArchiveDrag();
+  private dragTrack: { axis: DragAxis; value: number } | null = null;
+  private navigatingDrag = false;
+  private cancelPointer = () => {};
   private rotation = 0;
   private targetRotation = 0;
   private light: THREE.DirectionalLight;
@@ -143,7 +150,7 @@ export class ArchiveScene {
     this.renderer.toneMappingExposure = 1.05;
     this.renderer.domElement.setAttribute(
       "aria-label",
-      "三维研究档案阵列，可点击选择档案",
+      "三维研究档案阵列，点击选择，左右拖动切列，上下拖动或滚轮切换列内档案",
     );
     container.appendChild(this.renderer.domElement);
     this.scene.background = new THREE.Color("#eae5e1");
@@ -424,6 +431,8 @@ export class ArchiveScene {
     };
   }
   setMode(mode: "hidden" | "archive" | "detail") {
+    this.cancelPointer();
+    this.setHover(null);
     if (mode === "detail") this.decryption.enter(this.scanBlend > .9 && this.decryption.clarity > .999);
     else this.decryption.leave();
     if (mode === "hidden") this.decryption.select();
@@ -510,6 +519,8 @@ export class ArchiveScene {
           : 0,
     };
     if (!shift.lane && !shift.row) return;
+    this.setHover(null);
+    this.hoverLifts.clear();
     this.selectedCell.lane -= shift.lane;
     this.selectedCell.row -= shift.row;
     this.coordinateOrigin.lane += shift.lane;
@@ -532,6 +543,8 @@ export class ArchiveScene {
     }
   }
   select(index: number, navigation?: ArchiveNavigation) {
+    if (!this.navigatingDrag) this.cancelPointer();
+    this.setHover(null);
     this.lastInteraction = this.clock;
     const next = fileLocation(index).slot;
     const canonical = fileLocation(index);
@@ -660,118 +673,260 @@ export class ArchiveScene {
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
   }
+  private canBrowse() {
+    return (
+      this.looping &&
+      !this.targetDetail &&
+      this.detail < 0.2 &&
+      this.reveal >= 0.8 &&
+      this.loaded &&
+      !this.container.closest("[inert]")
+    );
+  }
+  private setHover(cell: ArchiveCell | null) {
+    if (
+      (!cell && !this.hoverCell) ||
+      (cell && this.hoverCell && sameCell(cell, this.hoverCell))
+    )
+      return;
+    this.hoverCell = cell ? { ...cell } : null;
+    this.onHover?.(cell ? fileAtCell(cell) : null);
+  }
+  private pickCell(x: number, y: number) {
+    const r = this.renderer.domElement.getBoundingClientRect();
+    this.cursor.set(
+      ((x - r.left) / r.width) * 2 - 1,
+      (-(y - r.top) / r.height) * 2 + 1,
+    );
+    this.raycaster.setFromCamera(this.cursor, this.camera);
+    const hit = this.raycaster.intersectObjects(
+      [this.instances[0], this.model, ...this.outgoing.map((o) => o.group)],
+      true,
+    )[0];
+    if (!hit) return null;
+    if (hit.instanceId !== undefined) return { ...this.cells[hit.instanceId] };
+    let object: THREE.Object3D | null = hit.object;
+    while (object) {
+      const copy = this.outgoing.find((o) => o.group === object);
+      if (copy) return { ...copy.cell };
+      object = object.parent;
+    }
+    return { ...this.selectedCell };
+  }
   private bindPointer() {
     const canvas = this.renderer.domElement;
-    let startX = 0,
-      startY = 0;
-    let activePointer: number | null = null, previousX = 0, started = 0, cancelled = false;
-    const pointers = new Set<number>();
-    canvas.addEventListener("pointerdown", (e) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      pointers.add(e.pointerId);
-      if (pointers.size > 1) { cancelled = true; this.dragging = false; return; }
-      activePointer = e.pointerId;
+    let activePointer: number | null = null;
+    let previousX = 0,
+      startX = 0,
+      startY = 0,
+      moved = false;
+    let browse = false,
       cancelled = false;
-      previousX = e.clientX;
-      started = performance.now();
-      startX = e.clientX;
-      startY = e.clientY;
-      canvas.setPointerCapture(e.pointerId);
-      if (this.canInspect) {
-        this.dragging = true;
-        canvas.setPointerCapture(e.pointerId);
-      }
-    });
-    canvas.addEventListener("pointermove", (e) => {
-      if (activePointer !== null && e.pointerId !== activePointer) return;
-      if (cancelled) return;
+    let origin = { lane: 0, row: 0 };
+    let startTrack = { lane: 0, row: 0 };
+    let wheelTotal = 0,
+      wheelTime = 0;
+    const pointers = new Set<number>();
+    const hover = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse" || !this.canBrowse()) return;
       const r = canvas.getBoundingClientRect();
-      if (e.pointerType === "mouse") this.pointer.set(
+      this.pointer.set(
         (e.clientX - r.left) / r.width - 0.5,
         (e.clientY - r.top) / r.height - 0.5,
       );
-      if (this.dragging) {
-        if (!this.canInspect) {
-          this.dragging = false;
+      const cell = this.pickCell(e.clientX, e.clientY);
+      this.setHover(cell);
+      canvas.style.cursor = cell ? "pointer" : "grab";
+    };
+    const reset = () => {
+      const id = activePointer;
+      activePointer = null;
+      this.dragging = false;
+      this.dragTrack = null;
+      browse = false;
+      this.setHover(null);
+      canvas.style.cursor = this.canBrowse() ? "grab" : "default";
+      if (id !== null && canvas.hasPointerCapture(id))
+        canvas.releasePointerCapture(id);
+    };
+    this.cancelPointer = () => {
+      cancelled = true;
+      pointers.clear();
+      wheelTotal = 0;
+      reset();
+    };
+    const navigate = (value: number) => {
+      const axis = this.archiveDrag.axis;
+      if (!axis) return;
+      const goal = Math.round(origin[axis] + value);
+      this.navigatingDrag = true;
+      try {
+        // Adjacent moves retain column memory and existing loop/return rules.
+        for (let i = 0; i < 64 && this.selectedCell[axis] !== goal; i++) {
+          const before = this.selectedCell[axis];
+          this.onNavigate?.(axis, Math.sign(goal - before));
+          if (this.selectedCell[axis] === before) break;
+        }
+      } finally {
+        this.navigatingDrag = false;
+      }
+    };
+    const displayedOrigin = (axis: DragAxis) =>
+      axis === "lane"
+        ? startTrack.lane / COLUMN_SPACING + 2
+        : (-startTrack.row - 2.17) / ROW_SPACING + 15.5;
+    const moveArchive = (e: PointerEvent) => {
+      const pending = this.archiveDrag.axis === null;
+      this.archiveDrag.move(e.clientX, e.clientY, performance.now());
+      moved ||= this.archiveDrag.moved;
+      const axis = this.archiveDrag.axis;
+      if (!axis) return;
+      if (pending) {
+        origin = { ...this.selectedCell };
+        startTrack = { lane: this.columnCamera.value, row: this.rail.value };
+      }
+      this.setHover(null);
+      this.lastInteraction = this.clock;
+      canvas.style.cursor = "grabbing";
+      const spacing = axis === "lane" ? COLUMN_SPACING : -ROW_SPACING;
+      this.dragTrack = {
+        axis,
+        value: startTrack[axis] + this.archiveDrag.value * spacing,
+      };
+      const track = axis === "lane" ? this.columnCamera : this.rail;
+      track.value = this.dragTrack.value;
+      track.velocity = 0;
+      navigate(displayedOrigin(axis) - origin[axis] + this.archiveDrag.value);
+    };
+    canvas.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      if (!this.canBrowse() && !this.canInspect) return;
+      pointers.add(e.pointerId);
+      if (pointers.size > 1) {
+        cancelled = true;
+        reset();
+        return;
+      }
+      activePointer = e.pointerId;
+      cancelled = false;
+      moved = false;
+      startX = previousX = e.clientX;
+      startY = e.clientY;
+      browse = this.canBrowse();
+      this.dragging = !browse && this.canInspect;
+      origin = { ...this.selectedCell };
+      startTrack = { lane: this.columnCamera.value, row: this.rail.value };
+      const r = canvas.getBoundingClientRect();
+      this.archiveDrag.start(e.clientX, e.clientY, r.width, r.height);
+      this.setHover(null);
+      canvas.setPointerCapture(e.pointerId);
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      if (activePointer !== null && e.pointerId !== activePointer) return;
+      if (activePointer === null) {
+        hover(e);
+        return;
+      }
+      if (cancelled) return;
+      moved ||= Math.hypot(e.clientX - startX, e.clientY - startY) > 7;
+      if (browse) {
+        if (!this.canBrowse()) {
+          this.cancelPointer();
           return;
         }
+        moveArchive(e);
+        return;
+      }
+      if (this.dragging && this.canInspect) {
         this.targetRotation = THREE.MathUtils.clamp(
           this.targetRotation + (e.clientX - previousX) * 0.004,
           -0.8,
           0.8,
         );
         previousX = e.clientX;
-        return;
       }
-      if (e.pointerType !== "mouse") return;
-      if (this.reveal < 0.8 || this.detail > 0.2 || !this.loaded) return;
-      this.cursor.set(
-        ((e.clientX - r.left) / r.width) * 2 - 1,
-        (-(e.clientY - r.top) / r.height) * 2 + 1,
-      );
-      this.raycaster.setFromCamera(this.cursor, this.camera);
-      const hit = this.raycaster.intersectObjects(
-        [this.instances[0], this.model],
-        true,
-      )[0];
-      canvas.style.cursor = hit ? "pointer" : "default";
-      this.onHover?.(
-        hit
-          ? hit.instanceId !== undefined
-            ? fileAtCell(this.cells[hit.instanceId])
-            : fileAtSlot(this.selectedSlot)
-          : null,
-      );
     });
     canvas.addEventListener("pointerup", (e) => {
       pointers.delete(e.pointerId);
       if (e.pointerId !== activePointer) return;
-      activePointer = null;
-      this.dragging = false;
-      if (cancelled) return;
-      if (e.pointerType !== "mouse" && this.detail < 0.2 && this.reveal >= 0.8 && this.loaded) {
-        const swipe = swipeDirection(e.clientX - startX, e.clientY - startY, performance.now() - started);
-        if (swipe) { this.onNavigate?.(swipe.axis, swipe.direction); return; }
+      if (!cancelled && browse && this.canBrowse()) {
+        moveArchive(e);
+        if (this.archiveDrag.axis) {
+          const axis = this.archiveDrag.axis;
+          navigate(
+            displayedOrigin(axis) -
+              origin[axis] +
+              this.archiveDrag.release(performance.now(), this.reduced),
+          );
+        } else if (!moved) {
+          const cell = this.pickCell(e.clientX, e.clientY);
+          if (cell) this.onSelect?.(fileAtCell(cell), cell);
+        }
       }
-      if (
-        Math.hypot(e.clientX - startX, e.clientY - startY) > 6 ||
-        this.detail > 0.2 ||
-        this.reveal < 0.8 ||
-        !this.loaded
-      )
-        return;
-      const r = canvas.getBoundingClientRect();
-      this.cursor.set(
-        ((e.clientX - r.left) / r.width) * 2 - 1,
-        (-(e.clientY - r.top) / r.height) * 2 + 1,
-      );
-      this.raycaster.setFromCamera(this.cursor, this.camera);
-      const hit = this.raycaster.intersectObjects(
-        [this.instances[0], this.model],
-        true,
-      )[0];
-      if (hit)
-        this.onSelect?.(
-          hit.instanceId !== undefined
-            ? fileAtCell(this.cells[hit.instanceId])
-            : fileAtSlot(this.selectedSlot),
-          hit.instanceId !== undefined
-            ? { ...this.cells[hit.instanceId] }
-            : { ...this.selectedCell },
-        );
+      reset();
     });
     canvas.addEventListener("pointercancel", (e) => {
       pointers.delete(e.pointerId);
-      if (e.pointerId === activePointer) { activePointer = null; cancelled = true; this.dragging = false; }
+      if (e.pointerId === activePointer) {
+        cancelled = true;
+        reset();
+      }
     });
     canvas.addEventListener("lostpointercapture", (e) => {
       pointers.delete(e.pointerId);
-      if (e.pointerId === activePointer) { activePointer = null; this.dragging = false; }
+      if (e.pointerId === activePointer) {
+        cancelled = true;
+        reset();
+      }
     });
     canvas.addEventListener("pointerleave", () => {
       this.pointer.set(0, 0);
-      this.onHover?.(null);
+      this.setHover(null);
     });
+    canvas.addEventListener(
+      "wheel",
+      (e) => {
+        if (
+          !this.canBrowse() ||
+          activePointer !== null ||
+          e.ctrlKey ||
+          Math.abs(e.deltaX) > Math.abs(e.deltaY)
+        )
+          return;
+        e.preventDefault();
+        const now = performance.now();
+        const delta = THREE.MathUtils.clamp(
+          e.deltaY *
+            (e.deltaMode === 1
+              ? 40
+              : e.deltaMode === 2
+                ? canvas.clientHeight
+                : 1),
+          -300,
+          300,
+        );
+        if (now - wheelTime > 180 || Math.sign(delta) !== Math.sign(wheelTotal))
+          wheelTotal = 0;
+        wheelTime = now;
+        wheelTotal += delta;
+        const steps = Math.min(3, Math.floor(Math.abs(wheelTotal) / 100));
+        if (!steps) return;
+        const direction = Math.sign(wheelTotal);
+        wheelTotal -= direction * steps * 100;
+        this.navigatingDrag = true;
+        try {
+          for (let i = 0; i < steps; i++) this.onNavigate?.("row", direction);
+        } finally {
+          this.navigatingDrag = false;
+        }
+      },
+      { passive: false },
+    );
+    window.addEventListener("blur", () => this.cancelPointer());
+    window.addEventListener("resize", () => this.cancelPointer());
+    // After multi-touch cancels capture, a finger can finish outside the canvas.
+    window.addEventListener("pointerup", (e) => pointers.delete(e.pointerId));
+    window.addEventListener("pointercancel", (e) => pointers.delete(e.pointerId));
   }
   update(
     time: number,
@@ -796,7 +951,20 @@ export class ArchiveScene {
       this.scanTime += dt;
       this.scanBlend *= Math.exp(-dt * 3);
     }
-    if (this.looping && !cinematic) this.rebaseCoordinates();
+    if (!this.canBrowse()) {
+      this.setHover(null);
+      if (this.dragTrack) this.cancelPointer();
+    }
+    if (this.looping && !cinematic && !this.dragTrack) this.rebaseCoordinates();
+    const hoverKey = !cinematic && this.hoverCell ? cellKey(this.hoverCell) : null;
+    if (hoverKey && !this.hoverLifts.has(hoverKey)) this.hoverLifts.set(hoverKey, 0);
+    for (const [key, value] of this.hoverLifts) {
+      const target = key === hoverKey ? 0.28 : 0;
+      const next = cinematic ? 0 : this.reduced ? target : THREE.MathUtils.lerp(value, target, 1 - Math.exp(-dt * 14));
+      if (target === 0 && next < 0.0001) this.hoverLifts.delete(key);
+      else this.hoverLifts.set(key, next);
+    }
+    const hoverLift = (cell: ArchiveCell) => this.hoverLifts.get(cellKey(cell)) ?? 0;
     const chosen = this.cellPosition(this.selectedCell);
     const selectedRow = this.selectedCell.row;
     const selectedLane = this.selectedCell.lane;
@@ -809,6 +977,11 @@ export class ArchiveScene {
       this.reduced ? 35 : 3.7,
       dt,
     );
+    if (this.dragTrack && !cinematic) {
+      const track = this.dragTrack.axis === "lane" ? this.columnCamera : this.rail;
+      track.value = this.dragTrack.value;
+      track.velocity = 0;
+    }
     if (cinematic) {
       this.rail.value = 0;
       this.rail.velocity = 0;
@@ -960,7 +1133,7 @@ export class ArchiveScene {
       } else damp(o.lift, 0, this.reduced ? 35 : 4.5, dt);
       o.group.position.set(
         p.x - trackX,
-        baseY + o.lift.value,
+        baseY + o.lift.value + hoverLift(o.cell),
         p.z + entryZ + this.rail.value,
       );
       const quality = ease(o.lift.value / 0.4);
@@ -1009,7 +1182,7 @@ export class ArchiveScene {
       const slope = field(row + 0.5, lane) - field(row - 0.5, lane);
       this.dummy.position.set(
         p.x - trackX,
-        p.y + field(row, lane),
+        p.y + field(row, lane) + hoverLift(this.cells[i]),
         p.z + entryZ + this.rail.value,
       );
       this.dummy.rotation.set(slope * 0.024 * (1 - detail), 0, 0);
@@ -1025,7 +1198,7 @@ export class ArchiveScene {
     for (const inst of this.instances) inst.instanceMatrix.needsUpdate = true;
     this.model.position.set(
       chosen.x - trackX,
-      chosen.y + field(selectedRow, selectedLane) + this.lift.value,
+      chosen.y + field(selectedRow, selectedLane) + this.lift.value + hoverLift(this.selectedCell),
       chosen.z + entryZ + this.rail.value,
     );
     // Extraction only changes elevation. Reframing belongs to the camera.
@@ -1291,6 +1464,9 @@ export class ArchiveScene {
       selectedSlot: this.selectedSlot,
       selectedLane: Math.floor(this.selectedSlot / 32),
       selectedCell: { ...this.selectedCell },
+      hoverCell: this.hoverCell ? { ...this.hoverCell } : null,
+      hoverLifts: Object.fromEntries(this.hoverLifts),
+      dragTrack: this.dragTrack ? { ...this.dragTrack } : null,
       coordinateOrigin: { ...this.coordinateOrigin },
       poolBounds: {
         minLane: Math.min(...this.cells.map((c) => c.lane)),

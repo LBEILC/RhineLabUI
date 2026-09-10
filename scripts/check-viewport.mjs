@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { viewportLayout, archiveFraming, swipeDirection } from "../src/viewport-layout.ts";
+import { viewportLayout, archiveFraming } from "../src/viewport-layout.ts";
 import { renderDimensions, qualityPresets } from "../src/render-quality.ts";
 
 for (const [w,h,touch] of [[1920,1080,false],[2560,1080,false],[1280,1024,false],[844,390,true],[390,844,true],[320,568,true]]) {
@@ -23,9 +23,4 @@ for (const [w,h,touch] of [[1920,1080,false],[2560,1080,false],[1280,1024,false]
 assert.deepEqual(viewportLayout(1920,1080,false),{width:1920,height:1080,scale:1,kind:'desktop'});
 assert.equal(archiveFraming(1920,1080,7.33,1,false).span,5.9);
 assert.equal(archiveFraming(1920,1080,7.33,1,false).detailX,550/1920);
-assert.equal(swipeDirection(20,3,200),null);
-assert.equal(swipeDirection(60,55,200),null);
-assert.equal(swipeDirection(70,0,1500),null);
-assert.deepEqual(swipeDirection(-70,4,200),{axis:'lane',direction:1});
-assert.deepEqual(swipeDirection(4,70,200),{axis:'row',direction:-1});
-console.log('Viewport, reference framing, touch thresholds and render resolution checks passed.');
+console.log('Viewport, reference framing and render resolution checks passed.');

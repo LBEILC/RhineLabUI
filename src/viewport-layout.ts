@@ -31,11 +31,3 @@ export function archiveFraming(width: number, height: number, span: number, deta
     detailY: portrait ? 0.27 + 34 / height : compact ? 0.49 : 560 / 1080,
   };
 }
-
-export function swipeDirection(dx: number, dy: number, elapsed: number) {
-  const major = Math.max(Math.abs(dx), Math.abs(dy));
-  const minor = Math.min(Math.abs(dx), Math.abs(dy));
-  if (major < 36 || major < minor * 1.3 || elapsed > 1400) return null;
-  return { axis: Math.abs(dx) > Math.abs(dy) ? "lane" as const : "row" as const,
-    direction: (Math.abs(dx) > Math.abs(dy) ? dx : dy) < 0 ? 1 : -1 };
-}
