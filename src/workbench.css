@@ -1,5 +1,10 @@
 .workbench { position: absolute; inset: 0; z-index: 5; pointer-events: none; color: #080a08; }
 .workbench[hidden] { display: none; }
+.workbench [hidden] { display: none !important; }
+[data-workbench="true"][data-workbench-brand="false"]:not([data-mode="boot"]) > .brand,
+[data-workbench="true"][data-workbench-footer="false"]:not([data-mode="boot"]) > .system-footer,
+[data-workbench="true"][data-workbench-settings="false"]:not([data-mode="boot"]) > .system-nav { display: none; }
+.workbench[data-clock-visible="false"] .wb-today { margin-top: 0; }
 [data-workbench="true"]:not([data-mode="boot"]) :is(#archive-ui, .powered, .inspection-overlay) { visibility: hidden; pointer-events: none; }
 [data-workbench="true"] .system-nav > button:not(.settings-button) { display: none; }
 .wb-overview { position: absolute; top: 24%; left: var(--edge); width: min(29%, 400px); }

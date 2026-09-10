@@ -82,7 +82,7 @@
       },
       "desktopmode": {
         "order": 0,
-        "text": "显示模式",
+        "text": "工作模式",
         "type": "combo",
         "value": "workbench",
         "options": [
@@ -145,6 +145,48 @@
         "max": 60,
         "step": 1,
         "precision": 0
+      },
+      "showclock": {
+        "order": 20,
+        "text": "工作台：显示时钟与日期",
+        "type": "bool",
+        "value": true
+      },
+      "showtasks": {
+        "order": 21,
+        "text": "工作台：显示今日事项",
+        "type": "bool",
+        "value": true
+      },
+      "showmodule": {
+        "order": 22,
+        "text": "工作台：显示右侧功能内容",
+        "type": "bool",
+        "value": true
+      },
+      "shownavigation": {
+        "order": 23,
+        "text": "工作台：显示底部功能导航",
+        "type": "bool",
+        "value": true
+      },
+      "showbrand": {
+        "order": 24,
+        "text": "工作台：显示品牌文字",
+        "type": "bool",
+        "value": true
+      },
+      "showfooter": {
+        "order": 25,
+        "text": "工作台：显示页脚信息",
+        "type": "bool",
+        "value": true
+      },
+      "showsettings": {
+        "order": 26,
+        "text": "工作台：显示设置入口",
+        "type": "bool",
+        "value": true
       }
     }
   }

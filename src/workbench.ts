@@ -2,6 +2,7 @@ import { escapeHtml } from "./html";
 import { wallpaperHost, type WallpaperProperties } from "./wallpaper";
 import { dayKey, durationText, idleTimer, parseTarget, restoreTimer, timerLeft } from "./workbench-state";
 import "./workbench.css";
+import { defaultWorkbenchVisibility, applyVisibilityProperties, type WorkbenchVisibility, type WorkbenchElement } from "./workbench-visibility";
 
 type Media = { status?: { enabled?: boolean }; properties?: { title?: string; artist?: string; albumTitle?: string }; thumbnail?: { thumbnail?: string }; timeline?: { position?: number; duration?: number }; playing?: boolean };
 declare global { interface Window { rhineWallpaperMedia?: Media; } }
@@ -17,6 +18,7 @@ export class Workbench {
   private date = dayKey(new Date());
   private storageOK = true;
   private lastSecond = -1;
+  private visibility: WorkbenchVisibility = defaultWorkbenchVisibility();
   constructor(private stage: HTMLElement, private onMode: () => void, private onLane: (lane: number) => void) {
     try {
       const saved = JSON.parse(localStorage.getItem(key) ?? "null");
@@ -24,7 +26,7 @@ export class Workbench {
       if (saved?.date === this.date && Array.isArray(saved.done)) this.done = saved.done.filter((s: unknown) => typeof s === "string").slice(0, 3);
     } catch { this.storageOK = false; }
     stage.insertAdjacentHTML("beforeend", `<section class="workbench" hidden aria-label="桌面工作台">
-      <div class="wb-overview"><div class="wb-kicker">RHINE LAB / DAILY TERMINAL</div><time class="wb-clock"></time><div class="wb-date"></div>
+      <div class="wb-overview"><div class="wb-time"><div class="wb-kicker">RHINE LAB / DAILY TERMINAL</div><time class="wb-clock"></time><div class="wb-date"></div></div>
       <section class="wb-today"><div class="wb-heading"><h2>今日事项</h2><span class="wb-task-count"></span></div><div class="wb-tasks"></div></section></div>
       <section class="wb-module"><div class="wb-kicker">PERSONAL WORKSPACE <span class="wb-index">01 / 05</span></div><h2 class="wb-title"></h2><div class="wb-content"></div><p class="wb-storage" role="status"></p></section>
       <nav class="wb-nav" aria-label="工作台功能">${names.map((n, i) => `<button data-wb-lane="${i}" aria-pressed="false"><small>0${i + 1}</small>${n}<span>↗</span></button>`).join("")}</nav>
@@ -52,12 +54,14 @@ export class Workbench {
   private taskId(i: number) { return `${i}:${this.text(`task${i + 1}`)}`; }
   private apply(props: WallpaperProperties) {
     Object.assign(this.props, props);
+    this.visibility = applyVisibilityProperties(this.visibility, props);
     if (props.desktopmode) this.setEnabled(props.desktopmode.value === "workbench");
     // Early/partial host updates must not clear saved tasks before their text arrives.
     const previous = this.done.length;
     this.done = this.done.filter(id => [0, 1, 2].every(i => !props[`task${i + 1}`] || !id.startsWith(`${i}:`) || id === this.taskId(i)));
     if (previous !== this.done.length) this.save();
     this.renderTasks(); this.renderPanel();
+    this.syncElements();
   }
   setEnabled(value: boolean) {
     this.enabled = value;
@@ -65,6 +69,7 @@ export class Workbench {
     document.querySelectorAll<HTMLElement>("[data-workbench-mode]").forEach(button => button.setAttribute("aria-pressed", String((button.dataset.workbenchMode === "workbench") === value)));
     this.onMode();
     this.syncVisibility();
+    this.syncElements();
   }
   syncVisibility() { this.root.hidden = !this.enabled || this.stage.dataset.mode === "boot"; }
   select(lane: number) {
@@ -72,7 +77,16 @@ export class Workbench {
     this.renderPanel();
   }
   settingsMarkup() {
-    return `<div class="wb-settings"><strong>显示模式</strong><div><button data-workbench-mode="workbench" aria-pressed="${this.enabled}">桌面工作台</button><button data-workbench-mode="archive" aria-pressed="${!this.enabled}">档案展示</button></div><p>事项、日程和计时时长请在 Wallpaper Engine 属性中填写。事项完成状态按天保存，计时进度单独保留。</p></div>`;
+    return `<div class="wb-settings"><strong>工作模式</strong><div><button data-workbench-mode="workbench" aria-pressed="${this.enabled}">桌面工作台</button><button data-workbench-mode="archive" aria-pressed="${!this.enabled}">档案展示</button></div><p>事项、日程和计时时长请在 Wallpaper Engine 属性中填写。事项完成状态按天保存，计时进度单独保留。</p><p>工作台元素与设置入口的显示开关位于 Wallpaper Engine 的壁纸属性中。全部关闭后只显示档案阵列；需要恢复时从那里重新打开。隐藏专注内容不会停止计时。</p></div>`;
+  }
+  private syncElements() {
+    const selectors = { clock: ".wb-time", tasks: ".wb-today", module: ".wb-module", navigation: ".wb-nav" } as const;
+    for (const [key, selector] of Object.entries(selectors)) this.root.querySelector<HTMLElement>(selector)!.hidden = !this.visibility[key as WorkbenchElement];
+    this.root.querySelector<HTMLElement>(".wb-overview")!.hidden = !this.visibility.clock && !this.visibility.tasks;
+    this.root.dataset.clockVisible = String(this.visibility.clock);
+    this.stage.dataset.workbenchBrand = String(!this.enabled || this.visibility.brand);
+    this.stage.dataset.workbenchFooter = String(!this.enabled || this.visibility.footer);
+    this.stage.dataset.workbenchSettings = String(!this.enabled || this.visibility.settings);
   }
   private save() {
     try { localStorage.setItem(key, JSON.stringify({ date: this.date, done: this.done, timer: this.timer })); this.storageOK = true; }
