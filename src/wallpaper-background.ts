@@ -11,7 +11,7 @@ export class WallpaperBackground {
   private image?: HTMLImageElement;
   private failed = false;
   private root = document.createElement("div");
-  constructor(parent: HTMLElement, private notify: (message: string) => void) {
+  constructor(private parent: HTMLElement, private notify: (message: string) => void) {
     this.root.className = "wallpaper-background";
     this.root.setAttribute("aria-hidden", "true");
     // Above the opaque WebGL canvas so the image can fade while it restarts,
@@ -22,6 +22,10 @@ export class WallpaperBackground {
     this.enabled = properties.customwallpaper?.value === true;
     this.released = released;
     this.reduced = reduced;
+    const amount = Number(properties.customwallpapermask?.value ?? 100);
+    const range = Number.isFinite(amount) ? Math.max(0, Math.min(100, amount)) : 100;
+    this.parent.style.setProperty("--wallpaper-mask-range", `${range}%`);
+    this.parent.style.setProperty("--wallpaper-mask-visible", range === 0 ? "0" : "1");
     this.root.style.transitionDuration = reduced ? "0s" : "650ms";
     const path = String(properties.customwallpaperfile?.value || "");
     if (path !== this.path || (retry && this.failed && path)) {
@@ -60,6 +64,7 @@ export class WallpaperBackground {
     this.paint();
   }
   private paint() {
+    this.parent.dataset.customWallpaperVisible = String(this.enabled && this.released && Boolean(this.image));
     this.root.style.opacity = this.enabled && this.released && this.image ? "1" : "0";
     this.root.dataset.ready = String(Boolean(this.image));
     this.root.dataset.reduced = String(this.reduced);

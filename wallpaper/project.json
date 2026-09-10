@@ -782,6 +782,16 @@
         "type": "bool",
         "value": false
       },
+      "customwallpapermask": {
+        "order": 6.22,
+        "text": "上下遮罩范围（0 为关闭）",
+        "type": "slider",
+        "value": 100,
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "condition": "customwallpaper.value == true"
+      },
       "customwallpaperfile": {
         "order": 6.21,
         "text": "自定义壁纸图片",

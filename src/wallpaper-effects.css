@@ -46,3 +46,22 @@
 .relay-actions.frost-surface::after { left: auto; width: 240px; }
 .reduce-motion .frost-surface::after { transition: none; }
 @media(max-width:700px) { [data-ui-frost="true"] .wb-module { position: relative; } }
+
+/* Scale only the image's atmosphere; 100 preserves the original gradients. */
+#stage[data-custom-wallpaper-visible="true"] .scene-atmosphere {
+  background-size: 100% var(--wallpaper-mask-range), 100% var(--wallpaper-mask-range), 100% 100%;
+  background-position: top, bottom, center;
+  background-repeat: no-repeat;
+  opacity: var(--wallpaper-mask-visible) !important;
+  transition: none;
+}
+#stage[data-custom-wallpaper-visible="true"] .archive-atmosphere::before,
+#stage[data-custom-wallpaper-visible="true"] .archive-atmosphere::after {
+  background-size: 100% var(--wallpaper-mask-range), 100% var(--wallpaper-mask-range), 100% 100%;
+  background-position: top, bottom, center;
+  background-repeat: no-repeat;
+}
+
+#stage[data-custom-wallpaper-visible="true"] .archive-atmosphere::before { background-size: 100% var(--wallpaper-mask-range), 100% 100%; background-position: top, center; }
+[data-dark-surface="true"] #stage[data-custom-wallpaper-visible="true"] .archive-atmosphere::before { background-size: 100% var(--wallpaper-mask-range), 100% var(--wallpaper-mask-range), 100% 100%; background-position: top, bottom, center; }
+

@@ -1,0 +1,38 @@
+[
+  {
+    "dark": false,
+    "value": 100,
+    "opacity": "1",
+    "size": "100% 100%, 100% 100%, 100% 100%"
+  },
+  {
+    "dark": false,
+    "value": 50,
+    "opacity": "1",
+    "size": "100% 50%, 100% 50%, 100% 100%"
+  },
+  {
+    "dark": false,
+    "value": 0,
+    "opacity": "0",
+    "size": "100% 0%, 100% 0%, 100% 100%"
+  },
+  {
+    "dark": true,
+    "value": 100,
+    "opacity": "1",
+    "size": "100% 100%"
+  },
+  {
+    "dark": true,
+    "value": 50,
+    "opacity": "1",
+    "size": "100% 50%"
+  },
+  {
+    "dark": true,
+    "value": 0,
+    "opacity": "0",
+    "size": "100% 0%"
+  }
+]

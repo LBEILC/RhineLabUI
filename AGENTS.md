@@ -232,3 +232,5 @@ WE 画质下拉增加「自定义」，仅此选择且超级模式关闭时显�
 - 发布操作和后续更新须保留 workshopid，见 docs/WORKSHOP-PUBLISH.md；预览来源与验证见 verification/WORKSHOP-PREVIEW.md。
 
 - 用户要求增加「启动时加载 3D」WE 属性，默认开启；关闭时只播放前段 2D 入场并进入组件页，不创建三维场景，左下可手动加载。属性下次加载生效。自定义图片在 2D 开场后显示，支持 WE 编码盘符和失败后同路径重试。见 docs/WALLPAPER-ENGINE.md。
+
+- 用户要求自定义壁纸上下遮罩范围可调：WE 图片设置下新增 0–100 滑杆，默认 100，0 完全关闭遮罩；仅自定义图片显示时生效，沿用原生实现。见 docs/WALLPAPER-ENGINE.md。

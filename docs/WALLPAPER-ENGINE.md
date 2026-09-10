@@ -234,3 +234,7 @@ WE「入场与画面」新增「启动时加载 3D（下次加载生效）」，
 ### 宿主属性到达时序修复
 
 启动必须等待 WE 首次 applyUserProperties 回调后再判断是否创建三维场景，不能将尚未收到的属性当作默认开启。真实 file 壁纸没有超时后强行加载的回退；普通 HTTP 预览无宿主时继续正常启动。此前测试只覆盖提前注入属性，现补充 1800ms 延迟回调；真实 WE 独立窗口验证关闭属性后进入 archive，canvas 与 GLB 请求均为 0（scripts/check-startup-2d-host.mjs，verification/startup-2d/host-results.json）。
+
+## 自定义图片遮罩范围
+
+WE 自定义壁纸图片下方新增「上下遮罩范围（0 为关闭）」：0–100，默认 100 保留原渐变范围；降低数值缩小上下覆盖，0 完全隐藏图片上的 atmosphere。仅图片实际显示时生效。亮暗配色 100/50/0 的样式断言及截图见 scripts/check-wallpaper-mask.mjs 与 verification/wallpaper-mask；构建通过。
