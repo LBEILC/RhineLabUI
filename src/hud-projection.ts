@@ -27,6 +27,7 @@ export function hudQuadMatrix(width: number, height: number, quad: HudPoint[]): 
 }
 
 type HudPanel = { node: HTMLElement; width: number; height: number; origin: HudPoint; corners: HudPoint[] };
+const bootPanels = ".access-text, .boot-logo, .auth-status, .scan, .welcome";
 const panels = ".brand, .system-nav, .system-footer > span, .system-footer > button, .powered, .wb-overview, .wb-module, .wb-nav > button, .archive-callout, .archive-counter, .archive-navigation, .column-navigation, .archive-hint, .detail-content, .back-button, .object-caption, .relay-entry, .relay-heading, .relay-actions";
 
 export class HudProjection {
@@ -38,7 +39,7 @@ export class HudProjection {
   private layout = "";
   private observer: ResizeObserver;
   constructor(private stage: HTMLElement) {
-    this.nodes = [...stage.querySelectorAll<HTMLElement>(panels)];
+    this.nodes = [...stage.querySelectorAll<HTMLElement>(`${panels}, ${bootPanels}`)];
     this.nodes.forEach(node => node.classList.add("hud-surface"));
     this.observer = new ResizeObserver(() => this.invalidate());
     this.observer.observe(stage);
@@ -59,7 +60,10 @@ export class HudProjection {
       if (!styles.has(node)) styles.set(node, getComputedStyle(node));
       return styles.get(node)!;
     };
+    const boot = this.stage.dataset.mode === "boot";
     for (const node of this.nodes) {
+      if (boot && !node.matches(`${bootPanels}, .brand, .powered`)) continue;
+      if (!boot && node.matches(bootPanels)) continue;
       if (!node.offsetWidth || !node.offsetHeight || !node.getClientRects().length) continue;
       const style = readStyle(node), rect = node.getBoundingClientRect();
       const matrix = new DOMMatrixReadOnly(style.transform === "none" ? undefined : style.transform);
@@ -87,7 +91,9 @@ export class HudProjection {
     const layout = `${this.stage.dataset.layout}/${this.stage.dataset.mode}/${this.stage.dataset.workbench}`;
     if (layout !== this.layout) { this.layout = layout; this.invalidate(); }
     if (depth < .00001) { this.stage.dataset.hudDepth = "false"; return; }
-    if (this.dirty) this.measure();
+    // Boot transforms and text dimensions follow the authored timeline each frame.
+    // Measure that current pose before composing the HUD, never cache an in-flight scale.
+    if (this.dirty || this.stage.dataset.mode === "boot") this.measure();
     for (const panel of this.measured) {
       const corners = panel.corners.map(point => {
         const q = projectHudPoint(point, this.width, this.height, depth, pointer);
