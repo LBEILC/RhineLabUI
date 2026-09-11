@@ -680,10 +680,12 @@ document.addEventListener("change", (e) => {
     prefs.motionPreset = motionPresetFor(prefs.motion);
     savePrefs();
     const motionRoot = $("#motion-settings");
+    const advancedOpen = motionRoot.querySelector<HTMLDetailsElement>(".motion-advanced")?.open ?? false;
     const settingsPanel = motionRoot.closest<HTMLElement>(".settings-modal");
     const scrollTop = settingsPanel?.scrollTop ?? 0;
     motionRoot.outerHTML = motionSettingsMarkup(prefs.motion, prefs.motionPreset);
     $("#motion-preference-note").outerHTML = motionPreferenceNoteMarkup();
+    $("#motion-settings").querySelector<HTMLDetailsElement>(".motion-advanced")!.open = advancedOpen;
     requestAnimationFrame(() => {
       if (settingsPanel) settingsPanel.scrollTop = scrollTop;
       document.querySelector<HTMLInputElement>(`[data-motion="${key}"]`)?.focus({ preventScroll: true });
