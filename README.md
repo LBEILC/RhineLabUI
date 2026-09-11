@@ -16,9 +16,9 @@ iPhone 可用 Safari 打开在线版，通过“分享 → 添加到主屏幕”
 
 [快速运行](#快速运行) · [界面与动效](#界面与动效) · [操作说明](#操作说明) · [源码与 Blender 工程下载](https://pan.quark.cn/s/762d9ee9dfc3) · [参考原 PV](https://www.bilibili.com/video/BV1rr4y1b7sz/)
 
-## Wallpaper Engine 壁纸分支
+## Wallpaper Engine 壁纸与独立仓库
 
-`main` 同时包含网页与 Wallpaper Engine 的共用实现；`codex/wallpaper-engine` 保留壁纸开发入口。普通构建输出网页与 PWA，壁纸构建单独接入宿主功能。
+壁纸版已从本项目拆分为独立公共仓库，后续功能在 **[RhineLabWallpaper](https://github.com/LBEILC/RhineLabWallpaper)** 的 `main` 分支开发。本仓库继续维护网页版本；[原壁纸分支 codex/wallpaper-engine](https://github.com/LBEILC/RhineLabUI/tree/codex/wallpaper-engine) 保留迁移记录。需要最新壁纸源码，请前往独立仓库。
 
 **[在 Steam 创意工坊订阅壁纸 → Rhine Lab · 莱茵生命交互桌面](https://steamcommunity.com/sharedfiles/filedetails/?id=3799142774)**
 
@@ -33,7 +33,9 @@ iPhone 可用 Safari 打开在线版，通过“分享 → 添加到主屏幕”
 使用壁纸请通过上方创意工坊链接订阅，在 Wallpaper Engine 中应用并调整属性。需要自行构建时：
 
 ```sh
-npm install
+git clone https://github.com/LBEILC/RhineLabWallpaper.git
+cd RhineLabWallpaper
+npm ci
 npm run build:wallpaper
 ```
 
