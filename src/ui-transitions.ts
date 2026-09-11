@@ -101,4 +101,9 @@ export class ContentTransition {
     this.animation?.cancel();
     this.animation = undefined;
   }
+
+  finish() {
+    this.animation?.finish();
+    this.animation = undefined;
+  }
 }

@@ -1441,7 +1441,10 @@ export class ArchiveScene {
       cameraPosition.x += this.pointer.x * 0.12;
       cameraPosition.y -= this.pointer.y * 0.12;
     }
-    const cameraBlend = cinematic ? 1 : this.motion.detailTransition ? 1 - Math.exp(-dt * 5) : 1;
+    const cameraTransition = this.targetDetail || this.detail > 0.01
+      ? this.motion.detailTransition
+      : this.motion.selectionTransition;
+    const cameraBlend = cinematic ? 1 : cameraTransition ? 1 - Math.exp(-dt * 5) : 1;
     this.camera.position.lerp(cameraPosition, cameraBlend);
     this.cameraAim.lerp(cameraAim, cameraBlend);
     this.camera.lookAt(this.cameraAim);

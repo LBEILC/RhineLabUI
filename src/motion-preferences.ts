@@ -16,9 +16,10 @@ export type MotionKey =
   | "viewerModelTransition";
 
 export type MotionPreferences = Record<MotionKey, boolean>;
+export type MotionPreset = "full" | "reduced" | "custom";
 
 export type StoredMotion = Partial<MotionPreferences> & {
-  preset?: "system" | "full" | "reduced" | "custom";
+  preset?: MotionPreset;
 };
 
 export const MOTION_LABELS: Record<
@@ -146,6 +147,12 @@ export function reducedMotion(): MotionPreferences {
   return { ...REDUCED };
 }
 
+export function motionPresetFor(motion: MotionPreferences): MotionPreset {
+  if (Object.values(motion).every(Boolean)) return "full";
+  if (Object.values(motion).every((value) => !value)) return "reduced";
+  return "custom";
+}
+
 export function createMotionPreferences(
   stored: StoredMotion | undefined,
   legacyReduced: boolean | undefined,
@@ -188,19 +195,15 @@ export function motionSummary(motion: MotionPreferences) {
 
 export function motionSettingsMarkup(
   motion: MotionPreferences,
-  preset?: StoredMotion["preset"],
+  preset?: MotionPreset,
 ) {
   const groups = [
     ...new Set(Object.values(MOTION_LABELS).map((entry) => entry.group)),
   ];
-  const selected = preset ?? (Object.values(motion).every(Boolean)
-    ? "full"
-    : Object.values(motion).every((value) => !value)
-      ? "reduced"
-      : "custom");
-  const presetButton = (value: "system" | "full" | "reduced", label: string) =>
-    `<button type="button" data-action="motion-preset" data-preset="${value}" aria-pressed="${selected === value}">${label}</button>`;
-  return `<div id="motion-settings" class="motion-settings"><div class="motion-settings-head"><div><strong>ANIMATION CONTROLS</strong><span>按场景分别控制动画，关闭后会直接到达稳定状态</span></div>${presetButton("system", "跟随系统")}${presetButton("full", "完整")}${presetButton("reduced", "减少")}</div>${groups
+  const selected = preset ?? motionPresetFor(motion);
+  const presetButton = (value: "full" | "reduced" | "custom", label: string) =>
+    `<button type="button" data-action="motion-preset" data-preset="${value}" aria-pressed="${selected === value}"${value === "custom" ? " disabled" : ""}>${label}</button>`;
+  return `<div id="motion-settings" class="motion-settings"><div class="motion-settings-head"><div><strong>ANIMATION CONTROLS</strong><span>完整、减少或按分项自定义；关闭后会立即收束当前动画（开场设置下次重播生效）</span></div>${presetButton("full", "完整")}${presetButton("reduced", "减少")}${presetButton("custom", "自定义")}</div>${groups
     .map(
       (group) =>
         `<fieldset><legend>${group}</legend>${(
