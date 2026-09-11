@@ -400,7 +400,7 @@ export class ArchiveScene {
     });
     this.appearance.prepare(model);
     this.appearance.apply(model, 1);
-    this.appearance.setClarity(model, this.decryption.clarity);
+    this.appearance.setClarity(model, this.modelClarity());
     const canvas = document.createElement("canvas");
     canvas.width = this.labelCanvas.width;
     canvas.height = this.labelCanvas.height;
@@ -471,6 +471,16 @@ export class ArchiveScene {
     if (!value.selectionWave) this.pulses = [];
     if (!value.idleWave) this.idleGain = 0;
     this.motion = { ...value };
+    if (!value.modelDecryption) {
+      this.appearance.setClarity(this.model, 1);
+      for (const old of this.outgoing) {
+        old.clarity = 1;
+        this.appearance.setClarity(old.group, 1);
+      }
+    }
+  }
+  private modelClarity() {
+    return this.motion.modelDecryption ? this.decryption.clarity : 1;
   }
   setQuality(value: RenderQuality | boolean) {
     const quality =
@@ -581,7 +591,7 @@ export class ArchiveScene {
         depthWrite: false,
       });
       this.appearance.apply(group, ease(this.lift.value / 0.4));
-      this.appearance.setClarity(group, this.decryption.clarity);
+      this.appearance.setClarity(group, this.modelClarity());
       this.scene.add(group);
       this.outgoing.push({
         group,
@@ -589,7 +599,7 @@ export class ArchiveScene {
         cell: { ...this.selectedCell },
         lift: { ...this.lift },
         returnY: group.rotation.y !== 0 ? group.position.y : null,
-        clarity: this.decryption.clarity,
+        clarity: this.modelClarity(),
       });
       this.lift.value = 0;
       this.lift.velocity = 0;
@@ -1201,10 +1211,12 @@ export class ArchiveScene {
       ? cinematic.zoom
       : THREE.MathUtils.lerp(this.detail, cameraTarget, detailBlend);
     const detail = this.detail;
-    this.decryption.update(dt, detail > .78 && this.lift.value > 3.3, !this.motion.modelDecryption,
+    // Keep the physical decryption timeline alive even when its model visuals
+    // are disabled; the document mask uses the same timeline independently.
+    this.decryption.update(dt, detail > .78 && this.lift.value > 3.3, false,
       cinematic ? shot + 5 : undefined);
     this.appearance.apply(this.model, ease(this.lift.value / 0.4));
-    this.appearance.setClarity(this.model, this.decryption.clarity);
+    this.appearance.setClarity(this.model, this.modelClarity());
     // Reference 26.92–27.76: the array travels horizontally into a white field.
     const entry = cinematic ? ease((shot - 21.9) / 0.86) : this.reveal;
     const entranceTime = THREE.MathUtils.clamp((shot - 21.92) / 0.75, 0, 1);
@@ -1228,7 +1240,7 @@ export class ArchiveScene {
       );
       const quality = ease(o.lift.value / 0.4);
       this.appearance.apply(o.group, quality);
-      o.clarity = this.motion.modelDecryption ? o.clarity * Math.exp(-dt * 9) : 0;
+      o.clarity = this.motion.modelDecryption ? o.clarity * Math.exp(-dt * 9) : 1;
       this.appearance.setClarity(o.group, o.clarity);
       const { row, lane } = o.cell;
       o.group.rotation.x =

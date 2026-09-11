@@ -979,7 +979,7 @@ function frame(ms: number) {
   }
   $("#stage").style.setProperty("--detail-shade", String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0));
   if (scene) inspectionOverlay.render(scene.decryptionFrame,
-    (x, y) => scene.projectCard(x, y), Boolean(cinema));
+    (x, y) => scene.projectCard(x, y), Boolean(cinema), motionActive("modelDecryption"));
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
     $("#clock").textContent = new Date().toLocaleTimeString("en-GB");
