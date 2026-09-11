@@ -1,5 +1,10 @@
 # Rhine Lab UI
 
+## 开场中央字体
+
+- 2026-09-11：用户要求中央开场文案中适合的位置统一使用 Novecento Sans Wide。访问、身份、请求、处理、授权提示使用 Normal；欢迎三行使用 Bold。沿用原时间轴与 HUD，左上品牌保留 MiSans。
+- 使用获许可桌面字体制作固定文字轮廓图形，不随项目嵌入字体软件。来源、再制作与回归见 verification/BOOT-LETTERING.md，脚本为 scripts/make-boot-lettering.py。
+
 ## Wallpaper Engine 实验分支
 
 - 用户追加授权音乐律动、手动点击开始且可隐藏入口的波纹接力小游戏，以及入场详情开关。工作台默认短入场，展示模式默认完整；可强制覆盖。工作台内容轻微错峰淡入，减少动态效果时直接显示。

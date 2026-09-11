@@ -1,0 +1,20 @@
+Opening phrase artwork / 开场固定文字图形
+
+Novecento Sans Wide, designed by Jan Tonellato / Synthview Type Design.
+https://typography.synthview.com/novecento-sans-font-family.php
+
+Normal and Bold were used to draw the fixed English phrases in the opening.
+The distribution contains outlined phrase graphics, not font software, a webfont,
+an SVG font, a reusable alphabet, or an arbitrary-text typesetting library.
+Original font copyrights and ownership remain with Jan Tonellato / Synthview.
+The project's MIT license does not relicense the underlying typeface.
+
+Normal source: author's DaFont package, free desktop license.
+https://www.dafont.com/novecento-sans.font
+https://typography.synthview.com/pdf/eula-free-font-dafont.pdf
+Bold source: user's existing MyFonts desktop package.
+
+Both source licenses permit characters to be imported as graphical objects
+(letters outlined as graphics). The desktop font files must not be redistributed
+or embedded in this project. Changing the authored phrases requires separately
+obtaining the font and rerunning scripts/make-boot-lettering.py locally.

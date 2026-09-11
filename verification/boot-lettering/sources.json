@@ -1,0 +1,12 @@
+{
+  "Normal": {
+    "filename": "Novecentosanswide-Normal.otf",
+    "sha256": "8bb9c4a562adeaae69a6174fe3cce83166119841a71b22f3b0d5246680b78e34",
+    "version": "Version 3.001;PS 003.001;hotconv 1.0.70;makeotf.lib2.5.58329"
+  },
+  "Bold": {
+    "filename": "Novecentosanswide-Bold.otf",
+    "sha256": "dbba358622df5b4bffc76bdb46fb9e688e0f76b8e0f8c386593f4f1a3de159d1",
+    "version": "Version 3.001;PS 003.001;hotconv 1.0.70;makeotf.lib2.5.58329"
+  }
+}

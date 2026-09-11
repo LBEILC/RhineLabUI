@@ -1,6 +1,7 @@
 import { bootMotion } from "./boot-motion";
 import { bootMarkContour } from "./brand";
 import { themeAmount } from "./theme-ui";
+import { BootLettering } from "./boot-lettering";
 
 const ns = "http://www.w3.org/2000/svg";
 const arc = (r: number, start: number, sweep: number, x = 960, y = 540) => {
@@ -24,6 +25,8 @@ export class BootSequence {
   private caps: SVGCircleElement[];
   private companyInk: HTMLElement[];
   private poweredHTML: string;
+  private accessLettering: BootLettering;
+  private authLettering: BootLettering;
   constructor(private stage: HTMLElement) {
     [
       ".access-text",
@@ -101,6 +104,20 @@ export class BootSequence {
       el.replaceChildren(ink);
     });
     this.poweredHTML = this.el(".powered").innerHTML;
+    // Bind after collecting the original ring paths. Phrase artwork also has
+    // SVG paths, and must never be included in the scan's animated geometry.
+    this.accessLettering = new BootLettering(this.el(".access-text"), ["access"]);
+    this.authLettering = new BootLettering(this.el("#auth-message"), [
+      "identity", "request", "processing", "processingGlitch",
+    ]);
+    for (const [selector, key, text] of [
+      [".scan > span", "permission", "PERMISSION AUTHORIZED"],
+      [".welcome-heading", "welcome", "WELCOME TO"],
+      [".welcome-database", "database", "INTERNAL DATABASE"],
+    ] as const) new BootLettering(this.el(selector), [key]).setText(text);
+    this.companyInk.forEach((el) =>
+      new BootLettering(el.querySelector("span")!, ["company"]).setText("RHINE LAB.LLC."),
+    );
   }
   private el(selector: string) {
     return this.nodes.get(selector)!;
@@ -112,7 +129,7 @@ export class BootSequence {
     const s = bootMotion(time),
       t = s.t;
     this.stage.dataset.bootFrame = String(s.f);
-    this.el(".access-text").textContent = s.access;
+    this.accessLettering.setText(s.access);
     this.opacity(".access-text", s.accessOpacity);
     this.opacity(".boot-logo", s.logoOpacity);
     this.el(".boot-logo").style.transform =
@@ -139,7 +156,7 @@ export class BootSequence {
       `translate(${s.logo.minusX} 70) scale(${s.logo.symbolScale})`,
     );
     this.opacity(".auth-status", s.authOpacity);
-    this.el("#auth-message").textContent = s.auth;
+    this.authLettering.setText(s.auth);
     this.opacity(".brand", 1);
     this.el(".brand").style.transform = "none";
     this.brandLines.forEach((node, i) => {
@@ -241,6 +258,7 @@ export class BootSequence {
     });
     this.opacity(".scan > span", s.permissionOpacity);
     this.el(".scan > span").style.letterSpacing = `${s.scanTracking}px`;
+    this.el(".scan > span").style.setProperty("--boot-phrase-tracking", `${s.scanTracking}px`);
     this.el(".scan > span").style.fontSize = `${s.scanFont}px`;
   }
   reset() {
