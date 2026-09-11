@@ -10,3 +10,7 @@
 验证：`npm run build:wallpaper`、`node scripts/check-visual-effects.mjs`、`node scripts/check-boot-hud.mjs` 通过。Edge 实际运行覆盖开场五块投影、启停、静态追踪、减少动态效果、工作台衔接与 2560×1080 视口；无页面异常。截图与结果见 `verification/boot-hud/`。检查了圆环与欢迎画面截图；尚待用户试用最终观感。
 
 复现脚本自带 5189 静态服务，读取壁纸构建；可通过 `PLAYWRIGHT_MODULE` 指定 Playwright 安装位置。
+
+## Logo 下方小字闪动修正
+
+用户录屏 `PixPin_2026-09-11_10-36-02.mp4` 指向 Logo 内的 RHINE·LAB 字样。此前 BootSequence 每帧无条件赋值 SVG text.textContent；内容完整且不变时，650ms 内产生 20 次节点替换。改为仅内容变化时赋值。浏览器回归同一时段为 0 次替换，保留同一个文本节点和完整文字，HUD 其他回归通过。仅修正此处文字更新，最终 WE 录屏所见的闪动是否完全消失仍待用户复看。
