@@ -156,14 +156,13 @@ export function motionPresetFor(motion: MotionPreferences): MotionPreset {
 export function createMotionPreferences(
   stored: StoredMotion | undefined,
   legacyReduced: boolean | undefined,
-  systemReduced: boolean,
 ): MotionPreferences {
   const base =
     stored?.preset === "full"
       ? FULL
       : stored?.preset === "reduced"
         ? REDUCED
-        : legacyReduced === true || (stored === undefined && systemReduced)
+        : legacyReduced === true
           ? REDUCED
           : FULL;
   const result = { ...base };

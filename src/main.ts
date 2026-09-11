@@ -142,7 +142,7 @@ function readLocal<T>(key: string, fallback: T): T {
 }
 const saved = new Set<string>(readLocal<string[]>("rhine-saved", []));
 const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; motion: StoredMotion; motionPreset: MotionPreset }>>("rhine-settings", {});
-const initialMotion = createMotionPreferences(storedPrefs.motion, storedPrefs.reduced, false);
+const initialMotion = createMotionPreferences(storedPrefs.motion, storedPrefs.reduced);
 const initialMotionPreset: MotionPreset = storedPrefs.motion
   ? motionPresetFor(initialMotion)
   : storedPrefs.reduced === undefined
@@ -150,7 +150,7 @@ const initialMotionPreset: MotionPreset = storedPrefs.motion
     : storedPrefs.reduced ? "reduced" : "full";
 const prefs = {
   sound: storedPrefs.sound ?? true,
-  music: storedPrefs.music ?? true,
+  music: storedPrefs.music ?? storedPrefs.sound ?? true,
   soundVolume: storedPrefs.soundVolume ?? .55,
   musicVolume: storedPrefs.musicVolume ?? .5,
   motion: initialMotion,
@@ -737,20 +737,6 @@ document.addEventListener("click", (e) => {
   }
   if (el.dataset.tab) {
     setTab(el.dataset.tab);
-    return;
-  }
-  if (el.dataset.action === "motion-preset") {
-    const preset = el.dataset.preset;
-    prefs.motionPreset = preset === "system" || preset === "full" || preset === "reduced" ? preset : "custom";
-    prefs.motion = preset === "full"
-      ? fullMotion()
-      : preset === "reduced"
-        ? reducedMotion()
-        : createMotionPreferences(undefined, undefined, systemReduced);
-    savePrefs();
-    renderModal();
-    requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`[data-action="motion-preset"][data-preset="${prefs.motionPreset}"]`)?.focus({ preventScroll: true }));
-    audio.play("confirm");
     return;
   }
   const action = el.dataset.action;
