@@ -1318,10 +1318,12 @@ button {
   top: 4px;
   transition: transform 0.3s;
 }
-.settings-list input:checked + .toggle {
+.settings-list input:checked + .toggle,
+.motion-settings input:checked + .toggle {
   background: #565c46;
 }
-.settings-list input:checked + .toggle:after {
+.settings-list input:checked + .toggle:after,
+.motion-settings input:checked + .toggle:after {
   transform: translateX(26px);
 }
 .settings-list input:focus-visible + .toggle {
