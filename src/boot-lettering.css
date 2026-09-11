@@ -9,10 +9,27 @@
   white-space: nowrap;
 }
 .boot-phrase-letter {
+  position: relative;
   display: block;
   flex: 0 0 auto;
   height: 1em;
   margin-inline-end: var(--boot-phrase-tracking, 0px);
+}
+.boot-font-letter::before {
+  content: attr(data-letter);
+  position: absolute;
+  left: 0;
+  /* The official font's 1021/-179 metrics place its 1em line baseline at
+     .921em. Move it to the same .8em baseline as the authored artwork. */
+  top: -0.121em;
+  font-family: var(--boot-webfont-family);
+  font-size: inherit;
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  font-kerning: none;
+  line-height: 1;
+  white-space: pre;
 }
 .boot-phrase-letter:last-child { margin-inline-end: 0; }
 .boot-phrase[hidden], .boot-phrase-letter[hidden] { display: none; }

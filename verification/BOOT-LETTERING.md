@@ -41,3 +41,15 @@ python scripts/make-boot-lettering.py --fonts .tools/font-comparison/fonts
 用户指出 Bold 偏重后，同一裁切拟合的 DemiBold 像素 MSE 为 0.03689，Bold 为 0.06343，支持采用 DemiBold。对照图 `boot-lettering/brand-demibold-fit.png` 从上到下为原片、DemiBold、叠加；不代表原工程字体鉴定。原始品牌外层及三行节点不变，第一行固定 48px 高，避免推动下方内容。复核页新增标题文字、DemiBold 图形和行高检查。
 
 此修订实际浏览器共 14 项检查全部通过，含原有 83 个文字变化；两种发行构建再次通过。
+
+## MyFonts 正式 Webfont（2026-09-11 后续）
+
+用户明确授权接受 MyFonts 条款并领取字体。Normal、DemiBold、Bold 的年度 Webfont 订单已成功，当前每种每月 10,000 次页面浏览，合计 $0；自动续期未开启。订单与个人账单信息不写入仓库。MyFonts 的单域名网页许可范围不应等同于允许分发 Wallpaper Engine 字体包；用户获知区别后仍要求本机直接替换，此轮完成本机构建，未上传创意工坊。
+
+官方 Kit Builder 下载的原始 WOFF2 总计 119,732 字节。每种所用 27 个字符的字形与之前桌面 OTF 一致，来源版本与哈希见 `boot-lettering/webfont-sources.json`。字体未经转换、子集化或修改。原包保存于本机 `.tools/myfonts-webfont/`；字体包和版权声明安装到 `public/fonts/novecento/`，该目录已加入 Git 忽略。
+
+其他获许可的维护者可将官方 Kit Builder 的包解压，将其顶层内容放到上述目录，保持 `webFonts/NovecentoSansWideNormal/font.woff2`、`NovecentoSansWideDemiBold/font.woff2`、`NovecentoSansWideBold/font.woff2` 三个相对路径，并保留原 CSS 的版权声明。重启开发服务器或重新构建后生效。字体权利不随项目 MIT 许可转让。
+
+Vite 检查本地三种字体是否齐备；齐备时开场准备阶段加载三种原生 FontFace，成功后用真实文字替换 SVG 字形。保留原有逐字容器宽度和字距，以避免位置、声音触发和动画变化。官方字体行度量为 1021/-179，1em 行高下基线为 0.921em；字形上移 0.121em 对齐既有 0.8em 基线。缺少字体包或网络失败时保留原图形，8 秒超时不阻断启动。
+
+浏览器实际通过 15 项检查：原有文字／品牌／扫描／欢迎回归通过，确认三种 WOFF2 均已加载、所有文字改用真实字体且不保留文字 SVG 路径。网页与壁纸构建均通过；PWA 资源表包含三种 WOFF2。公开 Git 仅提交接入逻辑和声明，不包含授权字体。新环境未安装字体包时仍使用此前图形。

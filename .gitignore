@@ -21,3 +21,6 @@ reference/local-files-connection.js
 
 # Local integration checkout
 .main-integration/
+
+# Individually licensed MyFonts kit; install locally, never publish to Git.
+public/fonts/novecento/

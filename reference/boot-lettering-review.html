@@ -3,7 +3,7 @@
 body{margin:24px;background:#e8e5e1;color:#161714;font:14px/1.5 system-ui}h1{font-size:21px}button{font:inherit;margin:0 8px 8px 0;padding:7px 12px;cursor:pointer}#view{width:960px;height:540px;position:relative;max-width:100%;overflow:hidden}iframe{width:1920px;height:1080px;border:0;transform-origin:0 0;transform:scale(var(--scale,.5))}pre{white-space:pre-wrap;max-width:960px}.note{color:#666}
 </style>
 <h1>开场中央文字 · Novecento Sans Wide</h1>
-<p>访问、身份、处理与授权提示使用 Normal；欢迎画面使用 Bold，左上 RHINE LAB 使用 DemiBold。固定文字轮廓保留原时间轴。</p>
+<p>访问、身份、处理与授权提示使用 Normal；欢迎画面使用 Bold，左上 RHINE LAB 使用 DemiBold。本机授权包启用真实 WOFF2，字形位置与原时间轴保持一致。</p>
 <div id="controls">
 <button data-frame="187">访问提示</button><button data-frame="339">身份与姓名</button><button data-frame="389">请求接收</button><button data-frame="450">开始处理</button><button data-frame="500">授权展开</button><button data-frame="540">授权收束</button><button data-frame="635">欢迎画面</button><button id="run">运行回归检查</button>
 </div>
@@ -30,14 +30,18 @@ const count=sel=>doc.querySelector(sel).querySelectorAll('.boot-phrase:not([hidd
 let previous='';let tested=0;
 for(let f=169;f<=487;f++){const s=bootMotion(f/25-5),key=s.access+'|'+s.auth;if(key===previous)continue;previous=key;await seek(f);for(const [sel,text] of [[hosts[0],s.access],[hosts[1],s.auth]]){if(doc.querySelector(sel).textContent!==text||count(sel)!==text.length||doc.querySelector(sel).classList.contains('boot-lettering-fallback'))throw Error(`逐字不一致 ${f} ${sel}`)}tested++}
 check(`${tested} 个实际文字变化完整覆盖，包含标点、留白及故障帧`,true);
-await seek(450);const first=doc.querySelector('#auth-message .boot-phrase:not([hidden])').outerHTML;const svg=doc.querySelector('#auth-message svg');let mutations=0;const observer=new MutationObserver(records=>mutations+=records.length);observer.observe(doc.querySelector('#auth-message'),{attributes:true,childList:true,subtree:true,characterData:true});await new Promise(r=>setTimeout(r,450));observer.disconnect();check('固定文字停留时不重建 SVG、不修改 DOM',mutations===0);
-await seek(635);await seek(300);await seek(450);check('前后跳帧保持同一图形节点并恢复相同内容',svg===doc.querySelector('#auth-message svg')&&first===doc.querySelector('#auth-message .boot-phrase:not([hidden])').outerHTML);
+await seek(450);const first=doc.querySelector('#auth-message .boot-phrase:not([hidden])').outerHTML;const glyph=doc.querySelector('#auth-message .boot-phrase-letter');let mutations=0;const observer=new MutationObserver(records=>mutations+=records.length);observer.observe(doc.querySelector('#auth-message'),{attributes:true,childList:true,subtree:true,characterData:true});await new Promise(r=>setTimeout(r,450));observer.disconnect();check('固定文字停留时不重建字形、不修改 DOM',mutations===0);
+await seek(635);await seek(300);await seek(450);check('前后跳帧保持同一字形节点并恢复相同内容',glyph===doc.querySelector('#auth-message .boot-phrase-letter')&&first===doc.querySelector('#auth-message .boot-phrase:not([hidden])').outerHTML);
 await seek(500);const span=doc.querySelector('.scan > span'),width1=span.querySelector('.boot-phrase').getBoundingClientRect().width;const ring=doc.querySelector('.scan > svg').outerHTML;
 await seek(540);const width2=span.querySelector('.boot-phrase').getBoundingClientRect().width;check('授权文字实际图形随原字距收束',width1>width2+100);check('原扫描圆环仍只有六条动画弧线',doc.querySelectorAll('.scan > svg path').length===6);
 await seek(500);check('扫描圆环跳帧恢复一致，文字路径未混入圆环',ring===doc.querySelector('.scan > svg').outerHTML);
 await seek(594);check('欢迎白字遮罩保留灰闪帧',doc.querySelector('.welcome-highlight > span').style.opacity==='0.06');await seek(592);check('反向跳帧恢复欢迎文字',doc.querySelector('.welcome-highlight > span').style.opacity==='1');
 await seek(635);check('欢迎三行全部使用 Bold 图形',doc.querySelectorAll('.welcome .boot-phrase[data-weight="Bold"]:not([hidden])').length===4);check('全场不存在未生成文案的后备显示',doc.querySelectorAll('.boot-lettering-fallback').length===0);
-check('未嵌入 Novecento 字体文件',!performance.getEntriesByType('resource').some(r=>/novecento.*\.(otf|ttf|woff)/i.test(r.name))&&!win.performance.getEntriesByType('resource').some(r=>/novecento.*\.(otf|ttf|woff)/i.test(r.name)));
+const native=doc.querySelector('#auth-message').dataset.letteringRenderer==='webfont';
+if(native){
+check('已加载三种官方 WOFF2，所有文字源已切换为真实字体',win.performance.getEntriesByType('resource').filter(r=>/novecento\/.*\.woff2/i.test(r.name)).length===3&&doc.querySelectorAll('[data-lettering-renderer="artwork"]').length===0);
+check('真实字体模式不保留文字 SVG 路径',doc.querySelectorAll('.has-boot-lettering svg').length===0);
+}else check('无本地授权包时保留固定图形',doc.querySelectorAll('[data-lettering-renderer="webfont"]').length===0&&doc.querySelectorAll('.has-boot-lettering svg').length>0);
 await seek(675);check('开场结束正常隐藏文字并进入阵列',doc.querySelector('.welcome').style.opacity==='0'&&doc.querySelector('#stage').dataset.boot==='array');
 await seek(450);result.textContent=JSON.stringify({passed:true,checks},null,2);
 }catch(error){result.textContent=JSON.stringify({passed:false,error:String(error),checks},null,2)}finally{running=false}}

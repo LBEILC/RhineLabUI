@@ -19,6 +19,7 @@ import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
 import { ContentTransition, SurfaceTransition } from "./ui-transitions";
 import { BootSequence } from "./boot";
+import { loadBootWebfonts } from "./boot-lettering";
 import { wrap, type ArchiveNavigation } from "./archive-loop";
 import {
   records,
@@ -1092,6 +1093,7 @@ async function start() {
     }
     await Promise.all([
       scene?.load(),
+      loadBootWebfonts(),
       // With unicode-range faces, preload the opening's actual characters,
       // not every font shard. Other archive text loads on demand.
       document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),

@@ -1,0 +1,23 @@
+{
+  "Normal": {
+    "glyphsIdentical": 27,
+    "glyphsCompared": 27,
+    "woff2Bytes": 39572,
+    "sha256": "31910c082422680a19fc22c8677ea8e11664d8b8ad55812e96018833d15ae4d4",
+    "version": "Version 3.001;PS 003.001;hotconv 1.0.70;makeotf.lib2.5.58329"
+  },
+  "DemiBold": {
+    "glyphsIdentical": 27,
+    "glyphsCompared": 27,
+    "woff2Bytes": 40452,
+    "sha256": "35fd72ca8d5a366a07497845f376328e887c51ea6c521025f42196a06c6dadd2",
+    "version": "Version 3.001;PS 003.001;hotconv 1.0.70;makeotf.lib2.5.58329"
+  },
+  "Bold": {
+    "glyphsIdentical": 27,
+    "glyphsCompared": 27,
+    "woff2Bytes": 39708,
+    "sha256": "d9c32120abe0a5ea33dca70cb16083efc06671c86a9a1f781641c47a436bebe2",
+    "version": "Version 3.001;PS 003.001;hotconv 1.0.70;makeotf.lib2.5.58329"
+  }
+}
