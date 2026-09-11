@@ -3,13 +3,14 @@ Opening phrase artwork / 开场固定文字图形
 Novecento Sans Wide, designed by Jan Tonellato / Synthview Type Design.
 https://typography.synthview.com/novecento-sans-font-family.php
 
-Normal and Bold were used to draw the fixed English phrases in the opening.
+Normal, DemiBold and Bold were used to draw the fixed English phrases in the
+opening and the fixed RHINE LAB corner heading.
 The distribution contains outlined phrase graphics, not font software, a webfont,
 an SVG font, a reusable alphabet, or an arbitrary-text typesetting library.
 Original font copyrights and ownership remain with Jan Tonellato / Synthview.
 The project's MIT license does not relicense the underlying typeface.
 
-Normal source: author's DaFont package, free desktop license.
+Normal and DemiBold source: author's DaFont package, free desktop license.
 https://www.dafont.com/novecento-sans.font
 https://typography.synthview.com/pdf/eula-free-font-dafont.pdf
 Bold source: user's existing MyFonts desktop package.

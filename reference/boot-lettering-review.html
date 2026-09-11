@@ -3,7 +3,7 @@
 body{margin:24px;background:#e8e5e1;color:#161714;font:14px/1.5 system-ui}h1{font-size:21px}button{font:inherit;margin:0 8px 8px 0;padding:7px 12px;cursor:pointer}#view{width:960px;height:540px;position:relative;max-width:100%;overflow:hidden}iframe{width:1920px;height:1080px;border:0;transform-origin:0 0;transform:scale(var(--scale,.5))}pre{white-space:pre-wrap;max-width:960px}.note{color:#666}
 </style>
 <h1>开场中央文字 · Novecento Sans Wide</h1>
-<p>访问、身份、处理与授权提示使用 Normal；欢迎画面使用 Bold。固定文字轮廓保留原时间轴。</p>
+<p>访问、身份、处理与授权提示使用 Normal；欢迎画面使用 Bold，左上 RHINE LAB 使用 DemiBold。固定文字轮廓保留原时间轴。</p>
 <div id="controls">
 <button data-frame="187">访问提示</button><button data-frame="339">身份与姓名</button><button data-frame="389">请求接收</button><button data-frame="450">开始处理</button><button data-frame="500">授权展开</button><button data-frame="540">授权收束</button><button data-frame="635">欢迎画面</button><button id="run">运行回归检查</button>
 </div>
@@ -21,6 +21,9 @@ document.querySelectorAll('[data-frame]').forEach(button=>button.onclick=()=>see
 let running=false;
 async function run(){if(running)return;running=true;const checks=[];const check=(name,pass)=>{checks.push({name,pass});if(!pass)throw Error(name)};try{
 await ready();const doc=app.contentDocument,win=app.contentWindow;
+const brand=doc.querySelector('.brand h1');const brandArt=brand.querySelector('.boot-phrase[data-phrase="brand"]');
+check('左上 RHINE LAB 使用 DemiBold，保留标题文本与三行结构',brand.textContent==='RHINE LAB'&&brandArt?.dataset.weight==='DemiBold'&&!brandArt.hidden&&doc.querySelector('.brand').children.length===3);
+check('品牌第一行固定 48px 高，未推动下方两行',win.getComputedStyle(brand).height==='48px');
 const hosts=['.access-text','#auth-message'];
 const count=sel=>doc.querySelector(sel).querySelectorAll('.boot-phrase:not([hidden]) .boot-phrase-letter:not([hidden])').length;
 // Cover every authored text change, including blank cuts, punctuation and glitches.

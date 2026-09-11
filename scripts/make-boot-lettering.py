@@ -19,6 +19,7 @@ from fontTools.pens.transformPen import TransformPen
 from PIL import ImageFont
 
 PHRASES = [
+    ('brand', 'RHINE LAB', 'DemiBold'),
     ('access', 'ACCESS PERMISSION REQUIRED', 'Normal'),
     ('identity', 'ID CONFIRMED : JOYCE MOORE', 'Normal'),
     ('request', 'REQUEST RECEIVED', 'Normal'),
@@ -35,7 +36,7 @@ def main():
     parser.add_argument('--fonts', required=True, type=Path)
     args = parser.parse_args()
     art, sources = {}, {}
-    for weight in ('Normal', 'Bold'):
+    for weight in ('Normal', 'DemiBold', 'Bold'):
         path = args.fonts / f'Novecentosanswide-{weight}.otf'
         font = TTFont(path)
         units = font['head'].unitsPerEm

@@ -41,6 +41,18 @@
 #auth-message { --boot-phrase-tracking: -0.00909em; }
 .auth-status { top: 527px; gap: 10px; font-size: 21.35px; }
 .welcome-company { --boot-phrase-tracking: -0.5px; }
+.brand h1 {
+  position: relative;
+  height: 48px;
+  font-size: 50.75px;
+  letter-spacing: 0;
+  --boot-phrase-tracking: 1px;
+}
+.brand h1 > .boot-phrase {
+  position: absolute;
+  left: 0;
+  top: 1.425px;
+}
 [data-layout="opening"][data-opening-portrait="true"] .scan > span {
   --boot-phrase-tracking: 1px !important;
 }

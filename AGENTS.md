@@ -2,7 +2,7 @@
 
 ## 开场中央字体
 
-- 2026-09-11：用户要求中央开场文案中适合的位置统一使用 Novecento Sans Wide。访问、身份、请求、处理、授权提示使用 Normal；欢迎三行使用 Bold。沿用原时间轴与 HUD，左上品牌保留 MiSans。
+- 2026-09-11：用户要求中央开场文案中适合的位置统一使用 Novecento Sans Wide。访问、身份、请求、处理、授权提示使用 Normal；欢迎三行使用 Bold。后续按用户纠正与原片叠加比较，左上 RHINE LAB 使用 DemiBold，下方两行保留 MiSans。沿用原时间轴与 HUD。
 - 使用获许可桌面字体制作固定文字轮廓图形，不随项目嵌入字体软件。来源、再制作与回归见 verification/BOOT-LETTERING.md，脚本为 scripts/make-boot-lettering.py。
 
 ## Wallpaper Engine 实验分支

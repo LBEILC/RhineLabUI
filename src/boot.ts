@@ -104,6 +104,7 @@ export class BootSequence {
       el.replaceChildren(ink);
     });
     this.poweredHTML = this.el(".powered").innerHTML;
+    new BootLettering(this.brandLines[0], ["brand"]).setText("RHINE LAB");
     // Bind after collecting the original ring paths. Phrase artwork also has
     // SVG paths, and must never be included in the scan's animated geometry.
     this.accessLettering = new BootLettering(this.el(".access-text"), ["access"]);

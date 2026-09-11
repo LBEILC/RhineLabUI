@@ -301,4 +301,4 @@ WE 画质下拉增加「自定义」，仅此选择且超级模式关闭时显�
 
 ## 开场中央字体补充（2026-09-11）
 
-中央访问、身份、请求、处理、授权提示采用 Novecento Sans Wide Normal，欢迎三行采用 Bold。按固定文案制作轮廓，保留原字距动画与逐字时间轴；处理提示字号 21.35px，顶部 527px，图标间距 10px（1920×1080 基准）。左上三行品牌继续沿用已确认的 MiSans 排版。来源与验证见 verification/BOOT-LETTERING.md。
+中央访问、身份、请求、处理、授权提示采用 Novecento Sans Wide Normal，欢迎三行采用 Bold。按固定文案制作轮廓，保留原字距动画与逐字时间轴；处理提示字号 21.35px，顶部 527px，图标间距 10px（1920×1080 基准）。左上 RHINE LAB 按用户后续纠正改用 DemiBold，字号 50.75px、字距 1px，标题行固定高 48px，图形顶部偏移 1.425px；下方两行保留 MiSans 与既有位置。来源与验证见 verification/BOOT-LETTERING.md。
