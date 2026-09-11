@@ -14,7 +14,7 @@ iPhone 可用 Safari 打开在线版，通过“分享 → 添加到主屏幕”
 
 代码由 GPT-6 Astra 协助完成，模型通过 Blender MCP 制作。界面采用 **TypeScript + Three.js + Vite**，运行时实时渲染三维模型，开场由 DOM / SVG 与场景时间轴驱动。
 
-[快速运行](#快速运行) · [界面与动效](#界面与动效) · [操作说明](#操作说明) · [源码与 Blender 工程下载](https://pan.quark.cn/s/762d9ee9dfc3) · [参考原 PV](https://www.bilibili.com/video/BV1rr4y1b7sz/)
+[快速运行](#快速运行) · [界面与动效](#界面与动效) · [操作说明](#操作说明) · [源码与 Blender 工程下载](https://pan.quark.cn/s/463285897234) · [参考原 PV](https://www.bilibili.com/video/BV1rr4y1b7sz/)
 
 ## Wallpaper Engine 壁纸分支
 
@@ -139,7 +139,7 @@ git clone https://github.com/LBEILC/RhineLabUI.git
 cd RhineLabUI
 ```
 
-也可以从 GitHub 的 **Code → Download ZIP** 下载当前源码，或获取[夸克项目包](https://pan.quark.cn/s/762d9ee9dfc3)。夸克包是 **2026-09-08 的打包快照**，包含源码、运行模型与 Blender 源工程；后续更新以本仓库为准。
+也可以从 GitHub 的 **Code → Download ZIP** 下载当前源码，或获取[夸克项目包](https://pan.quark.cn/s/463285897234)。夸克包是 **2026-09-09 的打包快照**，包含源码、运行模型与 Blender 源工程；后续更新以本仓库为准。
 
 ### 安装并启动
 

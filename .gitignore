@@ -16,3 +16,8 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+reference/local-files-connection.js
+
+# Local integration checkout
+.main-integration/
