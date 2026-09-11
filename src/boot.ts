@@ -120,7 +120,10 @@ export class BootSequence {
     this.contour.style.strokeDasharray = `${s.logo.length} ${1 - s.logo.length}`;
     this.contour.style.strokeDashoffset = String(-s.logo.start);
     this.contour.setAttribute("stroke-width", String(s.logo.strokeWidth));
-    this.letters.textContent = s.logoLetters;
+    // Preserve the SVG text node once each revealed letter is in place. Replacing
+    // it every frame invalidates glyph rasterization under the moving HUD.
+    if (this.letters.textContent !== s.logoLetters)
+      this.letters.textContent = s.logoLetters;
     this.plus.style.opacity = this.minus.style.opacity =
       s.logo.symbolScale > 0 ? "1" : "0";
     this.plus.setAttribute(

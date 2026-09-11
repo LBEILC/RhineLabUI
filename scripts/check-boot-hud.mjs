@@ -13,6 +13,9 @@ try {
  const apply=values=>page.evaluate(values=>wallpaperPropertyListener.applyUserProperties(Object.fromEntries(Object.entries(values).map(([k,value])=>[k,{value}]))),values);
  const shot=()=>page.evaluate(()=>({mode:rhine.stats().mode,hud:document.querySelector('#stage').dataset.hudDepth,tracking:document.querySelector('#stage').dataset.hudTracking,panels:[...document.querySelectorAll('.boot .hud-surface')].map(n=>({name:n.className,base:n.style.transform,projection:n.style.getPropertyValue('--hud-projection'),transform:getComputedStyle(n).transform}))}));
  await page.goto('http://127.0.0.1:5189/');await page.waitForFunction(()=>window.rhine?.stats().ready);await page.waitForTimeout(600);
+ await page.evaluate(()=>rhine.seek(7));await page.waitForTimeout(150);
+ const glyphs=await page.evaluate(async()=>{const text=document.querySelector('.boot-logo text'),first=text.firstChild;let mutations=0;const observer=new MutationObserver(records=>mutations+=records.length);observer.observe(text,{childList:true,characterData:true,subtree:true});await new Promise(r=>setTimeout(r,650));observer.disconnect();return {mutations,sameNode:first===text.firstChild,value:text.textContent}});
+ assert.equal(glyphs.mutations,0,'Completed logo lettering must not be rebuilt each frame');assert.equal(glyphs.sameNode,true);assert.equal(glyphs.value,'RHINE·LAB');
  await mkdir('verification/boot-hud',{recursive:true});
  for(const [name,time] of [['logo',6.5],['scan',15.3],['welcome',19.6]]) {
    await page.evaluate(time=>rhine.seek(time),time);await page.mouse.move(1450,120);await page.waitForTimeout(300);
@@ -25,6 +28,6 @@ try {
  await apply({hudparallax:true,reduced:true});await page.evaluate(()=>rhine.seek(12));await page.waitForTimeout(100);assert.equal((await shot()).hud,'true');assert.equal((await shot()).tracking,'false');
  await page.evaluate(()=>rhine.archive());await page.waitForTimeout(200);assert.equal((await shot()).hud,'true');assert.equal((await shot()).mode,'archive');
  await apply({reduced:false});await page.evaluate(()=>rhine.seek(12));await page.setViewportSize({width:2560,height:1080});await page.waitForTimeout(400);assert.equal((await shot()).hud,'true');await page.screenshot({path:'verification/boot-hud/ultrawide.png'});
- assert.deepEqual(errors,[]);await writeFile('verification/boot-hud/results.json',JSON.stringify({results,errors,off:true,static:true,reduced:true,modeTransition:true,resize:true},null,2));
+ assert.deepEqual(errors,[]);await writeFile('verification/boot-hud/results.json',JSON.stringify({glyphs,results,errors,off:true,static:true,reduced:true,modeTransition:true,resize:true},null,2));
  console.log('Boot HUD: all five panels, authored transforms, tracking/static/off, reduced motion, mode transition and ultrawide passed.');
 } finally {await browser.close();server.close();}
