@@ -1,0 +1,683 @@
+{
+  "before": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting"
+    },
+    "topLeft": [
+      -1324,
+      10
+    ],
+    "topRight": [
+      -964,
+      -138
+    ],
+    "labelTopLeft": [
+      -1252,
+      39
+    ],
+    "labelBottomLeft": [
+      -1249,
+      86
+    ],
+    "modelPosition": [
+      0,
+      -2.3657,
+      -23.3319
+    ],
+    "cameraPosition": [
+      -82.8371,
+      39.7394,
+      53.2654
+    ],
+    "fieldOfView": 4.910240400031848,
+    "loaded": true,
+    "drawCalls": 5,
+    "superPerformance": true,
+    "presentation": 1,
+    "triangles": 811154,
+    "archiveCount": 393,
+    "archiveCandidates": 534,
+    "archiveCulled": 141,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 0,
+    "selectionPhase": "settled",
+    "pendingPulse": null,
+    "pulses": [],
+    "referenceTime": 34.2,
+    "selectedSlot": 76,
+    "selectedLane": 2,
+    "selectedCell": {
+      "lane": 2,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -309.9545782438803,
+        "y": 132.47118532294434
+      },
+      "row": {
+        "x": -41.73956529496259,
+        "y": -10.160735053997383
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -3,
+      "maxLane": 9,
+      "minRow": 1,
+      "maxRow": 85
+    },
+    "laneFocus": 2,
+    "columnCamera": 0,
+    "rotation": 0,
+    "clearance": -3.6609709849095577,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.027,
+    "appearance": 0.003,
+    "cameraDetail": 0,
+    "idleGain": 0.07688365361336427,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [],
+    "cameraDistance": 105.16920005611999,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 110.16920005611999,
+    "fogFar": 130.16920005612,
+    "returningAppearance": [],
+    "rail": 0,
+    "threeState": "on",
+    "fps": 0,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "systemReduced": false
+    },
+    "bootTime": null,
+    "selected": "X-001",
+    "saved": [],
+    "audio": {
+      "state": "suspended",
+      "scene": "archive",
+      "tracks": 0,
+      "voices": 0,
+      "loaded": false,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": false,
+        "music": false,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": {
+      "properties": {
+        "desktopmode": {
+          "value": "workbench"
+        },
+        "boot": {
+          "value": false
+        },
+        "superperformance": {
+          "value": true
+        },
+        "screenfinish": {
+          "value": false
+        },
+        "hudparallax": {
+          "value": false
+        },
+        "uifrost": {
+          "value": false
+        },
+        "sound": {
+          "value": false
+        },
+        "music": {
+          "value": false
+        },
+        "reduced": {
+          "value": false
+        }
+      },
+      "fps": 30,
+      "paused": false
+    }
+  },
+  "closing": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting"
+    },
+    "topLeft": [
+      -648,
+      128
+    ],
+    "topRight": [
+      -277,
+      -39
+    ],
+    "labelTopLeft": [
+      -571,
+      164
+    ],
+    "labelBottomLeft": [
+      -569,
+      219
+    ],
+    "modelPosition": [
+      0,
+      -2.2212,
+      -13.3308
+    ],
+    "cameraPosition": [
+      -104.4373,
+      43.6858,
+      63.7474
+    ],
+    "fieldOfView": 3.6088326240271495,
+    "loaded": true,
+    "drawCalls": 5,
+    "superPerformance": true,
+    "presentation": 0.8528181818181824,
+    "triangles": 745106,
+    "archiveCount": 361,
+    "archiveCandidates": 502,
+    "archiveCulled": 141,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 0,
+    "selectionPhase": "settled",
+    "pendingPulse": null,
+    "pulses": [],
+    "referenceTime": 34.43,
+    "selectedSlot": 76,
+    "selectedLane": 2,
+    "selectedCell": {
+      "lane": 2,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -319.8093738304337,
+        "y": 149.66015090177888
+      },
+      "row": {
+        "x": -52.68551748259487,
+        "y": -10.91186620286135
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -4,
+      "maxLane": 9,
+      "minRow": -12,
+      "maxRow": 71
+    },
+    "laneFocus": 2,
+    "columnCamera": 0,
+    "rotation": 0,
+    "clearance": -3.5294400512398427,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.16,
+    "appearance": 0.319,
+    "cameraDetail": 0,
+    "idleGain": 0.23110433893351442,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [],
+    "cameraDistance": 128.84792191146238,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 133.84792191146238,
+    "fogFar": 153.84792191146238,
+    "returningAppearance": [],
+    "rail": 0,
+    "threeState": "closing",
+    "fps": 0,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "systemReduced": false
+    },
+    "bootTime": null,
+    "selected": "X-001",
+    "saved": [],
+    "audio": {
+      "state": "suspended",
+      "scene": "archive",
+      "tracks": 0,
+      "voices": 0,
+      "loaded": false,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": false,
+        "music": false,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": {
+      "properties": {
+        "desktopmode": {
+          "value": "workbench"
+        },
+        "boot": {
+          "value": false
+        },
+        "superperformance": {
+          "value": true
+        },
+        "screenfinish": {
+          "value": false
+        },
+        "hudparallax": {
+          "value": false
+        },
+        "uifrost": {
+          "value": false
+        },
+        "sound": {
+          "value": false
+        },
+        "music": {
+          "value": false
+        },
+        "reduced": {
+          "value": false
+        }
+      },
+      "fps": 30,
+      "paused": false
+    }
+  },
+  "reloading": {
+    "decryption": {
+      "time": -1,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 0,
+      "clarity": 0,
+      "phase": "waiting"
+    },
+    "topLeft": [
+      618,
+      3230
+    ],
+    "topRight": [
+      916,
+      2968
+    ],
+    "labelTopLeft": [
+      681,
+      3242
+    ],
+    "labelBottomLeft": [
+      681,
+      3283
+    ],
+    "modelPosition": [
+      0,
+      -30.0857,
+      -2.17
+    ],
+    "cameraPosition": [
+      -73.8279,
+      38.0935,
+      48.8936
+    ],
+    "fieldOfView": 5.453036286150327,
+    "loaded": true,
+    "drawCalls": 5,
+    "superPerformance": true,
+    "presentation": 0.22727272727272727,
+    "triangles": 22706,
+    "archiveCount": 11,
+    "archiveCandidates": 522,
+    "archiveCulled": 511,
+    "archiveCapacity": 288,
+    "archiveCoverage": "standard",
+    "returningFiles": 0,
+    "selectionPhase": "settled",
+    "pendingPulse": null,
+    "pulses": [],
+    "referenceTime": 34.15,
+    "selectedSlot": 76,
+    "selectedLane": 2,
+    "selectedCell": {
+      "lane": 2,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -255.87434055839887,
+        "y": 230.79087600367637
+      },
+      "row": {
+        "x": -44.550513365770605,
+        "y": -18.217561835856078
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": -3,
+      "maxLane": 9,
+      "minRow": -34,
+      "maxRow": 50
+    },
+    "laneFocus": 2,
+    "columnCamera": 0,
+    "rotation": 0,
+    "clearance": -31.377952052013175,
+    "canInspect": false,
+    "returnPhase": "lowering",
+    "extraction": 0.008,
+    "appearance": 0,
+    "cameraDetail": 0,
+    "idleGain": 0.03921056084767682,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [],
+    "cameraDistance": 95.36791873221328,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 100.36791873221328,
+    "fogFar": 120.36791873221328,
+    "returningAppearance": [],
+    "rail": 0,
+    "threeState": "on",
+    "fps": 30,
+    "mode": "archive",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": false,
+      "systemReduced": false
+    },
+    "bootTime": null,
+    "selected": "X-001",
+    "saved": [],
+    "audio": {
+      "state": "suspended",
+      "scene": "archive",
+      "tracks": 0,
+      "voices": 0,
+      "loaded": false,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": false,
+        "music": false,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": {
+      "properties": {
+        "desktopmode": {
+          "value": "workbench"
+        },
+        "boot": {
+          "value": false
+        },
+        "superperformance": {
+          "value": true
+        },
+        "screenfinish": {
+          "value": false
+        },
+        "hudparallax": {
+          "value": false
+        },
+        "uifrost": {
+          "value": false
+        },
+        "sound": {
+          "value": false
+        },
+        "music": {
+          "value": false
+        },
+        "reduced": {
+          "value": false
+        },
+        "customwallpaper": {
+          "value": true
+        },
+        "customwallpaperfile": {
+          "value": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221600%22%20height%3D%22900%22%3E%3Crect%20width%3D%221600%22%20height%3D%22900%22%20fill%3D%22%23bfd0db%22%2F%3E%3Ccircle%20cx%3D%22900%22%20cy%3D%22380%22%20r%3D%22260%22%20fill%3D%22%23dfd5be%22%2F%3E%3Cpath%20d%3D%22M0%20790L1100%20560L1600%20730V900H0Z%22%20fill%3D%22%238da69d%22%2F%3E%3C%2Fsvg%3E"
+        }
+      },
+      "fps": 30,
+      "paused": false
+    }
+  },
+  "after": {
+    "decryption": {
+      "time": 39.56,
+      "intervals": [],
+      "markers": 0,
+      "point": 0,
+      "label": 0,
+      "labelValue": 1,
+      "clarity": 1,
+      "phase": "clear"
+    },
+    "topLeft": [
+      127,
+      238
+    ],
+    "topRight": [
+      1000,
+      174
+    ],
+    "labelTopLeft": [
+      255,
+      317
+    ],
+    "labelBottomLeft": [
+      257,
+      399
+    ],
+    "modelPosition": [
+      0,
+      1.6537,
+      -2.17
+    ],
+    "cameraPosition": [
+      -20.0643,
+      21.4815,
+      64.8791
+    ],
+    "fieldOfView": 4.7296934149796535,
+    "loaded": true,
+    "drawCalls": 43,
+    "superPerformance": true,
+    "presentation": 1,
+    "triangles": 825178,
+    "archiveCount": 160,
+    "archiveCandidates": 276,
+    "archiveCulled": 116,
+    "archiveCapacity": 576,
+    "archiveCoverage": "standard",
+    "returningFiles": 0,
+    "selectionPhase": "settled",
+    "pendingPulse": null,
+    "pulses": [],
+    "referenceTime": 34.76,
+    "selectedSlot": 76,
+    "selectedLane": 2,
+    "selectedCell": {
+      "lane": 2,
+      "row": 12
+    },
+    "hoverCell": null,
+    "hoverLifts": {},
+    "dragTrack": null,
+    "archiveMomentum": null,
+    "holdingArchive": false,
+    "dragProjection": {
+      "lane": {
+        "x": -751.5369089431449,
+        "y": 61.708452792965105
+      },
+      "row": {
+        "x": -26.997889581692736,
+        "y": -22.089203813031105
+      }
+    },
+    "dragMapping": null,
+    "coordinateOrigin": {
+      "lane": 0,
+      "row": 0
+    },
+    "poolBounds": {
+      "minLane": 0,
+      "maxLane": 5,
+      "minRow": -26,
+      "maxRow": 52
+    },
+    "laneFocus": 2,
+    "columnCamera": 0,
+    "rotation": 0,
+    "clearance": 0.3635096763018444,
+    "canInspect": true,
+    "returnPhase": "lowering",
+    "extraction": 4.05,
+    "appearance": 1,
+    "cameraDetail": 1,
+    "idleGain": 0,
+    "flatten": 0,
+    "spectrumActivity": 0,
+    "selectedIndexDim": 0,
+    "returningIndexDims": [],
+    "cameraDistance": 72.20515830620151,
+    "cameraNear": 5,
+    "cameraFar": 300,
+    "fogNear": 71.20515830811468,
+    "fogFar": 84.20515831034672,
+    "returningAppearance": [],
+    "rail": 0,
+    "threeState": "on",
+    "fps": 7,
+    "mode": "detail",
+    "ready": true,
+    "startup": "started",
+    "motion": {
+      "reduced": true,
+      "systemReduced": false
+    },
+    "bootTime": null,
+    "selected": "X-001",
+    "saved": [],
+    "audio": {
+      "state": "suspended",
+      "scene": "detail",
+      "tracks": 0,
+      "voices": 0,
+      "loaded": false,
+      "playedKeys": 0,
+      "error": "",
+      "preferences": {
+        "sound": false,
+        "music": false,
+        "soundVolume": 0.55,
+        "musicVolume": 0.5
+      }
+    },
+    "wallpaper": {
+      "properties": {
+        "desktopmode": {
+          "value": "archive"
+        },
+        "boot": {
+          "value": false
+        },
+        "superperformance": {
+          "value": true
+        },
+        "screenfinish": {
+          "value": false
+        },
+        "hudparallax": {
+          "value": false
+        },
+        "uifrost": {
+          "value": false
+        },
+        "sound": {
+          "value": false
+        },
+        "music": {
+          "value": false
+        },
+        "reduced": {
+          "value": true
+        },
+        "customwallpaper": {
+          "value": true
+        },
+        "customwallpaperfile": {
+          "value": ""
+        }
+      },
+      "fps": 30,
+      "paused": false
+    }
+  },
+  "errors": []
+}

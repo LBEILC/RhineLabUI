@@ -1,0 +1,20 @@
+.relay-entry, .relay-hud, .relay-target { position: absolute; z-index: 7; color: #171713; }
+.relay-entry { left: var(--edge); bottom: 9%; padding: 12px 0; border-top: 1px solid #aaa59a; background: transparent; font-size: 13px; letter-spacing: 1px; }
+.relay-entry span { margin-right: 22px; }
+.relay-hud { top: 15%; left: var(--edge); right: var(--edge); pointer-events: none; }
+.relay-heading { display: flex; align-items: baseline; gap: 24px; }
+.relay-heading small { font-size: 11px; letter-spacing: 2px; }
+.relay-score { font-size: 56px; font-weight: 300; font-variant-numeric: tabular-nums; }
+.relay-message { font-size: 13px; }
+.relay-time { height: 2px; background: #b7b3a944; margin-top: 12px; }
+.relay-time i { display: block; height: 100%; background: #8c744b; transform-origin: left; }
+.relay-actions { position: relative; display: flex; justify-content: flex-end; gap: 16px; margin-top: 16px; }
+.relay-actions button { pointer-events: auto; padding: 12px 18px; border: 1px solid #928c7b; background: #e8e5deee; font-size: 13px; }
+.relay-target { width: 46px; height: 46px; transform: translate(-50%, -50%); border: 1px solid #7b6035; background: #eee9dfe8; box-shadow: 0 0 0 5px #eee9df44; font-size: 15px; font-variant-numeric: tabular-nums; }
+.relay-target:hover { background: #1d1e19; color: #eee9df; }
+.relay-entry[hidden], .relay-hud[hidden], .relay-target[hidden], .relay-retry[hidden] { display: none; }
+[data-relay]:not([data-mode="boot"]) > :is(.workbench, .brand, .system-footer) { transition: opacity 300ms ease, visibility 0s; }
+[data-relay="true"] > :is(.workbench, .brand, .system-footer, #archive-ui, .powered, .inspection-overlay) { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 220ms ease-out, visibility 0s 220ms; }
+.reduce-motion[data-relay] > :is(.workbench, .brand, .system-footer, #archive-ui, .powered, .inspection-overlay) { transition: none; }
+.relay-entry:focus-visible, .relay-actions button:focus-visible, .relay-target:focus-visible { outline: 2px solid #9c7642; outline-offset: 5px; }
+@media(max-width: 700px) { .relay-heading { gap: 12px; flex-wrap: wrap; }.relay-message { flex-basis: 100%; }.relay-hud { top: max(120px, 18%); } }

@@ -1,0 +1,190 @@
+{
+  "retainedMediaNode": true,
+  "retainedUnchangedReel": true,
+  "clockReels": true,
+  "longTitleEllipsis": true,
+  "digitMotion": [
+    {
+      "sec": 0,
+      "active": 6,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -48.2862)",
+          "faces": "567890567890"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.65723)",
+          "faces": "9090"
+        }
+      ]
+    },
+    {
+      "sec": 1,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -10.2081)",
+          "faces": "0101"
+        }
+      ]
+    },
+    {
+      "sec": 2,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.94542)",
+          "faces": "1212"
+        }
+      ]
+    },
+    {
+      "sec": 3,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.65723)",
+          "faces": "2323"
+        }
+      ]
+    },
+    {
+      "sec": 4,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.94064)",
+          "faces": "3434"
+        }
+      ]
+    },
+    {
+      "sec": 5,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.94064)",
+          "faces": "4545"
+        }
+      ]
+    },
+    {
+      "sec": 6,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -10.2033)",
+          "faces": "5656"
+        }
+      ]
+    },
+    {
+      "sec": 7,
+      "active": 3,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.94064)",
+          "faces": "6767"
+        }
+      ]
+    },
+    {
+      "sec": 8,
+      "active": 5,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -10.2081)",
+          "faces": "7878"
+        }
+      ]
+    },
+    {
+      "sec": 9,
+      "active": 5,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, 0)",
+          "faces": "0"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -9.65179)",
+          "faces": "8989"
+        }
+      ]
+    },
+    {
+      "sec": 10,
+      "active": 7,
+      "reels": [
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -10.2081)",
+          "faces": "0101"
+        },
+        {
+          "transform": "matrix(1, 0, 0, 1, 0, -10.2081)",
+          "faces": "9090"
+        }
+      ]
+    }
+  ],
+  "mediaMotion": [
+    {
+      "title": "Dive",
+      "active": 24
+    },
+    {
+      "title": "888999",
+      "active": 25
+    },
+    {
+      "title": "Wide letters WWW",
+      "active": 71
+    },
+    {
+      "title": "Thin letters iii",
+      "active": 36
+    },
+    {
+      "title": "Another Artist - Song",
+      "active": 86
+    }
+  ],
+  "footerNumericReels": 3,
+  "footerRunningAnimation": true,
+  "footerHourCarry": true,
+  "focusReels": true,
+  "reducedMotion": true,
+  "errors": []
+}

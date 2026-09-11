@@ -1,0 +1,17 @@
+/* Avoid native select rendering in Wallpaper Engine's off-screen CEF. */
+.quality-cycle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-width: 125px;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 12px;
+  color: #393d32;
+  background: #e7e3d9;
+  border: 1px solid #bdb4a1;
+}
+.quality-cycle:disabled { opacity: .4; cursor: default; }
+
+.wallpaper-settings-note { margin: 14px 0 20px; padding: 12px 16px; border-left: 2px solid #9b8b54; background: #e7e3d9; color: #555849; font-size: 13px; line-height: 1.7; }

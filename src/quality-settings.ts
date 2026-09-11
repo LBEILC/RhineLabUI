@@ -4,6 +4,27 @@ import {
   type QualityPreset,
   type RenderQuality,
 } from "./render-quality";
+import { isWallpaper } from "./wallpaper";
+import { escapeHtml } from "./html";
+
+function choiceControl(attributes: string, label: string, value: string | number, choices: (readonly [string | number, string])[]) {
+  if (isWallpaper) {
+    const text = choices.find(([key]) => key === value)?.[1] ?? "自定义";
+    return `<button type="button" ${attributes} class="quality-cycle" aria-label="${label}" title="点击切换${label}" value="${value}" data-quality-choices="${escapeHtml(JSON.stringify(choices))}"><span data-quality-label>${text}</span><span aria-hidden="true">↻</span></button>`;
+  }
+  return `<select ${attributes} aria-label="${label}">${choices.map(([key, text]) => `<option value="${key}" ${key === value ? "selected" : ""}>${text}</option>`).join("")}${value === "custom" ? '<option value="custom" disabled selected>自定义</option>' : ""}</select>`;
+}
+
+if (isWallpaper) document.addEventListener("click", event => {
+  const button = (event.target as Element).closest<HTMLButtonElement>("[data-quality-choices]");
+  if (!button || button.disabled) return;
+  const choices = JSON.parse(button.dataset.qualityChoices!) as [string | number, string][];
+  const index = choices.findIndex(([value]) => String(value) === button.value);
+  const [value, label] = choices[(index + 1) % choices.length];
+  button.value = String(value);
+  button.querySelector("[data-quality-label]")!.textContent = label;
+  button.dispatchEvent(new Event("change", { bubbles: true }));
+});
 
 function select(
   quality: RenderQuality,
@@ -12,7 +33,7 @@ function select(
   hint: string,
   choices: (readonly [string | number, string])[],
 ) {
-  return `<label class="quality-control"><span>${label}<small>${hint}</small></span><select data-quality="${key}" aria-label="${label}">${choices.map(([value, text]) => `<option value="${value}" ${quality[key] === value ? "selected" : ""}>${text}</option>`).join("")}</select></label>`;
+  return `<label class="quality-control"><span>${label}<small>${hint}</small></span>${choiceControl(`data-quality="${key}"`, label, quality[key], choices)}</label>`;
 }
 function range(
   quality: RenderQuality,
@@ -27,7 +48,7 @@ function range(
 export function qualityMarkup(quality: RenderQuality) {
   const preset = matchingPreset(quality);
   return `<section class="quality-settings" aria-label="画质设置">
-    <div class="quality-heading"><h3>RENDER QUALITY <span>渲染画质</span></h3><select id="quality-preset" aria-label="画质预设">${(Object.keys(presetLabels) as QualityPreset[]).map((key) => `<option value="${key}" ${preset === key ? "selected" : ""}>${presetLabels[key]}</option>`).join("")}<option value="custom" disabled ${preset === "custom" ? "selected" : ""}>自定义</option></select></div>
+    <div class="quality-heading"><h3>RENDER QUALITY <span>渲染画质</span></h3>${choiceControl('id="quality-preset"', "画质预设", preset, (Object.keys(presetLabels) as QualityPreset[]).map(key => [key, presetLabels[key]]))}</div>
     <p class="quality-summary" id="quality-summary" aria-live="polite"></p>
     <details class="quality-advanced"><summary>精细设置 <span>清晰度 / 材质 / 阴影</span></summary><div class="quality-grid">
     ${range(quality, "scale", "渲染比例", "相对屏幕像素，受密度上限限制；高比例改善细线", 50, 200)}
@@ -88,21 +109,25 @@ export function qualityMarkup(quality: RenderQuality) {
       [0.5, 0.75, 1].map((v) => [v, `${v * 100}%`]),
     )}
     ${range(quality, "depthOfField", "景深强度 · 阵列", "0% 关闭；100% 保留原始镜头虚化", 0, 150)}
-    </div></details><p class="quality-note">即时生效并自动保存。清晰度与材质设置同步至 360° 查看器。高渲染比例更适合静态观察；缓冲上限为 829 万像素，硬件限制时自动收敛。</p>
+    </div></details><p class="quality-note">${isWallpaper ? "即时生效，仅限当前运行；长期设置请在 Wallpaper Engine 中调整。" : "即时生效并自动保存。"}清晰度与材质设置同步至 360° 查看器。高渲染比例更适合静态观察；缓冲上限为 829 万像素，硬件限制时自动收敛。</p>
   </section>`;
 }
 
 export function syncQualityUI(quality: RenderQuality) {
-  const preset = document.querySelector<HTMLSelectElement>("#quality-preset");
+  const preset = document.querySelector<HTMLSelectElement | HTMLButtonElement>("#quality-preset");
   if (!preset) return;
   preset.value = matchingPreset(quality);
   document
-    .querySelectorAll<HTMLInputElement | HTMLSelectElement>("[data-quality]")
+    .querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLButtonElement>("[data-quality]")
     .forEach((control) => {
       const key = control.dataset.quality as keyof RenderQuality;
       control.value = String(quality[key]);
       control.disabled = key === "aoResolution" && quality.aoSamples === 0;
     });
+  document.querySelectorAll<HTMLButtonElement>("[data-quality-choices]").forEach(button => {
+    const choices = JSON.parse(button.dataset.qualityChoices!) as [string | number, string][];
+    button.querySelector("[data-quality-label]")!.textContent = choices.find(([value]) => String(value) === button.value)?.[1] ?? "自定义";
+  });
   document
     .querySelectorAll<HTMLOutputElement>("[data-quality-output]")
     .forEach((output) => {

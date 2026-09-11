@@ -5,14 +5,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "node scripts/export-records.mjs",
+    "postinstall": "node scripts/patch-rolling-number.mjs",
+    "predev": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs",
     "dev": "vite --host 127.0.0.1",
-    "prebuild": "node scripts/export-records.mjs",
+    "prebuild": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs",
     "check:content": "node --experimental-strip-types --test scripts/check-content.mjs",
     "check:viewport": "node --experimental-strip-types scripts/check-viewport.mjs",
     "review:mobile": "node scripts/serve-mobile-review.mjs",
     "export:archives": "node scripts/export-records.mjs",
     "build": "tsc && vite build && node scripts/build-pwa.mjs",
+    "build:wallpaper": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs && tsc && vite build --mode wallpaper --outDir release/wallpaper && node scripts/build-wallpaper.mjs",
     "format": "prettier --write src scripts index.html package.json tsconfig.json",
     "preview": "vite preview --host 127.0.0.1"
   },
@@ -27,3 +29,4 @@
     "vite": "^7.3.1"
   }
 }
+

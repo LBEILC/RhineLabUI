@@ -1,0 +1,52 @@
+import {createRequire} from 'node:module';
+import {mkdir,writeFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
+const browser=await chromium.launch({channel:'msedge',headless:true});
+try {
+const page=await browser.newPage({viewport:{width:1600,height:900}}),errors=[];
+page.on('pageerror',e=>errors.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&/THREE|shader|WebGL/.test(m.text()))errors.push(m.text())});
+await page.goto('http://127.0.0.1:5176/?scene=archive');await page.waitForFunction(()=>window.rhine?.stats().ready);
+const apply=async(values)=>{await page.evaluate(values=>window.wallpaperPropertyListener.applyUserProperties(Object.fromEntries(Object.entries(values).map(([k,value])=>[k,{value}]))),values);await page.waitForTimeout(300)};
+const stats=()=>page.evaluate(()=>window.rhine.stats());
+const click=()=>page.locator('[data-action="toggle-three"]').click();
+await apply({desktopmode:'workbench',boot:false,superperformance:true,screenfinish:false,hudparallax:false,uifrost:false,sound:false,music:false,reduced:false});
+await page.waitForFunction(()=>window.rhine.stats().mode==='archive');
+await page.evaluate(()=>{window.contextLosses=0;const canvas=document.querySelector('#three-scene canvas');canvas.addEventListener('webglcontextlost',()=>window.contextLosses++);window.oldCanvas=canvas});
+const before=await stats();
+await click();await page.waitForTimeout(150);const closing=await stats();assert.equal(closing.threeState,'closing');assert.ok(closing.presentation<1&&closing.presentation>0);
+await click();await page.waitForFunction(()=>window.rhine.stats().presentation===1);assert.equal(await page.evaluate(()=>window.contextLosses),0);
+const picture='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900"><rect width="1600" height="900" fill="#bfd0db"/><circle cx="900" cy="380" r="260" fill="#dfd5be"/><path d="M0 790L1100 560L1600 730V900H0Z" fill="#8da69d"/></svg>');
+await apply({customwallpaper:true,customwallpaperfile:picture});
+await page.waitForFunction(()=>document.querySelector('.wallpaper-background').dataset.ready==='true');
+assert.equal(await page.locator('.wallpaper-background').evaluate(el=>getComputedStyle(el).opacity),'0');
+await click();await page.waitForFunction(()=>window.rhine.stats().threeState==='off');await page.waitForTimeout(800);
+assert.equal(await page.locator('#three-scene canvas').count(),0);assert.equal(await page.evaluate(()=>window.contextLosses),1);
+assert.equal(await page.locator('.relay-entry').isVisible(),false);
+assert.equal(await page.locator('.wallpaper-background').evaluate(el=>getComputedStyle(el).opacity),'1');
+await mkdir('verification/three-release',{recursive:true});await page.screenshot({path:'verification/three-release/custom-wallpaper.png'});
+await click();await page.waitForFunction(()=>window.rhine.stats().threeState==='on');const reloading=await stats();assert.ok(reloading.presentation<1);
+await page.waitForFunction(()=>window.rhine.stats().presentation===1);await page.waitForTimeout(800);
+assert.equal(await page.locator('.wallpaper-background').evaluate(el=>getComputedStyle(el).opacity),'0');assert.equal(await page.locator('#three-scene canvas').count(),1);
+assert.equal(await page.evaluate(()=>window.oldCanvas===document.querySelector('#three-scene canvas')),false);
+assert.equal((await stats()).selected,before.selected);
+await page.waitForFunction(()=>!document.querySelector('.relay-entry').hidden);
+assert.equal(await page.locator('.relay-entry').isVisible(),true);
+// Reduced motion also disposes; toggling the optional picture never recreates WebGL.
+await apply({reduced:true});await click();await page.waitForFunction(()=>window.rhine.stats().threeState==='off');
+await apply({customwallpaper:false});assert.equal(await page.locator('.wallpaper-background').evaluate(el=>getComputedStyle(el).opacity),'0');
+await apply({customwallpaper:true});assert.equal(await page.locator('.wallpaper-background').evaluate(el=>getComputedStyle(el).opacity),'1');
+await apply({customwallpaperfile:''});assert.equal(await page.locator('.wallpaper-background img').count(),0);
+assert.equal(await page.locator('canvas').count(),0);
+await click();await page.waitForFunction(()=>window.rhine.stats().threeState==='on'&&window.rhine.stats().presentation===1);
+await apply({desktopmode:'archive'});await page.evaluate(()=>window.rhine.detail());await page.waitForFunction(()=>window.rhine.stats().mode==='detail');
+await page.locator('[data-action="model-viewer"]').click();await page.waitForTimeout(1800);
+assert.equal(await page.locator('canvas').count(),2);await page.keyboard.press('Escape');await page.waitForTimeout(400);
+await click();await page.waitForFunction(()=>window.rhine.stats().threeState==='off');assert.equal(await page.locator('canvas').count(),0);
+// Details stay readable with no renderer.
+assert.equal(await page.locator('#detail-content').evaluate(el=>el.inert),false);
+await click();await page.waitForFunction(()=>window.rhine.stats().threeState==='on');
+await page.screenshot({path:'verification/three-release/restored.png'});
+assert.deepEqual(errors,[]);await writeFile('verification/three-release/results.json',JSON.stringify({before,closing,reloading,after:await stats(),errors},null,2));
+console.log('Exit reversal, actual context loss, zero canvases, custom image, fresh context, reduced motion, viewer disposal and detail recovery passed.');
+} finally {await browser.close()}

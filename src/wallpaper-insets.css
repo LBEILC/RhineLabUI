@@ -1,0 +1,61 @@
+/* Additional UI margins. Negative values intentionally extend the HUD frame.
+   The renderer, game targets and model-attached inspection marks stay full size. */
+#stage {
+  --ui-top: 0px; --ui-right: 0px; --ui-bottom: 0px; --ui-left: 0px;
+  --ui-brand-top: 114px; --ui-nav-top: 124px; --ui-footer-bottom: 35px;
+  --ui-viewer-top: 58px; --ui-viewer-bottom: 68px; --ui-viewer-side: 60px; --ui-viewer-state: 37px;
+  --ui-modal-clearance: 100px;
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > :is(#archive-ui, #detail-ui) {
+  inset: var(--ui-top) var(--ui-right) var(--ui-bottom) var(--ui-left);
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { inset: var(--ui-top) var(--ui-right) 0 var(--ui-left); }
+/* Translate the lower rows AFTER their HUD projection. Changing their layout
+   anchors would resample the curved surface and change their relative gaps. */
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) :is(.wb-nav, .system-footer, .relay-entry) {
+  translate: 0 calc(-1 * var(--ui-bottom));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .brand {
+  left: calc(var(--edge) + var(--ui-left)); top: calc(var(--ui-brand-top) + var(--ui-top));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .system-nav {
+  right: calc(var(--edge) + var(--ui-right)); top: calc(var(--ui-nav-top) + var(--ui-top));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .system-footer {
+  left: calc(var(--edge) + var(--ui-left)); right: calc(var(--edge) + var(--ui-right)); bottom: var(--ui-footer-bottom);
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .powered {
+  right: calc(var(--edge) + var(--ui-right)); bottom: calc(108px + var(--ui-bottom));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .relay-entry {
+  left: calc(var(--edge) + var(--ui-left));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .relay-hud {
+  top: calc(15% + var(--ui-top)); left: calc(var(--edge) + var(--ui-left)); right: calc(var(--edge) + var(--ui-right));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) > .toast {
+  left: calc(50% + (var(--ui-left) - var(--ui-right)) / 2); bottom: calc(85px + var(--ui-bottom));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) .terminal-modal {
+  max-width: max(180px, calc(100% - var(--ui-left) - var(--ui-right) - var(--ui-modal-clearance)));
+  max-height: max(180px, calc(100% - var(--ui-top) - var(--ui-bottom) - var(--ui-modal-clearance)));
+  translate: calc((var(--ui-left) - var(--ui-right)) / 2) calc((var(--ui-top) - var(--ui-bottom)) / 2);
+  overflow: auto;
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) .viewer-header {
+  top: calc(var(--ui-viewer-top) + var(--ui-top)); left: calc(var(--ui-viewer-side) + var(--ui-left)); right: calc(var(--ui-viewer-side) + var(--ui-right));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) .viewer-footer {
+  bottom: calc(var(--ui-viewer-bottom) + var(--ui-bottom)); left: calc(var(--ui-viewer-side) + var(--ui-left)); right: calc(var(--ui-viewer-side) + var(--ui-right));
+}
+#stage[data-ui-insets="true"]:not([data-mode="boot"]) .viewer-state { bottom: calc(var(--ui-viewer-state) + var(--ui-bottom)); }
+#stage:is([data-layout="compact"], [data-layout="portrait"]) {
+  --ui-brand-top: var(--top-edge); --ui-nav-top: var(--top-edge); --ui-footer-bottom: var(--bottom-edge);
+  --ui-viewer-top: var(--top-edge); --ui-viewer-bottom: calc(var(--bottom-edge) + 18px); --ui-viewer-side: var(--edge); --ui-viewer-state: var(--bottom-edge);
+  --ui-modal-clearance: 0px;
+}
+#stage[data-layout="portrait"] { --ui-viewer-bottom: calc(var(--bottom-edge) + 24px); }
+@media (max-width: 700px) {
+  #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .workbench { top: calc(100px + var(--ui-top)); bottom: 50px; }
+  #stage[data-ui-insets="true"]:not([data-mode="boot"]) > .relay-hud { top: calc(max(120px, 18%) + var(--ui-top)); }
+}

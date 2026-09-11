@@ -1,0 +1,1507 @@
+{
+  "original": {
+    "quality": {
+      "ratio": 1,
+      "width": 1920,
+      "height": 1080,
+      "limited": false,
+      "antialias": "off",
+      "transmission": 1,
+      "anisotropy": 16,
+      "superPerformance": false,
+      "aoSamples": 32,
+      "aoWidth": 1920,
+      "aoHeight": 1080,
+      "shadows": 2048,
+      "depthOfField": 100
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        -476,
+        150
+      ],
+      "topRight": [
+        -100,
+        -22
+      ],
+      "labelTopLeft": [
+        -397,
+        187
+      ],
+      "labelBottomLeft": [
+        -396,
+        244
+      ],
+      "modelPosition": [
+        0,
+        -2.1854,
+        -11.3084
+      ],
+      "cameraPosition": [
+        -107.4754,
+        44.2408,
+        65.2217
+      ],
+      "fieldOfView": 3.425791628405905,
+      "loaded": true,
+      "drawCalls": 67,
+      "superPerformance": false,
+      "triangles": 6061145,
+      "archiveCount": 342,
+      "archiveCandidates": 490,
+      "archiveCulled": 148,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 34.5,
+      "selectedSlot": 76,
+      "selectedLane": 2,
+      "selectedCell": {
+        "lane": 2,
+        "row": 12
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -388.68070550106097,
+          "y": 185.33323718688828
+        },
+        "row": {
+          "x": -66.14263513338855,
+          "y": -13.436617830487492
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -4,
+        "maxLane": 9,
+        "minRow": -14,
+        "maxRow": 67
+      },
+      "laneFocus": 2,
+      "columnCamera": 0,
+      "rotation": 0,
+      "clearance": -3.4907570077197603,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.2,
+      "appearance": 0.501,
+      "cameraDetail": 0,
+      "idleGain": 0.27379286867960395,
+      "cameraDistance": 132.19292571382377,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 137.19292571382377,
+      "fogFar": 157.19292571382377,
+      "returningAppearance": [],
+      "rail": 0,
+      "fps": 5,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-001",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "workbench"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "original"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "true",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "fast": {
+    "quality": {
+      "ratio": 0.6,
+      "width": 1152,
+      "height": 648,
+      "limited": false,
+      "antialias": "off",
+      "transmission": 0.25,
+      "anisotropy": 2,
+      "superPerformance": true,
+      "aoSamples": 0,
+      "aoWidth": 576,
+      "aoHeight": 324,
+      "shadows": 0,
+      "depthOfField": 0
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        501,
+        285
+      ],
+      "topRight": [
+        883,
+        92
+      ],
+      "labelTopLeft": [
+        583,
+        326
+      ],
+      "labelBottomLeft": [
+        584,
+        390
+      ],
+      "modelPosition": [
+        0,
+        -1.9965,
+        -2.3008
+      ],
+      "cameraPosition": [
+        -114.5529,
+        45.5339,
+        68.6562
+      ],
+      "fieldOfView": 2.999375374294203,
+      "loaded": true,
+      "drawCalls": 43,
+      "superPerformance": true,
+      "triangles": 1477402,
+      "archiveCount": 318,
+      "archiveCandidates": 457,
+      "archiveCulled": 139,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 36.02,
+      "selectedSlot": 76,
+      "selectedLane": 2,
+      "selectedCell": {
+        "lane": 2,
+        "row": 12
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -396.20228556572243,
+          "y": 207.53687752984828
+        },
+        "row": {
+          "x": -76.48813166933738,
+          "y": -14.865006370941705
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -4,
+        "maxLane": 9,
+        "minRow": -27,
+        "maxRow": 51
+      },
+      "laneFocus": 2,
+      "columnCamera": 0,
+      "rotation": 0,
+      "clearance": -3.3084713812943365,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.399,
+      "appearance": 1,
+      "cameraDetail": 0,
+      "idleGain": 0.7841734061565869,
+      "cameraDistance": 139.9960244936259,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 144.9960244936259,
+      "fogFar": 164.9960244936259,
+      "returningAppearance": [],
+      "rail": 0,
+      "fps": 6,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-001",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "workbench"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "original"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          },
+          "superperformance": {
+            "value": true
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "false",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "restored": {
+    "quality": {
+      "ratio": 1,
+      "width": 1920,
+      "height": 1080,
+      "limited": false,
+      "antialias": "off",
+      "transmission": 1,
+      "anisotropy": 16,
+      "superPerformance": false,
+      "aoSamples": 32,
+      "aoWidth": 1920,
+      "aoHeight": 1080,
+      "shadows": 2048,
+      "depthOfField": 100
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        517,
+        289
+      ],
+      "topRight": [
+        899,
+        96
+      ],
+      "labelTopLeft": [
+        600,
+        330
+      ],
+      "labelBottomLeft": [
+        600,
+        394
+      ],
+      "modelPosition": [
+        0,
+        -2.0055,
+        -2.17
+      ],
+      "cameraPosition": [
+        -114.5533,
+        45.5338,
+        68.6593
+      ],
+      "fieldOfView": 2.999184536076502,
+      "loaded": true,
+      "drawCalls": 102,
+      "superPerformance": false,
+      "triangles": 5834355,
+      "archiveCount": 317,
+      "archiveCandidates": 459,
+      "archiveCulled": 142,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 47.48,
+      "selectedSlot": 46,
+      "selectedLane": 1,
+      "selectedCell": {
+        "lane": 1,
+        "row": 14
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -395.9244598739799,
+          "y": 207.7604195781138
+        },
+        "row": {
+          "x": -76.55808796506659,
+          "y": -14.88163125991234
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -5,
+        "maxLane": 8,
+        "minRow": -26,
+        "maxRow": 53
+      },
+      "laneFocus": 1.0000000000000013,
+      "columnCamera": -5.199999999999997,
+      "rotation": 0,
+      "clearance": -3.3077908802978393,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.4,
+      "appearance": 1,
+      "cameraDetail": 0,
+      "idleGain": 0.8474098942442123,
+      "cameraDistance": 139.99795347667427,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 144.9978720451173,
+      "fogFar": 164.99777704163418,
+      "returningAppearance": [],
+      "rail": -1.24,
+      "fps": 59,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-010",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "archive"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "original"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          },
+          "superperformance": {
+            "value": false
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "true",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "custom": {
+    "quality": {
+      "ratio": 0.75,
+      "width": 1440,
+      "height": 810,
+      "limited": false,
+      "antialias": "off",
+      "transmission": 0.5,
+      "anisotropy": 16,
+      "superPerformance": false,
+      "aoSamples": 0,
+      "aoWidth": 1440,
+      "aoHeight": 810,
+      "shadows": 0,
+      "depthOfField": 0
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        517,
+        289
+      ],
+      "topRight": [
+        899,
+        96
+      ],
+      "labelTopLeft": [
+        600,
+        330
+      ],
+      "labelBottomLeft": [
+        600,
+        394
+      ],
+      "modelPosition": [
+        0,
+        -2.0063,
+        -2.17
+      ],
+      "cameraPosition": [
+        -114.5535,
+        45.5339,
+        68.6592
+      ],
+      "fieldOfView": 2.999182948454873,
+      "loaded": true,
+      "drawCalls": 46,
+      "superPerformance": false,
+      "triangles": 2827499,
+      "archiveCount": 317,
+      "archiveCandidates": 459,
+      "archiveCulled": 142,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 47.5,
+      "selectedSlot": 46,
+      "selectedLane": 1,
+      "selectedCell": {
+        "lane": 1,
+        "row": 14
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -395.9227051293093,
+          "y": 207.7636298986957
+        },
+        "row": {
+          "x": -76.55796954694105,
+          "y": -14.881818681894064
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -5,
+        "maxLane": 8,
+        "minRow": -26,
+        "maxRow": 53
+      },
+      "laneFocus": 1.0000000000000013,
+      "columnCamera": -5.199999999999997,
+      "rotation": 0,
+      "clearance": -3.307750882932696,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.4,
+      "appearance": 1,
+      "cameraDetail": 0,
+      "idleGain": 0.850095971553297,
+      "cameraDistance": 139.9980773695851,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 144.99800084570307,
+      "fogFar": 164.9979115678407,
+      "returningAppearance": [],
+      "rail": -1.24,
+      "fps": 59,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-010",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "archive"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "custom"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          },
+          "superperformance": {
+            "value": false
+          },
+          "qualityscale": {
+            "value": 75
+          },
+          "qualityshadows": {
+            "value": "0"
+          },
+          "qualityaosamples": {
+            "value": "0"
+          },
+          "qualitydepthoffield": {
+            "value": 0
+          },
+          "qualitytransmission": {
+            "value": "0.5"
+          },
+          "qualitypixelratio": {
+            "value": "1"
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "true",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "partial": {
+    "quality": {
+      "ratio": 0.65,
+      "width": 1248,
+      "height": 702,
+      "limited": false,
+      "antialias": "off",
+      "transmission": 0.5,
+      "anisotropy": 16,
+      "superPerformance": false,
+      "aoSamples": 0,
+      "aoWidth": 1248,
+      "aoHeight": 702,
+      "shadows": 0,
+      "depthOfField": 0
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        517,
+        287
+      ],
+      "topRight": [
+        899,
+        94
+      ],
+      "labelTopLeft": [
+        600,
+        328
+      ],
+      "labelBottomLeft": [
+        600,
+        392
+      ],
+      "modelPosition": [
+        0,
+        -1.9919,
+        -2.17
+      ],
+      "cameraPosition": [
+        -114.5564,
+        45.5345,
+        68.6579
+      ],
+      "fieldOfView": 2.999158609832844,
+      "loaded": true,
+      "drawCalls": 46,
+      "superPerformance": false,
+      "triangles": 2819099,
+      "archiveCount": 316,
+      "archiveCandidates": 458,
+      "archiveCulled": 142,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 49.08,
+      "selectedSlot": 46,
+      "selectedLane": 1,
+      "selectedCell": {
+        "lane": 1,
+        "row": 14
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -395.9214408990644,
+          "y": 207.7130217077808
+        },
+        "row": {
+          "x": -76.56098659488589,
+          "y": -14.877541236324468
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -5,
+        "maxLane": 8,
+        "minRow": -26,
+        "maxRow": 53
+      },
+      "laneFocus": 1.000000000000001,
+      "columnCamera": -5.199999999999997,
+      "rotation": 0,
+      "clearance": -3.310327987810028,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.4,
+      "appearance": 1,
+      "cameraDetail": 0,
+      "idleGain": 0.9575810464953457,
+      "cameraDistance": 139.99997682539143,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 144.99997590301064,
+      "fogFar": 164.9999748268997,
+      "returningAppearance": [],
+      "rail": -1.24,
+      "fps": 58,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-010",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "archive"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "custom"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          },
+          "superperformance": {
+            "value": false
+          },
+          "qualityscale": {
+            "value": 65
+          },
+          "qualityshadows": {
+            "value": "0"
+          },
+          "qualityaosamples": {
+            "value": "0"
+          },
+          "qualitydepthoffield": {
+            "value": 0
+          },
+          "qualitytransmission": {
+            "value": "0.5"
+          },
+          "qualitypixelratio": {
+            "value": "1"
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "true",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "customRestored": {
+    "quality": {
+      "ratio": 0.85,
+      "width": 1632,
+      "height": 918,
+      "limited": false,
+      "antialias": "off",
+      "transmission": 0.5,
+      "anisotropy": 16,
+      "superPerformance": false,
+      "aoSamples": 0,
+      "aoWidth": 1632,
+      "aoHeight": 918,
+      "shadows": 0,
+      "depthOfField": 0
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        517,
+        294
+      ],
+      "topRight": [
+        899,
+        101
+      ],
+      "labelTopLeft": [
+        600,
+        335
+      ],
+      "labelBottomLeft": [
+        600,
+        399
+      ],
+      "modelPosition": [
+        0,
+        -2.0399,
+        -2.17
+      ],
+      "cameraPosition": [
+        -114.5565,
+        45.5345,
+        68.6579
+      ],
+      "fieldOfView": 2.999158312913573,
+      "loaded": true,
+      "drawCalls": 46,
+      "superPerformance": false,
+      "triangles": 2827499,
+      "archiveCount": 317,
+      "archiveCandidates": 458,
+      "archiveCulled": 141,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 53.65,
+      "selectedSlot": 46,
+      "selectedLane": 1,
+      "selectedCell": {
+        "lane": 1,
+        "row": 14
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -395.87691083111946,
+          "y": 207.88569791167836
+        },
+        "row": {
+          "x": -76.55263413418963,
+          "y": -14.88990199772
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -5,
+        "maxLane": 8,
+        "minRow": -26,
+        "maxRow": 53
+      },
+      "laneFocus": 1.000000000000001,
+      "columnCamera": -5.199999999999997,
+      "rotation": 0,
+      "clearance": -3.308023653172159,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.4,
+      "appearance": 1,
+      "cameraDetail": 0,
+      "idleGain": 0.9989060059349608,
+      "cameraDistance": 139.99999999993616,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 144.99999999993364,
+      "fogFar": 164.99999999993065,
+      "returningAppearance": [],
+      "rail": -1.24,
+      "fps": 61,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-010",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "archive"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "custom"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          },
+          "superperformance": {
+            "value": false
+          },
+          "qualityscale": {
+            "value": 85
+          },
+          "qualityshadows": {
+            "value": "0"
+          },
+          "qualityaosamples": {
+            "value": "0"
+          },
+          "qualitydepthoffield": {
+            "value": 0
+          },
+          "qualitytransmission": {
+            "value": "0.5"
+          },
+          "qualitypixelratio": {
+            "value": "1"
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "true",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "uhd": {
+    "quality": {
+      "ratio": 0.6666666666666666,
+      "width": 1280,
+      "height": 720,
+      "limited": true,
+      "antialias": "off",
+      "transmission": 0.25,
+      "anisotropy": 2,
+      "superPerformance": true,
+      "aoSamples": 0,
+      "aoWidth": 640,
+      "aoHeight": 360,
+      "shadows": 0,
+      "depthOfField": 0
+    },
+    "stats": {
+      "decryption": {
+        "time": -1,
+        "intervals": [],
+        "markers": 0,
+        "point": 0,
+        "label": 0,
+        "labelValue": 0,
+        "clarity": 0,
+        "phase": "waiting"
+      },
+      "topLeft": [
+        517,
+        302
+      ],
+      "topRight": [
+        899,
+        108
+      ],
+      "labelTopLeft": [
+        600,
+        342
+      ],
+      "labelBottomLeft": [
+        600,
+        407
+      ],
+      "modelPosition": [
+        0,
+        -2.0945,
+        -2.17
+      ],
+      "cameraPosition": [
+        -114.5565,
+        45.5345,
+        68.6579
+      ],
+      "fieldOfView": 2.9991583129127646,
+      "loaded": true,
+      "drawCalls": 43,
+      "superPerformance": true,
+      "triangles": 1477402,
+      "archiveCount": 318,
+      "archiveCandidates": 458,
+      "archiveCulled": 140,
+      "archiveCapacity": 576,
+      "archiveCoverage": "standard",
+      "returningFiles": 0,
+      "selectionPhase": "settled",
+      "pendingPulse": null,
+      "pulses": [],
+      "referenceTime": 55.2,
+      "selectedSlot": 46,
+      "selectedLane": 1,
+      "selectedCell": {
+        "lane": 1,
+        "row": 14
+      },
+      "hoverCell": null,
+      "hoverLifts": {},
+      "dragTrack": null,
+      "archiveMomentum": null,
+      "holdingArchive": false,
+      "dragProjection": {
+        "lane": {
+          "x": -791.6530162544224,
+          "y": 416.1637247820573
+        },
+        "row": {
+          "x": -153.086270241787,
+          "y": -29.807906351829228
+        }
+      },
+      "dragMapping": null,
+      "coordinateOrigin": {
+        "lane": 0,
+        "row": 0
+      },
+      "poolBounds": {
+        "minLane": -5,
+        "maxLane": 8,
+        "minRow": -26,
+        "maxRow": 53
+      },
+      "laneFocus": 1.000000000000001,
+      "columnCamera": -5.199999999999997,
+      "rotation": 0,
+      "clearance": -3.2941594465377406,
+      "canInspect": false,
+      "returnPhase": "lowering",
+      "extraction": 0.4,
+      "appearance": 1,
+      "cameraDetail": 0,
+      "idleGain": 0.9996835166739286,
+      "cameraDistance": 139.99999999999918,
+      "cameraNear": 5,
+      "cameraFar": 300,
+      "fogNear": 144.99999999999915,
+      "fogFar": 164.9999999999991,
+      "returningAppearance": [],
+      "rail": -1.24,
+      "fps": 50,
+      "mode": "archive",
+      "ready": true,
+      "startup": "started",
+      "motion": {
+        "reduced": false,
+        "systemReduced": false
+      },
+      "bootTime": null,
+      "selected": "X-010",
+      "saved": [],
+      "audio": {
+        "state": "suspended",
+        "scene": "archive",
+        "tracks": 0,
+        "voices": 0,
+        "loaded": false,
+        "playedKeys": 0,
+        "error": "",
+        "preferences": {
+          "sound": false,
+          "music": false,
+          "soundVolume": 0.55,
+          "musicVolume": 0.5
+        }
+      },
+      "wallpaper": {
+        "properties": {
+          "boot": {
+            "value": false
+          },
+          "desktopmode": {
+            "value": "archive"
+          },
+          "sound": {
+            "value": false
+          },
+          "music": {
+            "value": false
+          },
+          "reduced": {
+            "value": false
+          },
+          "renderquality": {
+            "value": "custom"
+          },
+          "hudparallax": {
+            "value": true
+          },
+          "huddepth": {
+            "value": 20
+          },
+          "hudtracking": {
+            "value": false
+          },
+          "uifrost": {
+            "value": true
+          },
+          "screenfinish": {
+            "value": true
+          },
+          "screengrain": {
+            "value": 20
+          },
+          "screenfringe": {
+            "value": 20
+          },
+          "screenvignette": {
+            "value": 20
+          },
+          "audioreactive": {
+            "value": true
+          },
+          "selectionstyle": {
+            "value": "original"
+          },
+          "superperformance": {
+            "value": true
+          },
+          "qualityscale": {
+            "value": 85
+          },
+          "qualityshadows": {
+            "value": "0"
+          },
+          "qualityaosamples": {
+            "value": "0"
+          },
+          "qualitydepthoffield": {
+            "value": 0
+          },
+          "qualitytransmission": {
+            "value": "0.5"
+          },
+          "qualitypixelratio": {
+            "value": "1"
+          }
+        },
+        "fps": 60,
+        "paused": false
+      }
+    },
+    "font": "112px",
+    "screen": "false",
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)"
+  },
+  "errors": []
+}
