@@ -42,7 +42,7 @@ props({hudtracking:false});for(let i=120;i<240;i++)fx.update(i/60,false);
 assert.ok(probe.depth>.19,'Tracking off retains static curved HUD');assert.ok(Math.abs(probe.pointer.x)<.001,'Tracking off returns to centered lens');
 props({hudtracking:true});modal=1;for(let i=240;i<360;i++)fx.update(i/60,false);assert.ok(Math.abs(probe.pointer.x)<.001);
 modal=0;fx.update(6,true);assert.equal(probe.pointer.x,0);assert.ok(probe.depth>.19,'Reduced motion keeps stationary projection');
-stage.dataset.mode='boot';fx.update(6.1,false);assert.equal(probe.depth,0);assert.equal(stage.dataset.uiFrost,'false');assert.equal(probe.screen[0],true,'Global finish also covers opening');
+stage.dataset.mode='boot';fx.update(6.1,false);assert.ok(probe.depth>.19,'Opening shares the enabled HUD depth');assert.equal(stage.dataset.uiFrost,'false');assert.equal(probe.screen[0],true,'Global finish also covers opening');
 props({hudparallax:false,screenfinish:false});fx.update(6.2,false);assert.equal(scene.uiOnlyParallax,true,'Wallpaper camera never follows passive cursor input');assert.equal(probe.screen[0],false);
 props({uimarginbottom:60,uimarginleft:-20});fx.update(6.3,false);
 assert.equal(stage.dataset.uiInsets,'true');assert.equal(css['--ui-bottom'],'calc(60px / var(--stage-scale, 1))');assert.equal(css['--ui-left'],'calc(-20px / var(--stage-scale, 1))');
