@@ -1,0 +1,75 @@
+/* Fixed Novecento phrase drawings; the licensed font files are not embedded. */
+.boot-phrase {
+  display: inline-flex;
+  height: 1em;
+  align-items: stretch;
+  vertical-align: -0.16em;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.boot-phrase-letter {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  height: 1em;
+  margin-inline-end: var(--boot-phrase-tracking, 0px);
+}
+.boot-font-letter::before {
+  content: attr(data-letter);
+  position: absolute;
+  left: 0;
+  /* The official font's 1021/-179 metrics place its 1em line baseline at
+     .921em. Move it to the same .8em baseline as the authored artwork. */
+  top: -0.121em;
+  font-family: var(--boot-webfont-family);
+  font-size: inherit;
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  font-kerning: none;
+  line-height: 1;
+  white-space: pre;
+}
+.boot-phrase-letter:last-child { margin-inline-end: 0; }
+.boot-phrase[hidden], .boot-phrase-letter[hidden] { display: none; }
+.boot-phrase svg.boot-letter-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: currentColor;
+}
+.boot-phrase-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: pre;
+}
+.boot-lettering-fallback > .boot-phrase-label {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+}
+#auth-message { --boot-phrase-tracking: -0.00909em; }
+.auth-status { top: 527px; gap: 10px; font-size: 21.35px; }
+.welcome-company { --boot-phrase-tracking: -0.5px; }
+.brand h1 {
+  position: relative;
+  height: 48px;
+  font-size: 50.75px;
+  letter-spacing: 0;
+  --boot-phrase-tracking: 1px;
+}
+.brand h1 > .boot-phrase {
+  position: absolute;
+  left: 0;
+  top: 1.425px;
+}
+[data-layout="opening"][data-opening-portrait="true"] .scan > span {
+  --boot-phrase-tracking: 1px !important;
+}

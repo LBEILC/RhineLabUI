@@ -1,5 +1,12 @@
 # Rhine Lab UI
 
+- 2026-09-11：官网已独立集成 Novecento 开场字体；授权 kit 不进入 Git。正式 Vercel 项目在构建时从当前生产版本恢复并校验字体，首次部署使用本机授权 kit 的静态输出。见 verification/WEBFONT-DEPLOYMENT.md。
+
+## 开场中央字体
+
+- 2026-09-11：用户要求中央开场文案中适合的位置统一使用 Novecento Sans Wide。访问、身份、请求、处理、授权提示使用 Normal；欢迎三行使用 Bold。后续按用户纠正与原片叠加比较，左上 RHINE LAB 使用 DemiBold，下方两行保留 MiSans。沿用原时间轴与 HUD。
+- 用户后续授权从 MyFonts 领取 Normal、DemiBold、Bold 正式 Webfont 并直接替换，本机已领取并接入。public/fonts/novecento 为独立许可资源，排除 Git；有完整字体包时使用原始 WOFF2，其他检出或加载失败保留既有固定图形。来源、再制作与回归见 verification/BOOT-LETTERING.md。网页年度许可不等于已确认创意工坊分发授权，本轮未上传。
+
 ## Wallpaper Engine 实验分支
 
 - 用户追加授权音乐律动、手动点击开始且可隐藏入口的波纹接力小游戏，以及入场详情开关。工作台默认短入场，展示模式默认完整；可强制覆盖。工作台内容轻微错峰淡入，减少动态效果时直接显示。

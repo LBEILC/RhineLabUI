@@ -1,0 +1,30 @@
+Opening lettering / 开场文字
+
+Novecento Sans Wide, designed by Jan Tonellato / Synthview Type Design.
+https://typography.synthview.com/novecento-sans-font-family.php
+
+Normal, DemiBold and Bold were used to draw the fixed English phrases in the
+opening and the fixed RHINE LAB corner heading.
+The source repository contains pre-authored phrase graphics. A separately
+licensed local build may include the official MyFonts webfont kit and render
+these phrases using its original WOFF2 files. The kit is excluded from Git.
+Original font copyrights and ownership remain with Jan Tonellato / Synthview.
+The project's MIT license does not relicense the underlying typeface.
+
+Normal and DemiBold source: author's DaFont package, free desktop license.
+https://www.dafont.com/novecento-sans.font
+https://typography.synthview.com/pdf/eula-free-font-dafont.pdf
+Bold source: user's existing MyFonts desktop package.
+
+Both source licenses permit characters to be imported as graphical objects
+(letters outlined as graphics). The desktop font files must not be redistributed
+or embedded in this project. Changing the authored phrases requires separately
+obtaining the font and rerunning scripts/make-boot-lettering.py locally.
+
+Optional official webfont kit:
+MyFonts / Monotype Font Software For Web Content EULA (v260616).
+https://www.myfonts.com/pages/license-agreement?id=eula_2267&eula_lang=eula_en
+The fonts are individually licensed to the website owner. Other users must
+obtain their own license; this project's MIT license does not cover them.
+Retain the original kit's RhineLabNovecento.css copyright and license notice.
+Webfont rights are limited by the owner's license term, domain and pageviews.

@@ -8,7 +8,7 @@
     "postinstall": "node scripts/patch-rolling-number.mjs",
     "predev": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs",
     "dev": "vite --host 127.0.0.1",
-    "prebuild": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs",
+    "prebuild": "node scripts/patch-rolling-number.mjs && node scripts/export-records.mjs && node scripts/prepare-webfonts.mjs",
     "check:content": "node --experimental-strip-types --test scripts/check-content.mjs",
     "check:viewport": "node --experimental-strip-types scripts/check-viewport.mjs",
     "review:mobile": "node scripts/serve-mobile-review.mjs",
