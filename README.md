@@ -18,7 +18,7 @@ iPhone 可用 Safari 打开在线版，通过“分享 → 添加到主屏幕”
 
 ## Wallpaper Engine 壁纸分支
 
-当前分支 **`codex/wallpaper-engine`** 用于将莱茵生命三维终端扩展为 Wallpaper Engine 交互桌面壁纸。网页正式版继续由 `main` 维护，本分支单独开发和发布壁纸功能。
+壁纸版已迁移到独立公共仓库 **[RhineLabWallpaper](https://github.com/LBEILC/RhineLabWallpaper)**，后续功能在新仓库的 `main` 分支开发。当前 **`codex/wallpaper-engine`** 分支保留迁移记录；网页正式版继续由原仓库的 `main` 维护。
 
 **[在 Steam 创意工坊订阅壁纸 → Rhine Lab · 莱茵生命交互桌面](https://steamcommunity.com/sharedfiles/filedetails/?id=3799142774)**
 
@@ -33,8 +33,9 @@ iPhone 可用 Safari 打开在线版，通过“分享 → 添加到主屏幕”
 使用壁纸请通过上方创意工坊链接订阅，在 Wallpaper Engine 中应用并调整属性。需要自行构建时：
 
 ```sh
-git switch codex/wallpaper-engine
-npm install
+git clone https://github.com/LBEILC/RhineLabWallpaper.git
+cd RhineLabWallpaper
+npm ci
 npm run build:wallpaper
 ```
 
