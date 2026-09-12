@@ -2,6 +2,11 @@
 
 - 2026-09-11：官网已独立集成 Novecento 开场字体；授权 kit 不进入 Git。正式 Vercel 项目在构建时从当前生产版本恢复并校验字体，首次部署使用本机授权 kit 的静态输出。见 verification/WEBFONT-DEPLOYMENT.md。
 
+## 模型精度对照实验
+
+- 2026-09-12：用户授权高、中、低三档模型精度的性能试验。当前在 `codex/visual-preserving-performance` 保留独立对照页，尚未接入正式画质设置。高档原模型，中档只简化背景螺丝和边框，低档进一步简化背景及近景细节；其余画质、材质与动作一致。
+- 模型通过 Blender MCP 生成，脚本 `art/model_precision.py`，源工程 `art/model-precision.blend`。测试与限制见 `verification/MODEL-PRECISION.md`；用户尚未确认中低档最终视觉可接受性。
+
 ## 保持视觉效果的性能优化
 
 - 用户于 2026-09-12 授权新建 `codex/visual-preserving-performance`，从壁纸分支基线 `75f7eac` 逐项实现、验证性能优化，保留现有画质与动效。沿用原生实现流程。

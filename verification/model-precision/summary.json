@@ -1,0 +1,2756 @@
+{
+  "browser": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0",
+    "summary": [
+      {
+        "scenario": "static",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.8000000007450581,
+            "min": 0.7000000011175871,
+            "max": 0.900000000372529,
+            "rounds": [
+              0.7000000011175871,
+              0.8000000007450581,
+              0.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.7999999988824129,
+            "min": 0.6999999992549419,
+            "max": 0.8000000007450581,
+            "rounds": [
+              0.6999999992549419,
+              0.7999999988824129,
+              0.8000000007450581
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.900000000372529,
+            "min": 0.7000000011175871,
+            "max": 0.900000000372529,
+            "rounds": [
+              0.7000000011175871,
+              0.900000000372529,
+              0.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        }
+      },
+      {
+        "scenario": "idle",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2,
+            "min": 1.800000000745058,
+            "max": 2,
+            "rounds": [
+              2,
+              1.800000000745058,
+              2
+            ]
+          },
+          "gpu": {
+            "median": 4.681664,
+            "min": 4.679328,
+            "max": 4.730912,
+            "rounds": [
+              4.730912,
+              4.679328,
+              4.681664
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 4313825,
+            "min": 4313825,
+            "max": 4313825,
+            "rounds": [
+              4313825,
+              4313825,
+              4313825
+            ]
+          },
+          "uploadBytes": {
+            "median": 20320,
+            "min": 20320,
+            "max": 20320,
+            "rounds": [
+              20320,
+              20320,
+              20320
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.800000000745058,
+            "min": 1.800000000745058,
+            "max": 1.900000000372529,
+            "rounds": [
+              1.800000000745058,
+              1.900000000372529,
+              1.800000000745058
+            ]
+          },
+          "gpu": {
+            "median": 4.279264,
+            "min": 4.236928,
+            "max": 4.418112,
+            "rounds": [
+              4.418112,
+              4.279264,
+              4.236928
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 2283713,
+            "min": 2283713,
+            "max": 2283713,
+            "rounds": [
+              2283713,
+              2283713,
+              2283713
+            ]
+          },
+          "uploadBytes": {
+            "median": 20320,
+            "min": 20320,
+            "max": 20320,
+            "rounds": [
+              20320,
+              20320,
+              20320
+            ]
+          },
+          "gpuReduction": 0.08595234514907502
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.800000000745058,
+            "min": 1.700000001117587,
+            "max": 1.800000000745058,
+            "rounds": [
+              1.800000000745058,
+              1.700000001117587,
+              1.800000000745058
+            ]
+          },
+          "gpu": {
+            "median": 4.2048,
+            "min": 4.176352,
+            "max": 4.258688,
+            "rounds": [
+              4.176352,
+              4.2048,
+              4.258688
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 1608104,
+            "min": 1608104,
+            "max": 1608104,
+            "rounds": [
+              1608104,
+              1608104,
+              1608104
+            ]
+          },
+          "uploadBytes": {
+            "median": 20320,
+            "min": 20320,
+            "max": 20320,
+            "rounds": [
+              20320,
+              20320,
+              20320
+            ]
+          },
+          "gpuReduction": 0.10185780098699948
+        }
+      },
+      {
+        "scenario": "navigate",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.900000000372529,
+            "min": 2.699999999254942,
+            "max": 2.900000000372529,
+            "rounds": [
+              2.699999999254942,
+              2.900000000372529,
+              2.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 5.390848,
+            "min": 5.330048,
+            "max": 5.664448,
+            "rounds": [
+              5.664448,
+              5.330048,
+              5.390848
+            ]
+          },
+          "calls": {
+            "median": 273,
+            "min": 273,
+            "max": 273,
+            "rounds": [
+              273,
+              273,
+              273
+            ]
+          },
+          "triangles": {
+            "median": 5182921,
+            "min": 5182921,
+            "max": 5182921,
+            "rounds": [
+              5182921,
+              5182921,
+              5182921
+            ]
+          },
+          "uploadBytes": {
+            "median": 19816,
+            "min": 19816,
+            "max": 19816,
+            "rounds": [
+              19816,
+              19816,
+              19816
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.900000000372529,
+            "min": 2.800000000745058,
+            "max": 2.900000000372529,
+            "rounds": [
+              2.900000000372529,
+              2.800000000745058,
+              2.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 5.008,
+            "min": 4.739392,
+            "max": 5.049856,
+            "rounds": [
+              4.739392,
+              5.008,
+              5.049856
+            ]
+          },
+          "calls": {
+            "median": 273,
+            "min": 273,
+            "max": 273,
+            "rounds": [
+              273,
+              273,
+              273
+            ]
+          },
+          "triangles": {
+            "median": 3203881,
+            "min": 3203881,
+            "max": 3203881,
+            "rounds": [
+              3203881,
+              3203881,
+              3203881
+            ]
+          },
+          "uploadBytes": {
+            "median": 19816,
+            "min": 19816,
+            "max": 19816,
+            "rounds": [
+              19816,
+              19816,
+              19816
+            ]
+          },
+          "gpuReduction": 0.07101814037420462
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [
+            {
+              "round": 1,
+              "differences": [
+                {
+                  "frame": 75,
+                  "high": 358,
+                  "actual": 361
+                }
+              ]
+            },
+            {
+              "round": 2,
+              "differences": [
+                {
+                  "frame": 75,
+                  "high": 358,
+                  "actual": 361
+                }
+              ]
+            },
+            {
+              "round": 3,
+              "differences": [
+                {
+                  "frame": 75,
+                  "high": 358,
+                  "actual": 361
+                }
+              ]
+            }
+          ],
+          "cpu": {
+            "median": 2.700000001117587,
+            "min": 2.699999999254942,
+            "max": 3,
+            "rounds": [
+              2.699999999254942,
+              2.700000001117587,
+              3
+            ]
+          },
+          "gpu": {
+            "median": 4.736096,
+            "min": 4.68384,
+            "max": 4.912288,
+            "rounds": [
+              4.736096,
+              4.68384,
+              4.912288
+            ]
+          },
+          "calls": {
+            "median": 273,
+            "min": 273,
+            "max": 273,
+            "rounds": [
+              273,
+              273,
+              273
+            ]
+          },
+          "triangles": {
+            "median": 1824286,
+            "min": 1824286,
+            "max": 1824286,
+            "rounds": [
+              1824286,
+              1824286,
+              1824286
+            ]
+          },
+          "uploadBytes": {
+            "median": 19816,
+            "min": 19816,
+            "max": 19816,
+            "rounds": [
+              19816,
+              19816,
+              19816
+            ]
+          },
+          "gpuReduction": 0.121456216164878
+        }
+      },
+      {
+        "scenario": "detail",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.6000000014901161,
+            "min": 0.599999999627471,
+            "max": 0.6999999992549419,
+            "rounds": [
+              0.6000000014901161,
+              0.599999999627471,
+              0.6999999992549419
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.6999999992549419,
+            "min": 0.6999999992549419,
+            "max": 0.6999999992549419,
+            "rounds": [
+              0.6999999992549419,
+              0.6999999992549419,
+              0.6999999992549419
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.599999999627471,
+            "min": 0.599999999627471,
+            "max": 0.6000000014901161,
+            "rounds": [
+              0.599999999627471,
+              0.599999999627471,
+              0.6000000014901161
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        }
+      },
+      {
+        "scenario": "inspect",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.5,
+            "min": 1.400000000372529,
+            "max": 1.5,
+            "rounds": [
+              1.5,
+              1.5,
+              1.400000000372529
+            ]
+          },
+          "gpu": {
+            "median": 5.467552,
+            "min": 5.236512,
+            "max": 5.521088,
+            "rounds": [
+              5.236512,
+              5.521088,
+              5.467552
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 2216593,
+            "min": 2216593,
+            "max": 2216593,
+            "rounds": [
+              2216593,
+              2216593,
+              2216593
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.5,
+            "min": 1.300000000745058,
+            "max": 1.5,
+            "rounds": [
+              1.5,
+              1.300000000745058,
+              1.5
+            ]
+          },
+          "gpu": {
+            "median": 4.981984,
+            "min": 4.95344,
+            "max": 5.124128,
+            "rounds": [
+              5.124128,
+              4.981984,
+              4.95344
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 1233457,
+            "min": 1233457,
+            "max": 1233457,
+            "rounds": [
+              1233457,
+              1233457,
+              1233457
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": 0.08880903190312606
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.400000000372529,
+            "min": 1.300000000745058,
+            "max": 1.400000000372529,
+            "rounds": [
+              1.400000000372529,
+              1.300000000745058,
+              1.400000000372529
+            ]
+          },
+          "gpu": {
+            "median": 5.00896,
+            "min": 4.892352,
+            "max": 5.118592,
+            "rounds": [
+              5.00896,
+              4.892352,
+              5.118592
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 812704,
+            "min": 812704,
+            "max": 812704,
+            "rounds": [
+              812704,
+              812704,
+              812704
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": 0.08387519679739674
+        }
+      },
+      {
+        "scenario": "music",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.799999998882413,
+            "min": 1.700000001117587,
+            "max": 1.900000000372529,
+            "rounds": [
+              1.700000001117587,
+              1.799999998882413,
+              1.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 4.988768,
+            "min": 4.72576,
+            "max": 5.061952,
+            "rounds": [
+              4.72576,
+              5.061952,
+              4.988768
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 4237097,
+            "min": 4237097,
+            "max": 4237097,
+            "rounds": [
+              4237097,
+              4237097,
+              4237097
+            ]
+          },
+          "uploadBytes": {
+            "median": 19940,
+            "min": 19940,
+            "max": 19940,
+            "rounds": [
+              19940,
+              19940,
+              19940
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.799999998882413,
+            "min": 1.700000001117587,
+            "max": 1.900000000372529,
+            "rounds": [
+              1.700000001117587,
+              1.900000000372529,
+              1.799999998882413
+            ]
+          },
+          "gpu": {
+            "median": 4.269952,
+            "min": 4.230144,
+            "max": 4.279008,
+            "rounds": [
+              4.279008,
+              4.269952,
+              4.230144
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 2245289,
+            "min": 2245289,
+            "max": 2245289,
+            "rounds": [
+              2245289,
+              2245289,
+              2245289
+            ]
+          },
+          "uploadBytes": {
+            "median": 19940,
+            "min": 19940,
+            "max": 19940,
+            "rounds": [
+              19940,
+              19940,
+              19940
+            ]
+          },
+          "gpuReduction": 0.14408687675995357
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.900000000372529,
+            "min": 1.800000000745058,
+            "max": 2,
+            "rounds": [
+              1.900000000372529,
+              1.800000000745058,
+              2
+            ]
+          },
+          "gpu": {
+            "median": 4.123552,
+            "min": 4.0584,
+            "max": 4.130656,
+            "rounds": [
+              4.130656,
+              4.0584,
+              4.123552
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 1579004,
+            "min": 1579004,
+            "max": 1579004,
+            "rounds": [
+              1579004,
+              1579004,
+              1579004
+            ]
+          },
+          "uploadBytes": {
+            "median": 19940,
+            "min": 19940,
+            "max": 19940,
+            "rounds": [
+              19940,
+              19940,
+              19940
+            ]
+          },
+          "gpuReduction": 0.1734327994406636
+        }
+      }
+    ],
+    "images": [
+      {
+        "path": "verification/model-precision/browser/high-1-static.png",
+        "sha256": "683250aa307dcaa96c2f4ad40fbea018ec5ce8efd806d9c5f0ea0cd176aab63c",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/browser/medium-1-static.png",
+        "sha256": "ac92741bfa0c7d7360e73fce3596660089f70e440213186669858bad924e387d",
+        "changedPixels": 1593879,
+        "above3": 38938,
+        "max": 145,
+        "meanChannelError": 0.8379383680555555
+      },
+      {
+        "path": "verification/model-precision/browser/low-1-static.png",
+        "sha256": "8ec570b68a930dfdb3569ea9eccbde875dac50b85994fd5fa97722ed50071911",
+        "changedPixels": 1609577,
+        "above3": 244861,
+        "max": 140,
+        "meanChannelError": 1.7070740097736625
+      },
+      {
+        "path": "verification/model-precision/browser/high-1-idle.png",
+        "sha256": "ad8cc54fc3140b8bce6cc029f9820a5fe99307ecdbf70ce14ac7d7b8e868a34b",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/browser/medium-1-idle.png",
+        "sha256": "6318b5dc9e87511af8df588c31fed10d5e673dd4cf96bf04401b6675188682c2",
+        "changedPixels": 1435964,
+        "above3": 38358,
+        "max": 120,
+        "meanChannelError": 0.739852912808642
+      },
+      {
+        "path": "verification/model-precision/browser/low-1-idle.png",
+        "sha256": "d55131c77721dd87b4bddf571d246010f7ee23ff859fa529304a2a25de108875",
+        "changedPixels": 1610652,
+        "above3": 343513,
+        "max": 122,
+        "meanChannelError": 1.9005156893004116
+      },
+      {
+        "path": "verification/model-precision/browser/high-1-navigate.png",
+        "sha256": "8bd01a81a58fe7fd5ee7bfb17968b7f37c8845793a574d1b3cb0aa6d85e57b7d",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/browser/medium-1-navigate.png",
+        "sha256": "cfdd422c8d27899e52db8c1c4bf5c3d96b6e9c39fd9514afb371b3ed347e4de4",
+        "changedPixels": 1335782,
+        "above3": 33175,
+        "max": 132,
+        "meanChannelError": 0.6856182484567901
+      },
+      {
+        "path": "verification/model-precision/browser/low-1-navigate.png",
+        "sha256": "9ca320a03d593010a8c618e3c1208ce0970e9c29ebf56f8b37079dc0fbeb3df3",
+        "changedPixels": 1549471,
+        "above3": 328404,
+        "max": 133,
+        "meanChannelError": 1.8414076967592592
+      },
+      {
+        "path": "verification/model-precision/browser/high-1-detail.png",
+        "sha256": "b2381bbae9037c62ea1153f24beb9b744cd52765cc7a39add0a32759c3d19235",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/browser/medium-1-detail.png",
+        "sha256": "4a728d21a1a613686f5c8dc99675d8b28ae46b12f2e951ab65839a536ef06f41",
+        "changedPixels": 331276,
+        "above3": 8800,
+        "max": 129,
+        "meanChannelError": 0.14769659850823044
+      },
+      {
+        "path": "verification/model-precision/browser/low-1-detail.png",
+        "sha256": "6f83b04c065384dcca3de4fff6b46c36d402bff28e1aa83e32266bb29966f46a",
+        "changedPixels": 557097,
+        "above3": 41102,
+        "max": 126,
+        "meanChannelError": 0.36440297067901234
+      },
+      {
+        "path": "verification/model-precision/browser/high-1-inspect.png",
+        "sha256": "3282c0e288c6bd0fc85bc7e69bf2c03a4618d7c628603413d02735b03ee7bd2f",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/browser/medium-1-inspect.png",
+        "sha256": "70d4a15ec36c414d5494b7524e44ea13292a144cf6063d89c8176e6860aa8ea6",
+        "changedPixels": 327852,
+        "above3": 7503,
+        "max": 129,
+        "meanChannelError": 0.1439628343621399
+      },
+      {
+        "path": "verification/model-precision/browser/low-1-inspect.png",
+        "sha256": "d7cf31ea1a7e9c24fa396f34fefeaa64c8668020f668ee38e4287a39afc483d2",
+        "changedPixels": 545702,
+        "above3": 35093,
+        "max": 126,
+        "meanChannelError": 0.3402154063786008
+      },
+      {
+        "path": "verification/model-precision/browser/high-1-music.png",
+        "sha256": "2dceb206f09f5667ea3ef00fdfd2d27e683a05304c8356279c9594d1d5a4d268",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/browser/medium-1-music.png",
+        "sha256": "92e5102ff6ab91a9cafd8f3e7467a1430cd909aaeb7308622b0c66bfeec291cd",
+        "changedPixels": 1579893,
+        "above3": 36372,
+        "max": 138,
+        "meanChannelError": 0.820206886574074
+      },
+      {
+        "path": "verification/model-precision/browser/low-1-music.png",
+        "sha256": "84f6885594ecd204887ad4134f4f106ac2855d002731cb62f7f3e7639afbdf91",
+        "changedPixels": 1625402,
+        "above3": 252060,
+        "max": 138,
+        "meanChannelError": 1.6728494727366254
+      }
+    ]
+  },
+  "host": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+    "summary": [
+      {
+        "scenario": "static",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.099999999627471,
+            "min": 1.099999999627471,
+            "max": 1.199999999254942,
+            "rounds": [
+              1.199999999254942,
+              1.099999999627471,
+              1.099999999627471
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.1000000014901161,
+            "min": 1,
+            "max": 1.199999999254942,
+            "rounds": [
+              1,
+              1.1000000014901161,
+              1.199999999254942
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.099999999627471,
+            "min": 1.099999999627471,
+            "max": 1.1000000014901161,
+            "rounds": [
+              1.099999999627471,
+              1.1000000014901161,
+              1.099999999627471
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        }
+      },
+      {
+        "scenario": "idle",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.5,
+            "min": 2.300000000745058,
+            "max": 2.599999999627471,
+            "rounds": [
+              2.300000000745058,
+              2.599999999627471,
+              2.5
+            ]
+          },
+          "gpu": {
+            "median": 4.720864,
+            "min": 4.714688,
+            "max": 4.731744,
+            "rounds": [
+              4.731744,
+              4.720864,
+              4.714688
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 4313825,
+            "min": 4313825,
+            "max": 4313825,
+            "rounds": [
+              4313825,
+              4313825,
+              4313825
+            ]
+          },
+          "uploadBytes": {
+            "median": 20320,
+            "min": 20320,
+            "max": 20320,
+            "rounds": [
+              20320,
+              20320,
+              20320
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.5,
+            "min": 2.299999998882413,
+            "max": 2.5,
+            "rounds": [
+              2.5,
+              2.5,
+              2.299999998882413
+            ]
+          },
+          "gpu": {
+            "median": 4.316288,
+            "min": 4.268128,
+            "max": 4.337504,
+            "rounds": [
+              4.268128,
+              4.316288,
+              4.337504
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 2283713,
+            "min": 2283713,
+            "max": 2283713,
+            "rounds": [
+              2283713,
+              2283713,
+              2283713
+            ]
+          },
+          "uploadBytes": {
+            "median": 20320,
+            "min": 20320,
+            "max": 20320,
+            "rounds": [
+              20320,
+              20320,
+              20320
+            ]
+          },
+          "gpuReduction": 0.08569956685894775
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.5,
+            "min": 2.400000000372529,
+            "max": 2.5,
+            "rounds": [
+              2.5,
+              2.5,
+              2.400000000372529
+            ]
+          },
+          "gpu": {
+            "median": 4.213856,
+            "min": 4.130016,
+            "max": 4.23552,
+            "rounds": [
+              4.130016,
+              4.23552,
+              4.213856
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 1608104,
+            "min": 1608104,
+            "max": 1608104,
+            "rounds": [
+              1608104,
+              1608104,
+              1608104
+            ]
+          },
+          "uploadBytes": {
+            "median": 20320,
+            "min": 20320,
+            "max": 20320,
+            "rounds": [
+              20320,
+              20320,
+              20320
+            ]
+          },
+          "gpuReduction": 0.10739728998759546
+        }
+      },
+      {
+        "scenario": "navigate",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 4.199999999254942,
+            "min": 4.099999999627471,
+            "max": 4.199999999254942,
+            "rounds": [
+              4.199999999254942,
+              4.199999999254942,
+              4.099999999627471
+            ]
+          },
+          "gpu": {
+            "median": 5.811904,
+            "min": 5.66064,
+            "max": 5.949888,
+            "rounds": [
+              5.949888,
+              5.811904,
+              5.66064
+            ]
+          },
+          "calls": {
+            "median": 273,
+            "min": 273,
+            "max": 273,
+            "rounds": [
+              273,
+              273,
+              273
+            ]
+          },
+          "triangles": {
+            "median": 5182921,
+            "min": 5182921,
+            "max": 5182921,
+            "rounds": [
+              5182921,
+              5182921,
+              5182921
+            ]
+          },
+          "uploadBytes": {
+            "median": 19816,
+            "min": 19816,
+            "max": 19816,
+            "rounds": [
+              19816,
+              19816,
+              19816
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 4.099999999627471,
+            "min": 3.900000000372529,
+            "max": 4.100000001490116,
+            "rounds": [
+              3.900000000372529,
+              4.100000001490116,
+              4.099999999627471
+            ]
+          },
+          "gpu": {
+            "median": 5.437984,
+            "min": 5.42336,
+            "max": 5.62208,
+            "rounds": [
+              5.42336,
+              5.62208,
+              5.437984
+            ]
+          },
+          "calls": {
+            "median": 273,
+            "min": 273,
+            "max": 273,
+            "rounds": [
+              273,
+              273,
+              273
+            ]
+          },
+          "triangles": {
+            "median": 3203881,
+            "min": 3203881,
+            "max": 3203881,
+            "rounds": [
+              3203881,
+              3203881,
+              3203881
+            ]
+          },
+          "uploadBytes": {
+            "median": 19816,
+            "min": 19816,
+            "max": 19816,
+            "rounds": [
+              19816,
+              19816,
+              19816
+            ]
+          },
+          "gpuReduction": 0.0643369195361796
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [
+            {
+              "round": 1,
+              "differences": [
+                {
+                  "frame": 75,
+                  "high": 358,
+                  "actual": 361
+                }
+              ]
+            },
+            {
+              "round": 2,
+              "differences": [
+                {
+                  "frame": 75,
+                  "high": 358,
+                  "actual": 361
+                }
+              ]
+            },
+            {
+              "round": 3,
+              "differences": [
+                {
+                  "frame": 75,
+                  "high": 358,
+                  "actual": 361
+                }
+              ]
+            }
+          ],
+          "cpu": {
+            "median": 3.900000000372529,
+            "min": 3.800000000745058,
+            "max": 4.5,
+            "rounds": [
+              3.900000000372529,
+              4.5,
+              3.800000000745058
+            ]
+          },
+          "gpu": {
+            "median": 5.30816,
+            "min": 5.236704,
+            "max": 5.383616,
+            "rounds": [
+              5.30816,
+              5.383616,
+              5.236704
+            ]
+          },
+          "calls": {
+            "median": 273,
+            "min": 273,
+            "max": 273,
+            "rounds": [
+              273,
+              273,
+              273
+            ]
+          },
+          "triangles": {
+            "median": 1824286,
+            "min": 1824286,
+            "max": 1824286,
+            "rounds": [
+              1824286,
+              1824286,
+              1824286
+            ]
+          },
+          "uploadBytes": {
+            "median": 19816,
+            "min": 19816,
+            "max": 19816,
+            "rounds": [
+              19816,
+              19816,
+              19816
+            ]
+          },
+          "gpuReduction": 0.08667452180903201
+        }
+      },
+      {
+        "scenario": "detail",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.8000000007450581,
+            "min": 0.7999999988824129,
+            "max": 0.900000000372529,
+            "rounds": [
+              0.7999999988824129,
+              0.8000000007450581,
+              0.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.8000000007450581,
+            "min": 0.8000000007450581,
+            "max": 0.8000000007450581,
+            "rounds": [
+              0.8000000007450581,
+              0.8000000007450581,
+              0.8000000007450581
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 0.8000000007450581,
+            "min": 0.8000000007450581,
+            "max": 0.8000000007450581,
+            "rounds": [
+              0.8000000007450581,
+              0.8000000007450581,
+              0.8000000007450581
+            ]
+          },
+          "gpu": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "calls": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "triangles": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": null
+        }
+      },
+      {
+        "scenario": "inspect",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2,
+            "min": 1.900000000372529,
+            "max": 2.099999999627471,
+            "rounds": [
+              2,
+              1.900000000372529,
+              2.099999999627471
+            ]
+          },
+          "gpu": {
+            "median": 5.253248,
+            "min": 5.07872,
+            "max": 6.05104,
+            "rounds": [
+              5.253248,
+              5.07872,
+              6.05104
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 2216593,
+            "min": 2216593,
+            "max": 2216593,
+            "rounds": [
+              2216593,
+              2216593,
+              2216593
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.900000000372529,
+            "min": 1.900000000372529,
+            "max": 2.300000000745058,
+            "rounds": [
+              2.300000000745058,
+              1.900000000372529,
+              1.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 4.803488,
+            "min": 4.7232,
+            "max": 4.836512,
+            "rounds": [
+              4.7232,
+              4.836512,
+              4.803488
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 1233457,
+            "min": 1233457,
+            "max": 1233457,
+            "rounds": [
+              1233457,
+              1233457,
+              1233457
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": 0.08561560390828693
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 1.900000000372529,
+            "min": 1.900000000372529,
+            "max": 2,
+            "rounds": [
+              1.900000000372529,
+              2,
+              1.900000000372529
+            ]
+          },
+          "gpu": {
+            "median": 4.650464,
+            "min": 4.55376,
+            "max": 4.658144,
+            "rounds": [
+              4.650464,
+              4.658144,
+              4.55376
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 812704,
+            "min": 812704,
+            "max": 812704,
+            "rounds": [
+              812704,
+              812704,
+              812704
+            ]
+          },
+          "uploadBytes": {
+            "median": 0,
+            "min": 0,
+            "max": 0,
+            "rounds": [
+              0,
+              0,
+              0
+            ]
+          },
+          "gpuReduction": 0.1147450110864745
+        }
+      },
+      {
+        "scenario": "music",
+        "high": {
+          "geometry": {
+            "tier": "high",
+            "replaced": [],
+            "arrayTriangles": 4200,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.400000000372529,
+            "min": 2.299999998882413,
+            "max": 2.400000000372529,
+            "rounds": [
+              2.299999998882413,
+              2.400000000372529,
+              2.400000000372529
+            ]
+          },
+          "gpu": {
+            "median": 4.685536,
+            "min": 4.639072,
+            "max": 5.218592,
+            "rounds": [
+              4.685536,
+              4.639072,
+              5.218592
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 4237097,
+            "min": 4237097,
+            "max": 4237097,
+            "rounds": [
+              4237097,
+              4237097,
+              4237097
+            ]
+          },
+          "uploadBytes": {
+            "median": 19940,
+            "min": 19940,
+            "max": 19940,
+            "rounds": [
+              19940,
+              19940,
+              19940
+            ]
+          },
+          "gpuReduction": 0
+        },
+        "medium": {
+          "geometry": {
+            "tier": "medium",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners"
+            ],
+            "arrayTriangles": 2072,
+            "selectedTriangles": 82348
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.300000000745058,
+            "min": 2.199999999254942,
+            "max": 2.300000000745058,
+            "rounds": [
+              2.300000000745058,
+              2.300000000745058,
+              2.199999999254942
+            ]
+          },
+          "gpu": {
+            "median": 4.2544,
+            "min": 4.227456,
+            "max": 4.381184,
+            "rounds": [
+              4.2544,
+              4.381184,
+              4.227456
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 2245289,
+            "min": 2245289,
+            "max": 2245289,
+            "rounds": [
+              2245289,
+              2245289,
+              2245289
+            ]
+          },
+          "uploadBytes": {
+            "median": 19940,
+            "min": 19940,
+            "max": 19940,
+            "rounds": [
+              19940,
+              19940,
+              19940
+            ]
+          },
+          "gpuReduction": 0.0920142327366601
+        },
+        "low": {
+          "geometry": {
+            "tier": "low",
+            "replaced": [
+              "array:Ivory_Edges",
+              "array:Titanium_Fasteners",
+              "selected:Ivory_Edges",
+              "selected:Internal_Ceramic",
+              "selected:Optical_Edges",
+              "selected:Subsurface_Optics",
+              "selected:Optical_Film_Edge",
+              "selected:Amber_Optical_Inlay",
+              "selected:Case_Engraving",
+              "selected:Case_Engraving_Highlight",
+              "selected:Titanium_Fasteners",
+              "selected:Moulded_Lettering"
+            ],
+            "arrayTriangles": 1554,
+            "selectedTriangles": 21869
+          },
+          "drawCallDifferences": [],
+          "cpu": {
+            "median": 2.5,
+            "min": 2.300000000745058,
+            "max": 2.5,
+            "rounds": [
+              2.300000000745058,
+              2.5,
+              2.5
+            ]
+          },
+          "gpu": {
+            "median": 4.156224,
+            "min": 4.104768,
+            "max": 4.183872,
+            "rounds": [
+              4.156224,
+              4.183872,
+              4.104768
+            ]
+          },
+          "calls": {
+            "median": 75,
+            "min": 75,
+            "max": 75,
+            "rounds": [
+              75,
+              75,
+              75
+            ]
+          },
+          "triangles": {
+            "median": 1579004,
+            "min": 1579004,
+            "max": 1579004,
+            "rounds": [
+              1579004,
+              1579004,
+              1579004
+            ]
+          },
+          "uploadBytes": {
+            "median": 19940,
+            "min": 19940,
+            "max": 19940,
+            "rounds": [
+              19940,
+              19940,
+              19940
+            ]
+          },
+          "gpuReduction": 0.11296722509441826
+        }
+      }
+    ],
+    "images": [
+      {
+        "path": "verification/model-precision/host/high-1-static.png",
+        "sha256": "183ead84441852cde945e380326b49a8826161e4a082158594ef9e7cc50a9d69",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/host/medium-1-static.png",
+        "sha256": "ac92741bfa0c7d7360e73fce3596660089f70e440213186669858bad924e387d",
+        "changedPixels": 1593880,
+        "above3": 38938,
+        "max": 145,
+        "meanChannelError": 0.8379385288065844
+      },
+      {
+        "path": "verification/model-precision/host/low-1-static.png",
+        "sha256": "8ec570b68a930dfdb3569ea9eccbde875dac50b85994fd5fa97722ed50071911",
+        "changedPixels": 1609576,
+        "above3": 244861,
+        "max": 140,
+        "meanChannelError": 1.7070738490226338
+      },
+      {
+        "path": "verification/model-precision/host/high-1-idle.png",
+        "sha256": "de33cedfa186e1a34239f0a39eb084f5b270c1a68eafdcd680ddc46c00a65ea3",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/host/medium-1-idle.png",
+        "sha256": "4e60edcf1a673759f78e1bacd82a1e361a8ce02de16012a8b42ca531ed1cd70d",
+        "changedPixels": 1435945,
+        "above3": 38358,
+        "max": 120,
+        "meanChannelError": 0.7398472865226338
+      },
+      {
+        "path": "verification/model-precision/host/low-1-idle.png",
+        "sha256": "de9153d0b7f0047e8cb896ad68af8b07bc99b85882a64f267aff151e79527539",
+        "changedPixels": 1610606,
+        "above3": 343512,
+        "max": 122,
+        "meanChannelError": 1.900500257201646
+      },
+      {
+        "path": "verification/model-precision/host/high-1-navigate.png",
+        "sha256": "8bd01a81a58fe7fd5ee7bfb17968b7f37c8845793a574d1b3cb0aa6d85e57b7d",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/host/medium-1-navigate.png",
+        "sha256": "cfdd422c8d27899e52db8c1c4bf5c3d96b6e9c39fd9514afb371b3ed347e4de4",
+        "changedPixels": 1335782,
+        "above3": 33175,
+        "max": 132,
+        "meanChannelError": 0.6856182484567901
+      },
+      {
+        "path": "verification/model-precision/host/low-1-navigate.png",
+        "sha256": "9ca320a03d593010a8c618e3c1208ce0970e9c29ebf56f8b37079dc0fbeb3df3",
+        "changedPixels": 1549471,
+        "above3": 328404,
+        "max": 133,
+        "meanChannelError": 1.8414076967592592
+      },
+      {
+        "path": "verification/model-precision/host/high-1-detail.png",
+        "sha256": "aef3d4431e6700b5bc797951950b6c6ad24038e0fbaaddd9a9a6ac9b92a76f31",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/host/medium-1-detail.png",
+        "sha256": "3457ca6ac9cd70ae2428f4c0e7d8d62b595658f8c9e47b50effed6b96365c93d",
+        "changedPixels": 331276,
+        "above3": 8800,
+        "max": 129,
+        "meanChannelError": 0.14769675925925926
+      },
+      {
+        "path": "verification/model-precision/host/low-1-detail.png",
+        "sha256": "9e160c6c2770ffcca1e4c03ca7a95ca42536ade1f6fb78ed8e7e74b9105dc1db",
+        "changedPixels": 557096,
+        "above3": 41102,
+        "max": 126,
+        "meanChannelError": 0.36440248842592593
+      },
+      {
+        "path": "verification/model-precision/host/high-1-inspect.png",
+        "sha256": "641430e86da01a82a78c632c60babc8adae7c9eafc295c2a92e20a3cdb3a6437",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/host/medium-1-inspect.png",
+        "sha256": "c85596e2ac8baa13f9a380913bda445affb190972cb6b88791361f237ffefa20",
+        "changedPixels": 327852,
+        "above3": 7503,
+        "max": 129,
+        "meanChannelError": 0.1439628343621399
+      },
+      {
+        "path": "verification/model-precision/host/low-1-inspect.png",
+        "sha256": "7d5fd010c37b35f1d2832f18b6300b6c92436903d09aa49b010eef24f43ed2b8",
+        "changedPixels": 545702,
+        "above3": 35093,
+        "max": 126,
+        "meanChannelError": 0.3402154063786008
+      },
+      {
+        "path": "verification/model-precision/host/high-1-music.png",
+        "sha256": "2dceb206f09f5667ea3ef00fdfd2d27e683a05304c8356279c9594d1d5a4d268",
+        "changedPixels": 0,
+        "above3": 0,
+        "max": 0,
+        "meanChannelError": 0
+      },
+      {
+        "path": "verification/model-precision/host/medium-1-music.png",
+        "sha256": "92e5102ff6ab91a9cafd8f3e7467a1430cd909aaeb7308622b0c66bfeec291cd",
+        "changedPixels": 1579893,
+        "above3": 36372,
+        "max": 138,
+        "meanChannelError": 0.820206886574074
+      },
+      {
+        "path": "verification/model-precision/host/low-1-music.png",
+        "sha256": "84f6885594ecd204887ad4134f4f106ac2855d002731cb62f7f3e7639afbdf91",
+        "changedPixels": 1625402,
+        "above3": 252060,
+        "max": 138,
+        "meanChannelError": 1.6728494727366254
+      }
+    ]
+  }
+}
