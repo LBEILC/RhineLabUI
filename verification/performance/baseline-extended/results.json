@@ -1,0 +1,5019 @@
+{
+  "label": "baseline",
+  "errors": [],
+  "results": [
+    {
+      "scenario": "idle-dark",
+      "samples": [
+        {
+          "cpu": 1.800000000745058,
+          "total": 1.900000000372529,
+          "gpu": 13.539104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 5.97248,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7999999998137355,
+          "gpu": 7.33472,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 5.912288,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 6.914592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 6.20144,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 5.189536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 9.536512,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.400000000372529,
+          "total": 2.400000000372529,
+          "gpu": 5.162208,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 5.55264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 5.69312,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 6.48192,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.7000000001862645,
+          "gpu": 10.037856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 3.8999999994412065,
+          "gpu": 5.35904,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.6000000005587935,
+          "gpu": 5.190784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.5,
+          "gpu": 8.412928,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.1000000005587935,
+          "total": 3.2000000001862645,
+          "gpu": 5.909056,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.6000000005587935,
+          "gpu": 6.212544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7999999998137355,
+          "gpu": 10.665248,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 7.030144,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 6.689056,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 5.400000000372529,
+          "total": 5.400000000372529,
+          "gpu": 5.707392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 11.506656,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 5.400000000372529,
+          "total": 5.400000000372529,
+          "gpu": 5.754464,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 8.630944,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 8.805024,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 8.889408,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 7.871808,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 10.754048,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 5.42928,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.300000000745058,
+          "total": 3.300000000745058,
+          "gpu": 8.206464,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.8999999994412065,
+          "gpu": 5.554784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 7.672864,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 12.487232,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 7.60768,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 10.131872,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 5.967232,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 7.29456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 4,
+          "gpu": 8.091104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.300000000745058,
+          "total": 3.400000000372529,
+          "gpu": 9.993088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.8999999994412065,
+          "total": 3,
+          "gpu": 5.426272,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 5.986432,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 4.1000000005587935,
+          "total": 4.1000000005587935,
+          "gpu": 12.361504,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.6000000005587935,
+          "total": 2.6000000005587935,
+          "gpu": 6.65424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 12.22368,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 6.330016,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 11.46736,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 5.829344,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5139795
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          517,
+          289
+        ],
+        "topRight": [
+          899,
+          96
+        ],
+        "labelTopLeft": [
+          600,
+          330
+        ],
+        "labelBottomLeft": [
+          600,
+          394
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 102,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 5139795,
+        "archiveCount": 277,
+        "archiveCandidates": 399,
+        "archiveCulled": 122,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -395.90837417050494,
+            "y": 207.76321668045975
+          },
+          "row": {
+            "x": -76.55856375898642,
+            "y": -14.881128720046853
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 8,
+          "minRow": -20,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 140.9999999999999,
+        "fogFar": 155.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":1920,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 3.2999999998137355,
+        "total": 3.2999999998137355,
+        "gpu": 7.030144,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 102,
+        "triangles": 5139795,
+        "cpuP95": 4.1000000005587935
+      }
+    },
+    {
+      "scenario": "idle-half",
+      "samples": [
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 4.885024,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 8.779104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 5.567808,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 9.78112,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.699999999254942,
+          "total": 2.7999999998137355,
+          "gpu": 5.144224,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.2000000001862645,
+          "total": 2.2000000001862645,
+          "gpu": 6.476,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 5.556608,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.1000000005587935,
+          "total": 2.1000000005587935,
+          "gpu": 5.460704,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.300000000745058,
+          "total": 2.300000000745058,
+          "gpu": 8.218592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 5.166176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 6.903584,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 6.668288,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 4.791232,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 7.08544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 4.2000000001862645,
+          "total": 4.2000000001862645,
+          "gpu": 5.572768,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 7.25488,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 7.499104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 11.000032,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.199999999254942,
+          "total": 3.199999999254942,
+          "gpu": 5.802592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 6.265152,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 5.922528,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 6.795776,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 9.364256,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.300000000745058,
+          "total": 3.300000000745058,
+          "gpu": 5.144192,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 5.110144,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 6.217856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 5.04944,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 8.799168,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5816991
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 4.913312,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 4.924128,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.6000000005587935,
+          "gpu": 4.654336,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 7.524608,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.400000000372529,
+          "gpu": 6.972512,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 6.769088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 6.44416,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 11.55088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 5.85392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.800000000745058,
+          "total": 3.800000000745058,
+          "gpu": 6.87728,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 7.49856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.699999999254942,
+          "total": 3.699999999254942,
+          "gpu": 12.440544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 5.4664,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 7.018112,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 5.68096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 4.900000000372529,
+          "total": 5,
+          "gpu": 7.4208,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 5.189376,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 5.11264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 7.012704,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 8.38592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5834355
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          517,
+          289
+        ],
+        "topRight": [
+          899,
+          96
+        ],
+        "labelTopLeft": [
+          600,
+          330
+        ],
+        "labelBottomLeft": [
+          600,
+          394
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 102,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 5834355,
+        "archiveCount": 317,
+        "archiveCandidates": 458,
+        "archiveCulled": 141,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -395.90837417050494,
+            "y": 207.76321668045975
+          },
+          "row": {
+            "x": -76.55856375898642,
+            "y": -14.881128720046853
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":960,\"aoHeight\":540,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 3.300000000745058,
+        "total": 3.3999999994412065,
+        "gpu": 6.476,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 102,
+        "triangles": 5816991,
+        "cpuP95": 4
+      }
+    },
+    {
+      "scenario": "idle-noao",
+      "samples": [
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 4.64496,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 4.900000000372529,
+          "total": 5,
+          "gpu": 7.609056,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 5.802432,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 4.599999999627471,
+          "total": 4.599999999627471,
+          "gpu": 8.816576,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 5.5136,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 4.38624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 8.654944,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.3999999994412065,
+          "gpu": 6.329696,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.400000000372529,
+          "gpu": 11.379456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 3.8999999994412065,
+          "gpu": 6.514304,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.6000000005587935,
+          "gpu": 4.045184,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 6.75136,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 9.456096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.6000000005587935,
+          "gpu": 4.746752,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 4.8999999994412065,
+          "total": 4.8999999994412065,
+          "gpu": 7.018496,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 4.7456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 4,
+          "total": 4.099999999627471,
+          "gpu": 4.521728,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 8.759744,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 4.585984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 8.971936,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 4.892992,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.5,
+          "gpu": 4.61664,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 4.682368,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 14.694816,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 2.8999999994412065,
+          "total": 2.8999999994412065,
+          "gpu": 4.576384,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 5.28112,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 2.300000000745058,
+          "total": 2.300000000745058,
+          "gpu": 3.936832,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 2.699999999254942,
+          "total": 2.7999999998137355,
+          "gpu": 4.084448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4347842
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 6.95216,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.800000000745058,
+          "total": 1.900000000372529,
+          "gpu": 4.610432,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 6.594464,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.7999999998137355,
+          "total": 1.7999999998137355,
+          "gpu": 4.34032,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 5.568192,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 5.957376,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 4.596544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.7999999998137355,
+          "total": 1.7999999998137355,
+          "gpu": 5.316448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.099999999627471,
+          "total": 2.099999999627471,
+          "gpu": 7.654016,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.7000000001862645,
+          "total": 1.7000000001862645,
+          "gpu": 4.702976,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.8999999994412065,
+          "total": 1.8999999994412065,
+          "gpu": 4.730336,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.199999999254942,
+          "total": 2.2999999998137355,
+          "gpu": 6.797216,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.599999999627471,
+          "total": 1.599999999627471,
+          "gpu": 4.704928,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 1.599999999627471,
+          "total": 1.599999999627471,
+          "gpu": 4.617792,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 4.767968,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.1000000005587935,
+          "total": 2.1000000005587935,
+          "gpu": 4.246048,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.2000000001862645,
+          "total": 2.2000000001862645,
+          "gpu": 6.885344,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 4.531424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.2000000001862645,
+          "total": 2.2000000001862645,
+          "gpu": 4.818688,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        },
+        {
+          "cpu": 2.099999999627471,
+          "total": 2.099999999627471,
+          "gpu": 9.71424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 74,
+          "triangles": 4360818
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          517,
+          289
+        ],
+        "topRight": [
+          899,
+          96
+        ],
+        "labelTopLeft": [
+          600,
+          330
+        ],
+        "labelBottomLeft": [
+          600,
+          394
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 74,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 4360818,
+        "archiveCount": 317,
+        "archiveCandidates": 458,
+        "archiveCulled": 141,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -395.90837417050494,
+            "y": 207.76321668045975
+          },
+          "row": {
+            "x": -76.55856375898642,
+            "y": -14.881128720046853
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":0,\"aoWidth\":1920,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 2.900000000372529,
+        "total": 2.900000000372529,
+        "gpu": 5.28112,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 74,
+        "triangles": 4347842,
+        "cpuP95": 4.599999999627471
+      }
+    },
+    {
+      "scenario": "idle-nodof",
+      "samples": [
+        {
+          "cpu": 2.6000000005587935,
+          "total": 2.6000000005587935,
+          "gpu": 5.248448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 9.113536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 4.274592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 2.400000000372529,
+          "total": 2.5,
+          "gpu": 4.598624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 9.210272,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 7.117856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 11.30672,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 4.723424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.400000000372529,
+          "gpu": 4.058432,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 7.044128,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3,
+          "total": 3.099999999627471,
+          "gpu": 7.092096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 2.6000000005587935,
+          "total": 2.6000000005587935,
+          "gpu": 4.462656,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.1000000005587935,
+          "total": 3.1000000005587935,
+          "gpu": 4.701248,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 10.446336,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.800000000745058,
+          "total": 3.800000000745058,
+          "gpu": 6.378784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 6.870656,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 4.568384,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.400000000372529,
+          "gpu": 4.143104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.1000000005587935,
+          "total": 3.1000000005587935,
+          "gpu": 4.267392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.400000000372529,
+          "gpu": 6.236,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.699999999254942,
+          "total": 3.699999999254942,
+          "gpu": 5.782624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 4.729632,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.6000000005587935,
+          "gpu": 6.164256,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 4.1000000005587935,
+          "total": 4.2000000001862645,
+          "gpu": 9.573696,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 6.905632,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 4.5,
+          "total": 4.5,
+          "gpu": 5.215104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 7.91984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 8.144224,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4347844
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 5.364832,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.400000000372529,
+          "gpu": 11.055296,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 6.84896,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.199999999254942,
+          "total": 3.199999999254942,
+          "gpu": 5.301024,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 5.746336,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 7.805312,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 9.847584,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 3.8999999994412065,
+          "gpu": 7.090848,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 4.7999999998137355,
+          "total": 4.7999999998137355,
+          "gpu": 11.839264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 5.194368,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 9.559008,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 5.268064,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 2.8999999994412065,
+          "total": 3,
+          "gpu": 5.214272,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 5.329088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.3999999994412065,
+          "gpu": 5.620608,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.800000000745058,
+          "gpu": 14.075744,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 5.587776,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 9.812832,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 5.369984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 13.336128,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 76,
+          "triangles": 4360820
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          517,
+          289
+        ],
+        "topRight": [
+          899,
+          96
+        ],
+        "labelTopLeft": [
+          600,
+          330
+        ],
+        "labelBottomLeft": [
+          600,
+          394
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 76,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 4360820,
+        "archiveCount": 317,
+        "archiveCandidates": 458,
+        "archiveCulled": 141,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -395.90837417050494,
+            "y": 207.76321668045975
+          },
+          "row": {
+            "x": -76.55856375898642,
+            "y": -14.881128720046853
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":1920,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":0}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 3.3999999994412065,
+        "total": 3.400000000372529,
+        "gpu": 6.236,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 76,
+        "triangles": 4347844,
+        "cpuP95": 4.1000000005587935
+      }
+    },
+    {
+      "scenario": "idle-smaa",
+      "samples": [
+        {
+          "cpu": 5,
+          "total": 5.099999999627471,
+          "gpu": 7.544736,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4.2999999998137355,
+          "total": 4.400000000372529,
+          "gpu": 5.811648,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 5.487264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.800000000745058,
+          "total": 3.800000000745058,
+          "gpu": 5.683552,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 11.848128,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 6.02976,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 9.712096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 8.128416,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 6.7999999998137355,
+          "total": 6.7999999998137355,
+          "gpu": 9.45584,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 6.645088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4.7000000001862645,
+          "total": 4.7000000001862645,
+          "gpu": 19.328736,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4.5,
+          "total": 4.5,
+          "gpu": 8.869984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 3.8999999994412065,
+          "gpu": 12.32656,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 8.375424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 4,
+          "gpu": 8.472064,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.7000000001862645,
+          "gpu": 11.266848,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 10.563168,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4.199999999254942,
+          "total": 4.199999999254942,
+          "gpu": 8.539392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 12.978848,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 7.52384,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.900000000372529,
+          "gpu": 12.59936,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.2000000001862645,
+          "gpu": 6.673152,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 8.366656,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 7.071808,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4.1000000005587935,
+          "total": 4.1000000005587935,
+          "gpu": 9.949408,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.199999999254942,
+          "total": 3.199999999254942,
+          "gpu": 7.90096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 4.300000000745058,
+          "total": 4.300000000745058,
+          "gpu": 9.543424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 7.659392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5816994
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.5,
+          "gpu": 8.848992,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 7.045536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 13.471712,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 5.543616,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 5.538528,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.400000000372529,
+          "gpu": 5.47248,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 7.597792,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 5.099999999627471,
+          "total": 5.2000000001862645,
+          "gpu": 9.248768,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.6000000005587935,
+          "total": 2.6000000005587935,
+          "gpu": 9.273056,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 6.971392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.7000000001862645,
+          "gpu": 10.02448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 5.16448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.6000000005587935,
+          "gpu": 10.465696,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 7.059904,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 7.670816,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.699999999254942,
+          "total": 2.699999999254942,
+          "gpu": 4.634816,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 6.546304,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 11.50416,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 8.386144,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 9.591456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 105,
+          "triangles": 5834358
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          517,
+          289
+        ],
+        "topRight": [
+          899,
+          96
+        ],
+        "labelTopLeft": [
+          600,
+          330
+        ],
+        "labelBottomLeft": [
+          600,
+          394
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 105,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 5834358,
+        "archiveCount": 317,
+        "archiveCandidates": 458,
+        "archiveCulled": 141,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -395.90837417050494,
+            "y": 207.76321668045975
+          },
+          "row": {
+            "x": -76.55856375898642,
+            "y": -14.881128720046853
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"smaa\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":1920,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 3.5,
+        "total": 3.5,
+        "gpu": 8.375424,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 105,
+        "triangles": 5816994,
+        "cpuP95": 5
+      }
+    },
+    {
+      "scenario": "idle-wide",
+      "samples": [
+        {
+          "cpu": 6,
+          "total": 6,
+          "gpu": 10.880704,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.5,
+          "total": 5.5,
+          "gpu": 7.278048,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5,
+          "total": 5,
+          "gpu": 8.082752,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.2999999998137355,
+          "total": 5.2999999998137355,
+          "gpu": 10.376768,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 4.8999999994412065,
+          "total": 5,
+          "gpu": 8.70944,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.699999999254942,
+          "total": 5.699999999254942,
+          "gpu": 12.673984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.7000000001862645,
+          "total": 5.7999999998137355,
+          "gpu": 9.03232,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 9.100000000558794,
+          "total": 9.100000000558794,
+          "gpu": 11.598848,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 6.7000000001862645,
+          "total": 6.7000000001862645,
+          "gpu": 9.090656,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.7999999998137355,
+          "total": 5.900000000372529,
+          "gpu": 9.66976,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.300000000745058,
+          "total": 5.400000000372529,
+          "gpu": 8.81616,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 6.199999999254942,
+          "total": 6.199999999254942,
+          "gpu": 8.380352,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.900000000372529,
+          "total": 5.900000000372529,
+          "gpu": 8.352544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 6.400000000372529,
+          "total": 6.400000000372529,
+          "gpu": 8.463552,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.599999999627471,
+          "total": 5.599999999627471,
+          "gpu": 9.591296,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 7.199999999254942,
+          "total": 7.199999999254942,
+          "gpu": 12.23856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.7000000001862645,
+          "total": 5.7000000001862645,
+          "gpu": 8.216192,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 6.099999999627471,
+          "total": 6.099999999627471,
+          "gpu": 8.985824,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.699999999254942,
+          "total": 5.7999999998137355,
+          "gpu": 10.05408,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 7.599999999627471,
+          "total": 7.7000000001862645,
+          "gpu": 11.860736,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 6,
+          "total": 6,
+          "gpu": 8.222688,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.599999999627471,
+          "total": 5.599999999627471,
+          "gpu": 9.044704,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.400000000372529,
+          "total": 5.400000000372529,
+          "gpu": 7.516064,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 7.2999999998137355,
+          "total": 7.2999999998137355,
+          "gpu": 8.05632,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.7999999998137355,
+          "total": 5.7999999998137355,
+          "gpu": 9.378912,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.5,
+          "total": 5.5,
+          "gpu": 21.10496,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 5.900000000372529,
+          "total": 5.900000000372529,
+          "gpu": 14.2512,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.8999999994412065,
+          "gpu": 8.964672,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7171383
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 11.600352,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.099999999627471,
+          "total": 4.099999999627471,
+          "gpu": 11.235488,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 12.098624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 5.1000000005587935,
+          "total": 5.1000000005587935,
+          "gpu": 18.137376,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.2000000001862645,
+          "total": 4.2000000001862645,
+          "gpu": 12.971328,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.2000000001862645,
+          "total": 4.2000000001862645,
+          "gpu": 9.959744,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.7000000001862645,
+          "total": 4.7000000001862645,
+          "gpu": 11.429536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 20.681664,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 3.800000000745058,
+          "total": 3.800000000745058,
+          "gpu": 8.760544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 5.2999999998137355,
+          "total": 5.2999999998137355,
+          "gpu": 13.500608,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 11.39584,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 8.960704,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4,
+          "total": 4,
+          "gpu": 16.679296,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 4,
+          "gpu": 9.193504,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.3999999994412065,
+          "total": 4.3999999994412065,
+          "gpu": 9.50336,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.8999999994412065,
+          "total": 4.8999999994412065,
+          "gpu": 8.934784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 4.599999999627471,
+          "total": 4.599999999627471,
+          "gpu": 10.886784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 5.2000000001862645,
+          "total": 5.2000000001862645,
+          "gpu": 16.883712,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 6.7000000001862645,
+          "total": 6.7999999998137355,
+          "gpu": 8.012544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        },
+        {
+          "cpu": 7.7999999998137355,
+          "total": 7.7999999998137355,
+          "gpu": 10.305856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 7188747
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          837,
+          289
+        ],
+        "topRight": [
+          1219,
+          96
+        ],
+        "labelTopLeft": [
+          920,
+          330
+        ],
+        "labelBottomLeft": [
+          920,
+          394
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 102,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 7188747,
+        "archiveCount": 395,
+        "archiveCandidates": 576,
+        "archiveCulled": 181,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -395.9083741705049,
+            "y": 207.76321668045975
+          },
+          "row": {
+            "x": -76.55856375898637,
+            "y": -14.881128720046853
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -32,
+          "maxRow": 55
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":2560,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":2560,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 5.5,
+        "total": 5.5,
+        "gpu": 9.66976,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 102,
+        "triangles": 7171383,
+        "cpuP95": 7.599999999627471
+      }
+    },
+    {
+      "scenario": "idle-portrait",
+      "samples": [
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 3.94768,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 4.149056,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 4.599999999627471,
+          "total": 4.599999999627471,
+          "gpu": 4.242944,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 3.199999999254942,
+          "total": 3.199999999254942,
+          "gpu": 4.989408,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.400000000372529,
+          "total": 2.400000000372529,
+          "gpu": 3.951168,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.8999999994412065,
+          "total": 2.8999999994412065,
+          "gpu": 6.210144,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 3.779456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.6000000005587935,
+          "gpu": 4.108,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 7.918624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.300000000745058,
+          "total": 2.300000000745058,
+          "gpu": 3.817664,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 4.12176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5886447
+        },
+        {
+          "cpu": 2.6000000005587935,
+          "total": 2.6000000005587935,
+          "gpu": 3.734048,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 3.73984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 1.800000000745058,
+          "total": 1.800000000745058,
+          "gpu": 4.659744,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 9.079424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 3,
+          "total": 3.1000000005587935,
+          "gpu": 4.097184,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 7.928896,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 4.25952,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.400000000372529,
+          "total": 2.400000000372529,
+          "gpu": 4.039168,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 7.498784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 1.900000000372529,
+          "total": 1.900000000372529,
+          "gpu": 6.06304,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 2.900000000372529,
+          "gpu": 12.818752,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.900000000372529,
+          "total": 3,
+          "gpu": 3.813856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 4.535392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 6.019712,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 1.900000000372529,
+          "total": 1.900000000372529,
+          "gpu": 3.677728,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2,
+          "total": 2.099999999627471,
+          "gpu": 4.5872,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.6000000005587935,
+          "total": 2.6000000005587935,
+          "gpu": 3.506592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 5.989088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2,
+          "total": 2,
+          "gpu": 3.418464,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.099999999627471,
+          "total": 2.099999999627471,
+          "gpu": 4.341216,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 8.14672,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 3.882272,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 4.539872,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 3.938112,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 3.939168,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 4.2999999998137355,
+          "total": 4.2999999998137355,
+          "gpu": 3.760992,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 9.555584,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 3.781856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 5.27808,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 4.300000000745058,
+          "total": 4.300000000745058,
+          "gpu": 5.995776,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 10.100000000558794,
+          "total": 10.200000000186265,
+          "gpu": 5.988256,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 13.700000000186265,
+          "total": 13.700000000186265,
+          "gpu": 8.113312,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 9,
+          "total": 9.099999999627471,
+          "gpu": 4.663648,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 6.900000000372529,
+          "total": 7,
+          "gpu": 5.164224,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 6.1000000005587935,
+          "total": 6.1000000005587935,
+          "gpu": 3.989504,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 5.6000000005587935,
+          "total": 5.7000000001862645,
+          "gpu": 5.417216,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        },
+        {
+          "cpu": 4.599999999627471,
+          "total": 4.599999999627471,
+          "gpu": 6.433536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5903811
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          309,
+          458
+        ],
+        "topRight": [
+          587,
+          320
+        ],
+        "labelTopLeft": [
+          370,
+          489
+        ],
+        "labelBottomLeft": [
+          370,
+          536
+        ],
+        "modelPosition": [
+          0,
+          -2.0058,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.0489,
+          43.4565,
+          66.3575
+        ],
+        "fieldOfView": 6.105765029584858,
+        "loaded": true,
+        "drawCalls": 102,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 5903811,
+        "archiveCount": 321,
+        "archiveCandidates": 400,
+        "archiveCulled": 79,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -287.00843867352984,
+            "y": 148.79639201767915
+          },
+          "row": {
+            "x": -56.93920253925863,
+            "y": -10.657530805291593
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -6,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 57
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.3125999442285528,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.4,
+        "appearance": 1,
+        "cameraDetail": 0,
+        "idleGain": 0.9999999480681383,
+        "flatten": 0,
+        "spectrumActivity": 0,
+        "selectedIndexDim": 0,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":900,\"height\":1600,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":900,\"aoHeight\":1600,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 2.7000000001862645,
+        "total": 2.7000000001862645,
+        "gpu": 4.535392,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 102,
+        "triangles": 5903811,
+        "cpuP95": 9
+      }
+    },
+    {
+      "scenario": "music-wave",
+      "samples": [
+        {
+          "cpu": 4.900000000372529,
+          "total": 4.900000000372529,
+          "gpu": 6.976576,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5678079
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 10.079424,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5678079
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 6.381632,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.6000000005587935,
+          "gpu": 6.918176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 5.627072,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 5.455328,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 9.51488,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 4.2999999998137355,
+          "total": 4.2999999998137355,
+          "gpu": 6.612096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 8.840096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 5.077984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 4.6000000005587935,
+          "total": 4.6000000005587935,
+          "gpu": 5.67216,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 5,
+          "total": 5,
+          "gpu": 4.829504,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.800000000745058,
+          "total": 3.800000000745058,
+          "gpu": 6.355776,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 6.2000000001862645,
+          "total": 6.2000000001862645,
+          "gpu": 8.136448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 4.599999999627471,
+          "total": 4.7000000001862645,
+          "gpu": 6.150624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 4.3999999994412065,
+          "total": 4.5,
+          "gpu": 5.41456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 4.699999999254942,
+          "total": 4.699999999254942,
+          "gpu": 5.880896,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 4.099999999627471,
+          "total": 4.099999999627471,
+          "gpu": 6.347072,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.8999999994412065,
+          "total": 2.8999999994412065,
+          "gpu": 5.311264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 5.77344,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 7.413792,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 6.58368,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 7.816704,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 5.900736,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 9.720448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5782263
+        },
+        {
+          "cpu": 2.2000000001862645,
+          "total": 2.2000000001862645,
+          "gpu": 4.935712,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 6.130976,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 2.2000000001862645,
+          "total": 2.2000000001862645,
+          "gpu": 7.471776,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5782263
+        },
+        {
+          "cpu": 1.599999999627471,
+          "total": 1.7000000001862645,
+          "gpu": 5.900448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.800000000745058,
+          "total": 3.900000000372529,
+          "gpu": 10.088928,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.3999999994412065,
+          "gpu": 5.182688,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 1.900000000372529,
+          "total": 1.900000000372529,
+          "gpu": 5.60416,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 1.7000000001862645,
+          "total": 1.7999999998137355,
+          "gpu": 7.717344,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 1.599999999627471,
+          "total": 1.699999999254942,
+          "gpu": 5.800896,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 1.900000000372529,
+          "total": 1.900000000372529,
+          "gpu": 7.473792,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.300000000745058,
+          "total": 2.300000000745058,
+          "gpu": 5.545504,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 1.7999999998137355,
+          "total": 1.7999999998137355,
+          "gpu": 5.94592,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 8.063872,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 1.7000000001862645,
+          "total": 1.7000000001862645,
+          "gpu": 5.678784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 10.878176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.7999999998137355,
+          "total": 2.7999999998137355,
+          "gpu": 5.33776,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.400000000372529,
+          "total": 2.400000000372529,
+          "gpu": 6.323392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.3999999994412065,
+          "total": 2.3999999994412065,
+          "gpu": 10.75264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 6.087392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 10.117472,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.300000000745058,
+          "gpu": 8.447264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.3999999994412065,
+          "gpu": 10.975392,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3,
+          "total": 3,
+          "gpu": 8.395456,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          519,
+          554
+        ],
+        "topRight": [
+          899,
+          354
+        ],
+        "labelTopLeft": [
+          601,
+          593
+        ],
+        "labelBottomLeft": [
+          602,
+          657
+        ],
+        "modelPosition": [
+          0,
+          -3.8986,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 102,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 5730171,
+        "archiveCount": 311,
+        "archiveCandidates": 458,
+        "archiveCulled": 147,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -394.1695415854268,
+            "y": 214.5056661075741
+          },
+          "row": {
+            "x": -76.23012668397743,
+            "y": -15.364088446557341
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.6318768299114668,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.141,
+        "appearance": 0.238,
+        "cameraDetail": 0,
+        "idleGain": 0.5272923721112063,
+        "flatten": 0.9592377960216263,
+        "spectrumActivity": 1,
+        "selectedIndexDim": 0.9592377960216263,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":1920,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 2.7999999998137355,
+        "total": 2.7999999998137355,
+        "gpu": 6.355776,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 102,
+        "triangles": 5730171,
+        "cpuP95": 4.900000000372529
+      }
+    },
+    {
+      "scenario": "music-flow",
+      "samples": [
+        {
+          "cpu": 5.400000000372529,
+          "total": 5.5,
+          "gpu": 5.651008,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 4.400000000372529,
+          "total": 4.400000000372529,
+          "gpu": 12.756416,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 4.7000000001862645,
+          "total": 4.7000000001862645,
+          "gpu": 7.21536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 4.7999999998137355,
+          "total": 4.900000000372529,
+          "gpu": 12.222272,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 4.6000000005587935,
+          "total": 4.7000000001862645,
+          "gpu": 8.478848,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 9.168544,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 4,
+          "total": 4.099999999627471,
+          "gpu": 7.149888,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 4.2000000001862645,
+          "total": 4.2000000001862645,
+          "gpu": 6.093088,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 5.400000000372529,
+          "total": 5.400000000372529,
+          "gpu": 10.941984,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 6.541856,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5695443
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 6.137344,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 5.599999999627471,
+          "total": 5.599999999627471,
+          "gpu": 8.29744,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5712807
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 8.59472,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 9.871264,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 7.062784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 14.780576,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.2000000001862645,
+          "total": 3.2000000001862645,
+          "gpu": 7.600256,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 14.484448,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.400000000372529,
+          "gpu": 8.532736,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 5.721696,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.400000000372529,
+          "gpu": 7.315168,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 5.1000000005587935,
+          "total": 5.1000000005587935,
+          "gpu": 6.117248,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 4,
+          "gpu": 8.392512,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.900000000372529,
+          "total": 3.900000000372529,
+          "gpu": 7.936288,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 5.2999999998137355,
+          "total": 5.2999999998137355,
+          "gpu": 8.35152,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.6000000005587935,
+          "total": 3.6000000005587935,
+          "gpu": 11.552224,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 8.145632,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 4.099999999627471,
+          "total": 4.099999999627471,
+          "gpu": 8.716096,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.8999999994412065,
+          "total": 3.8999999994412065,
+          "gpu": 10.678624,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.3999999994412065,
+          "total": 3.3999999994412065,
+          "gpu": 6.705536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 4.099999999627471,
+          "total": 4.099999999627471,
+          "gpu": 11.37008,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.7999999998137355,
+          "total": 3.7999999998137355,
+          "gpu": 6.379712,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.7000000001862645,
+          "total": 3.7000000001862645,
+          "gpu": 6.469536,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.1000000005587935,
+          "total": 3.1000000005587935,
+          "gpu": 6.735104,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 3.5,
+          "total": 3.5,
+          "gpu": 10.611552,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.2999999998137355,
+          "gpu": 6.069664,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 6.066176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.400000000372529,
+          "total": 3.400000000372529,
+          "gpu": 5.708288,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.599999999627471,
+          "total": 3.599999999627471,
+          "gpu": 15.053408,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 5.857344,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 12.994784,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.099999999627471,
+          "total": 3.099999999627471,
+          "gpu": 6.068896,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.5,
+          "total": 2.5,
+          "gpu": 6.50176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.2999999998137355,
+          "total": 2.2999999998137355,
+          "gpu": 10.045312,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 3.2999999998137355,
+          "total": 3.3999999994412065,
+          "gpu": 7.273696,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5764899
+        },
+        {
+          "cpu": 2.7000000001862645,
+          "total": 2.7000000001862645,
+          "gpu": 9.772256,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 1.8999999994412065,
+          "total": 1.8999999994412065,
+          "gpu": 7.190176,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5747535
+        },
+        {
+          "cpu": 2.599999999627471,
+          "total": 2.599999999627471,
+          "gpu": 6.432672,
+          "uploads": 6,
+          "uploadBytes": 186624,
+          "calls": 102,
+          "triangles": 5730171
+        }
+      ],
+      "stats": {
+        "decryption": {
+          "time": -1,
+          "intervals": [],
+          "markers": 0,
+          "point": 0,
+          "label": 0,
+          "labelValue": 0,
+          "clarity": 0,
+          "phase": "waiting"
+        },
+        "topLeft": [
+          519,
+          603
+        ],
+        "topRight": [
+          899,
+          402
+        ],
+        "labelTopLeft": [
+          602,
+          642
+        ],
+        "labelBottomLeft": [
+          602,
+          706
+        ],
+        "modelPosition": [
+          0,
+          -4.2512,
+          -2.17
+        ],
+        "cameraPosition": [
+          -114.5565,
+          45.5345,
+          68.6579
+        ],
+        "fieldOfView": 2.999158312912754,
+        "loaded": true,
+        "drawCalls": 102,
+        "superPerformance": false,
+        "presentation": 1,
+        "triangles": 5730171,
+        "archiveCount": 311,
+        "archiveCandidates": 458,
+        "archiveCulled": 147,
+        "archiveCapacity": 576,
+        "archiveCoverage": "standard",
+        "returningFiles": 0,
+        "selectionPhase": "settled",
+        "pendingPulse": null,
+        "pulses": [],
+        "referenceTime": 55.07,
+        "selectedSlot": 76,
+        "selectedLane": 2,
+        "selectedCell": {
+          "lane": 2,
+          "row": 12
+        },
+        "hoverCell": null,
+        "hoverLifts": {},
+        "dragTrack": null,
+        "archiveMomentum": null,
+        "holdingArchive": false,
+        "dragProjection": {
+          "lane": {
+            "x": -393.84621312784316,
+            "y": 215.7485407009828
+          },
+          "row": {
+            "x": -76.16952289185127,
+            "y": -15.453115400131827
+          }
+        },
+        "dragMapping": null,
+        "coordinateOrigin": {
+          "lane": 0,
+          "row": 0
+        },
+        "poolBounds": {
+          "minLane": -4,
+          "maxLane": 9,
+          "minRow": -28,
+          "maxRow": 51
+        },
+        "laneFocus": 2,
+        "columnCamera": 0,
+        "rotation": 0,
+        "clearance": -3.7757355441730134,
+        "canInspect": false,
+        "returnPhase": "lowering",
+        "extraction": 0.141,
+        "appearance": 0.238,
+        "cameraDetail": 0,
+        "idleGain": 0.5272923721112063,
+        "flatten": 0.9592377960216263,
+        "spectrumActivity": 1,
+        "selectedIndexDim": 0.9592377960216263,
+        "returningIndexDims": [],
+        "cameraDistance": 139.9999999999999,
+        "cameraNear": 5,
+        "cameraFar": 300,
+        "fogNear": 144.9999999999999,
+        "fogFar": 164.9999999999999,
+        "returningAppearance": [],
+        "rail": 0
+      },
+      "quality": "{\"ratio\":1,\"width\":1920,\"height\":1080,\"limited\":false,\"antialias\":\"off\",\"transmission\":1,\"anisotropy\":16,\"superPerformance\":false,\"aoSamples\":32,\"aoWidth\":1920,\"aoHeight\":1080,\"shadows\":2048,\"depthOfField\":100}",
+      "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5070 Ti Laptop GPU (0x00002F18) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+      "gpuTimer": true,
+      "summary": {
+        "cpu": 3.6000000005587935,
+        "total": 3.6000000005587935,
+        "gpu": 7.936288,
+        "uploads": 6,
+        "uploadBytes": 186624,
+        "calls": 102,
+        "triangles": 5747535,
+        "cpuP95": 5.400000000372529
+      }
+    }
+  ]
+}

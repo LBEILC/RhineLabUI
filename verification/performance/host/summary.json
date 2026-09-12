@@ -1,0 +1,440 @@
+[
+  {
+    "scenario": "static",
+    "baseline": {
+      "cpu": {
+        "median": 2.599999999627471,
+        "min": 2.5,
+        "max": 2.600000001490116
+      },
+      "gpu": {
+        "median": 5.215072,
+        "min": 5.09472,
+        "max": 5.72064
+      },
+      "calls": {
+        "median": 102,
+        "min": 102,
+        "max": 102
+      },
+      "uploadBytes": {
+        "median": 186624,
+        "min": 186624,
+        "max": 186624
+      }
+    },
+    "candidate": {
+      "cpu": {
+        "median": 1.199999999254942,
+        "min": 1.199999999254942,
+        "max": 1.199999999254942
+      },
+      "gpu": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "calls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "uploadBytes": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "pixelHashesEqual": true,
+    "images": [
+      {
+        "round": 1,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 2,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 3,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      }
+    ],
+    "gpuReduction": 1
+  },
+  {
+    "scenario": "idle",
+    "baseline": {
+      "cpu": {
+        "median": 2.700000001117587,
+        "min": 2.599999999627471,
+        "max": 2.900000000372529
+      },
+      "gpu": {
+        "median": 5.234112,
+        "min": 4.888608,
+        "max": 5.45072
+      },
+      "calls": {
+        "median": 102,
+        "min": 102,
+        "max": 102
+      },
+      "uploadBytes": {
+        "median": 186624,
+        "min": 186624,
+        "max": 186624
+      }
+    },
+    "candidate": {
+      "cpu": {
+        "median": 2.400000000372529,
+        "min": 2.400000000372529,
+        "max": 2.599999999627471
+      },
+      "gpu": {
+        "median": 4.574656,
+        "min": 4.547552,
+        "max": 4.799072
+      },
+      "calls": {
+        "median": 75,
+        "min": 75,
+        "max": 75
+      },
+      "uploadBytes": {
+        "median": 20256,
+        "min": 20256,
+        "max": 20256
+      }
+    },
+    "pixelHashesEqual": true,
+    "images": [
+      {
+        "round": 1,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 2,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 3,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      }
+    ],
+    "gpuReduction": 0.12599195431813448
+  },
+  {
+    "scenario": "navigate",
+    "baseline": {
+      "cpu": {
+        "median": 5.100000001490116,
+        "min": 4.900000000372529,
+        "max": 5.199999999254942
+      },
+      "gpu": {
+        "median": 7.0864,
+        "min": 6.90592,
+        "max": 7.101152
+      },
+      "calls": {
+        "median": 440,
+        "min": 440,
+        "max": 440
+      },
+      "uploadBytes": {
+        "median": 186624,
+        "min": 186624,
+        "max": 186624
+      }
+    },
+    "candidate": {
+      "cpu": {
+        "median": 4.599999999627471,
+        "min": 4.300000000745058,
+        "max": 5
+      },
+      "gpu": {
+        "median": 6.149216,
+        "min": 5.955648,
+        "max": 6.181536
+      },
+      "calls": {
+        "median": 321,
+        "min": 321,
+        "max": 321
+      },
+      "uploadBytes": {
+        "median": 19752,
+        "min": 19752,
+        "max": 19752
+      }
+    },
+    "pixelHashesEqual": true,
+    "images": [
+      {
+        "round": 1,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 2,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 3,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      }
+    ],
+    "gpuReduction": 0.13225107247685708
+  },
+  {
+    "scenario": "detail",
+    "baseline": {
+      "cpu": {
+        "median": 2,
+        "min": 1.800000000745058,
+        "max": 2.100000001490116
+      },
+      "gpu": {
+        "median": 5.430432,
+        "min": 5.276384,
+        "max": 5.49664
+      },
+      "calls": {
+        "median": 102,
+        "min": 102,
+        "max": 102
+      },
+      "uploadBytes": {
+        "median": 186624,
+        "min": 186624,
+        "max": 186624
+      }
+    },
+    "candidate": {
+      "cpu": {
+        "median": 0.7999999988824129,
+        "min": 0.7000000011175871,
+        "max": 0.900000000372529
+      },
+      "gpu": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "calls": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      },
+      "uploadBytes": {
+        "median": 0,
+        "min": 0,
+        "max": 0
+      }
+    },
+    "pixelHashesEqual": false,
+    "images": [
+      {
+        "round": 1,
+        "pixels": 4,
+        "max": 1,
+        "sum": 4,
+        "mean": 6.430041152263375e-7,
+        "points": [
+          {
+            "x": 541,
+            "y": 652,
+            "delta": 1
+          },
+          {
+            "x": 1569,
+            "y": 1002,
+            "delta": 1
+          },
+          {
+            "x": 614,
+            "y": 1026,
+            "delta": 1
+          },
+          {
+            "x": 1004,
+            "y": 1058,
+            "delta": 1
+          }
+        ]
+      },
+      {
+        "round": 2,
+        "pixels": 4,
+        "max": 1,
+        "sum": 4,
+        "mean": 6.430041152263375e-7,
+        "points": [
+          {
+            "x": 541,
+            "y": 652,
+            "delta": 1
+          },
+          {
+            "x": 1569,
+            "y": 1002,
+            "delta": 1
+          },
+          {
+            "x": 614,
+            "y": 1026,
+            "delta": 1
+          },
+          {
+            "x": 1004,
+            "y": 1058,
+            "delta": 1
+          }
+        ]
+      },
+      {
+        "round": 3,
+        "pixels": 4,
+        "max": 1,
+        "sum": 4,
+        "mean": 6.430041152263375e-7,
+        "points": [
+          {
+            "x": 541,
+            "y": 652,
+            "delta": 1
+          },
+          {
+            "x": 1569,
+            "y": 1002,
+            "delta": 1
+          },
+          {
+            "x": 614,
+            "y": 1026,
+            "delta": 1
+          },
+          {
+            "x": 1004,
+            "y": 1058,
+            "delta": 1
+          }
+        ]
+      }
+    ],
+    "gpuReduction": 1
+  },
+  {
+    "scenario": "music",
+    "baseline": {
+      "cpu": {
+        "median": 2.799999998882413,
+        "min": 2.699999999254942,
+        "max": 3.299999998882413
+      },
+      "gpu": {
+        "median": 5.215616,
+        "min": 5.0368,
+        "max": 5.89536
+      },
+      "calls": {
+        "median": 102,
+        "min": 102,
+        "max": 102
+      },
+      "uploadBytes": {
+        "median": 186624,
+        "min": 186624,
+        "max": 186624
+      }
+    },
+    "candidate": {
+      "cpu": {
+        "median": 2.599999999627471,
+        "min": 2.400000000372529,
+        "max": 2.800000000745058
+      },
+      "gpu": {
+        "median": 4.521024,
+        "min": 4.438624,
+        "max": 4.69584
+      },
+      "calls": {
+        "median": 75,
+        "min": 75,
+        "max": 75
+      },
+      "uploadBytes": {
+        "median": 19940,
+        "min": 19940,
+        "max": 19940
+      }
+    },
+    "pixelHashesEqual": true,
+    "images": [
+      {
+        "round": 1,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 2,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      },
+      {
+        "round": 3,
+        "pixels": 0,
+        "max": 0,
+        "sum": 0,
+        "mean": 0,
+        "points": []
+      }
+    ],
+    "gpuReduction": 0.1331754484992761
+  }
+]
