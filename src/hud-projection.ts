@@ -26,7 +26,8 @@ export function hudQuadMatrix(width: number, height: number, quad: HudPoint[]): 
     0, 0, 1, 0, a.x, a.y, 0, 1];
 }
 
-type HudPanel = { node: HTMLElement; width: number; height: number; origin: HudPoint; corners: HudPoint[] };
+type HudPanel = { node: HTMLElement; width: number; height: number; origin: HudPoint; corners: HudPoint[];
+  transformOrigin: HudPoint; inlineTransform: string; animated: boolean };
 const bootPanels = ".access-text, .boot-logo, .auth-status, .scan, .welcome";
 const panels = ".brand, .system-nav, .system-footer > span, .system-footer > button, .powered, .wb-overview, .wb-module, .wb-nav > button, .archive-callout, .archive-counter, .archive-navigation, .column-navigation, .archive-hint, .detail-content, .back-button, .object-caption, .relay-entry, .relay-heading, .relay-actions";
 
@@ -37,6 +38,7 @@ export class HudProjection {
   private width = 1920;
   private height = 1080;
   private layout = "";
+  private bootText = "";
   private observer: ResizeObserver;
   constructor(private stage: HTMLElement) {
     this.nodes = [...stage.querySelectorAll<HTMLElement>(`${panels}, ${bootPanels}`)];
@@ -45,6 +47,7 @@ export class HudProjection {
     this.observer.observe(stage);
     this.nodes.forEach(node => this.observer.observe(node));
     document.fonts.ready.then(() => this.invalidate());
+    document.fonts.addEventListener('loadingdone', () => this.invalidate());
   }
   invalidate() { this.dirty = true; }
   private measure() {
@@ -82,7 +85,9 @@ export class HudProjection {
         entrance.y += parseFloat(translate[1]) || 0;
       }
       const origin = { x: (rect.left - stageRect.left) / scale - entrance.x - Math.min(...corners.map(p => p.x)), y: (rect.top - stageRect.top) / scale - entrance.y - Math.min(...corners.map(p => p.y)) };
-      this.measured.push({ node, width, height, origin, corners: corners.map(p => ({ x: p.x + origin.x, y: p.y + origin.y })) });
+      this.measured.push({ node, width, height, origin, corners: corners.map(p => ({ x: p.x + origin.x, y: p.y + origin.y })),
+        transformOrigin: { x: ox, y: oy }, inlineTransform: node.style.transform,
+        animated: boot && node.matches('.boot-logo, .welcome') });
     }
     this.stage.dataset.hudDepth = enabled ?? "false";
     this.dirty = false;
@@ -91,10 +96,24 @@ export class HudProjection {
     const layout = `${this.stage.dataset.layout}/${this.stage.dataset.mode}/${this.stage.dataset.workbench}`;
     if (layout !== this.layout) { this.layout = layout; this.invalidate(); }
     if (depth < .00001) { this.stage.dataset.hudDepth = "false"; return; }
-    // Boot transforms and text dimensions follow the authored timeline each frame.
-    // Measure that current pose before composing the HUD, never cache an in-flight scale.
-    if (this.dirty || this.stage.dataset.mode === "boot") this.measure();
+    // Text/font/layout changes need a rest-pose measurement. The two authored
+    // container transforms can be composed from cached local boxes without
+    // toggling HUD CSS and forcing style/layout twice on every opening frame.
+    if (this.stage.dataset.mode === 'boot') {
+      const text = this.nodes.filter(node => node.matches(bootPanels)).map(node => node.textContent).join('\0');
+      if (text !== this.bootText) { this.bootText = text; this.invalidate(); }
+    }
+    if (this.dirty) this.measure();
     for (const panel of this.measured) {
+      if (panel.animated && panel.inlineTransform !== panel.node.style.transform) {
+        panel.inlineTransform = panel.node.style.transform;
+        const matrix = new DOMMatrixReadOnly(panel.inlineTransform === 'none' ? undefined : panel.inlineTransform);
+        const { x: ox, y: oy } = panel.transformOrigin;
+        panel.corners = [{x:0,y:0},{x:panel.width,y:0},{x:panel.width,y:panel.height},{x:0,y:panel.height}].map(p => {
+          const q = matrix.transformPoint({x:p.x-ox,y:p.y-oy});
+          return {x:q.x/q.w+ox+panel.origin.x,y:q.y/q.w+oy+panel.origin.y};
+        });
+      }
       const corners = panel.corners.map(point => {
         const q = projectHudPoint(point, this.width, this.height, depth, pointer);
         return { x: q.x - panel.origin.x, y: q.y - panel.origin.y };

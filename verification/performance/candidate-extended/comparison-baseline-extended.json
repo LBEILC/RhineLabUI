@@ -1,0 +1,263 @@
+[
+  {
+    "scenario": "idle-dark",
+    "before": {
+      "cpu": 3.2999999998137355,
+      "total": 3.2999999998137355,
+      "gpu": 7.030144,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5139795,
+      "cpuP95": 4.1000000005587935
+    },
+    "after": {
+      "cpu": 2.900000000372529,
+      "total": 2.900000000372529,
+      "gpu": 5.68064,
+      "uploads": 1,
+      "uploadBytes": 17696,
+      "calls": 75,
+      "triangles": 3789517,
+      "cpuP95": 6.199999999254942
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle-half",
+    "before": {
+      "cpu": 3.300000000745058,
+      "total": 3.3999999994412065,
+      "gpu": 6.476,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5816991,
+      "cpuP95": 4
+    },
+    "after": {
+      "cpu": 4.2999999998137355,
+      "total": 4.2999999998137355,
+      "gpu": 5.36864,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 98,
+      "triangles": 5697799,
+      "cpuP95": 5.7999999998137355
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle-noao",
+    "before": {
+      "cpu": 2.900000000372529,
+      "total": 2.900000000372529,
+      "gpu": 5.28112,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 74,
+      "triangles": 4347842,
+      "cpuP95": 4.599999999627471
+    },
+    "after": {
+      "cpu": 4.2999999998137355,
+      "total": 4.3999999994412065,
+      "gpu": 4.362912,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 72,
+      "triangles": 4288246,
+      "cpuP95": 8.200000000186265
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle-nodof",
+    "before": {
+      "cpu": 3.3999999994412065,
+      "total": 3.400000000372529,
+      "gpu": 6.236,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 76,
+      "triangles": 4347844,
+      "cpuP95": 4.1000000005587935
+    },
+    "after": {
+      "cpu": 5.2000000001862645,
+      "total": 5.2000000001862645,
+      "gpu": 5.216832,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 74,
+      "triangles": 4288248,
+      "cpuP95": 13.299999999813735
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle-smaa",
+    "before": {
+      "cpu": 3.5,
+      "total": 3.5,
+      "gpu": 8.375424,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 105,
+      "triangles": 5816994,
+      "cpuP95": 5
+    },
+    "after": {
+      "cpu": 3.7999999998137355,
+      "total": 3.8999999994412065,
+      "gpu": 5.805216,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 78,
+      "triangles": 4288252,
+      "cpuP95": 5.5
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle-wide",
+    "before": {
+      "cpu": 5.5,
+      "total": 5.5,
+      "gpu": 9.66976,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 7171383,
+      "cpuP95": 7.599999999627471
+    },
+    "after": {
+      "cpu": 5.1000000005587935,
+      "total": 5.2000000001862645,
+      "gpu": 9.00464,
+      "uploads": 1,
+      "uploadBytes": 25184,
+      "calls": 75,
+      "triangles": 5285713,
+      "cpuP95": 8.400000000372529
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle-portrait",
+    "before": {
+      "cpu": 2.7000000001862645,
+      "total": 2.7000000001862645,
+      "gpu": 4.535392,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5903811,
+      "cpuP95": 9
+    },
+    "after": {
+      "cpu": 3.3999999994412065,
+      "total": 3.3999999994412065,
+      "gpu": 4.540448,
+      "uploads": 1,
+      "uploadBytes": 20512,
+      "calls": 75,
+      "triangles": 4352189,
+      "cpuP95": 7.400000000372529
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "music-wave",
+    "before": {
+      "cpu": 2.7999999998137355,
+      "total": 2.7999999998137355,
+      "gpu": 6.355776,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5730171,
+      "cpuP95": 4.900000000372529
+    },
+    "after": {
+      "cpu": 3.400000000372529,
+      "total": 3.5,
+      "gpu": 6.382688,
+      "uploads": 1,
+      "uploadBytes": 19880,
+      "calls": 75,
+      "triangles": 4224309,
+      "cpuP95": 4.5
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "music-flow",
+    "before": {
+      "cpu": 3.6000000005587935,
+      "total": 3.6000000005587935,
+      "gpu": 7.936288,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5747535,
+      "cpuP95": 5.400000000372529
+    },
+    "after": {
+      "cpu": 5,
+      "total": 5,
+      "gpu": 5.659328,
+      "uploads": 1,
+      "uploadBytes": 19936,
+      "calls": 75,
+      "triangles": 4237097,
+      "cpuP95": 7.300000000745058
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  }
+]

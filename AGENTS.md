@@ -2,6 +2,12 @@
 
 - 2026-09-11：官网已独立集成 Novecento 开场字体；授权 kit 不进入 Git。正式 Vercel 项目在构建时从当前生产版本恢复并校验字体，首次部署使用本机授权 kit 的静态输出。见 verification/WEBFONT-DEPLOYMENT.md。
 
+## 保持视觉效果的性能优化
+
+- 用户于 2026-09-12 授权新建 `codex/visual-preserving-performance`，从壁纸分支基线 `75f7eac` 逐项实现、验证性能优化，保留现有画质与动效。沿用原生实现流程。
+- 主场景采用同帧阴影和世界矩阵复用、共享实例缓冲及变化区间上传、静止画面复用、AO 与景深同分辨率时共享打包深度；开场 HUD 缓存框体并从原动作计算投影。降低 AO 分辨率时恢复原景深深度通道。
+- 浏览器与实际 Wallpaper Engine 受控测试、视觉精度差异、回归及复现步骤见 `verification/PERFORMANCE.md`。后续添加渲染输入时维护静止复用失效条件，升级 Three.js 时复核共享深度扩展点。
+
 ## 开场中央字体
 
 - 2026-09-11：用户要求中央开场文案中适合的位置统一使用 Novecento Sans Wide。访问、身份、请求、处理、授权提示使用 Normal；欢迎三行使用 Bold。后续按用户纠正与原片叠加比较，左上 RHINE LAB 使用 DemiBold，下方两行保留 MiSans。沿用原时间轴与 HUD。

@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { ArchiveVisibility } from "./archive-visibility";
+import { InstanceUpdates } from "./instance-updates";
+import { RenderState } from "./render-state";
+import { SharedDepthAO, SharedDepthBokeh } from "./shared-depth";
 import { disposeThreeTree } from "./three-resources";
 import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
@@ -8,7 +11,6 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { createArchiveLighting, type LightingLook } from "./archive-lighting";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
-import { SSAOPass } from "three/addons/postprocessing/SSAOPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { BokehPass } from "three/addons/postprocessing/BokehPass.js";
 import { SMAAPass } from "three/addons/postprocessing/SMAAPass.js";
@@ -160,9 +162,14 @@ export class ArchiveScene {
   // All visible foreground geometry is beyond 5; retain the framing and lens.
   readonly camera = new THREE.PerspectiveCamera(34, 16 / 9, 5, 300);
   private composer: EffectComposer;
-  private ao: SSAOPass;
+  private ao: SharedDepthAO;
   private bokeh: BokehPass;
   private instances: THREE.InstancedMesh[] = [];
+  private matrixUpdates?: InstanceUpdates;
+  private themeUpdates?: InstanceUpdates;
+  private renderState = new RenderState();
+  private renderedFrames = 0;
+  private reusedFrames = 0;
   private visibility = new ArchiveVisibility();
   private instanceCapacity = LOOP_COLUMNS * LOOP_ROWS;
   private drawnCells: ArchiveCell[] = [];
@@ -254,6 +261,9 @@ export class ArchiveScene {
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     this.renderer.info.autoReset = false;
     this.renderer.shadowMap.enabled = true;
+    // All composer passes see the same geometry within one application frame.
+    // Generate the shadow map in the beauty pass and reuse it in depth/normal passes.
+    this.renderer.shadowMap.autoUpdate = false;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.05;
@@ -262,7 +272,11 @@ export class ArchiveScene {
       "三维研究档案阵列，点击选择，左右拖动切列，上下拖动或滚轮切换列内档案",
     );
     container.appendChild(this.renderer.domElement);
+    this.renderer.domElement.addEventListener('webglcontextrestored', () => this.renderState.invalidate(), { signal: this.inputEvents.signal });
     this.scene.background = new THREE.Color("#eae5e1");
+    // The frame updates world matrices once after simulation; subsequent
+    // beauty, normal, depth and transmission renders reuse those same matrices.
+    this.scene.matrixWorldAutoUpdate = false;
     this.scene.fog = new THREE.Fog("#eae5e1", 22, 47);
     this.light = createArchiveLighting(this.renderer, this.scene, lightingLook);
     this.light.castShadow = true;
@@ -293,7 +307,7 @@ export class ArchiveScene {
     this.camera.lookAt(this.cameraAim);
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
-    this.ao = new SSAOPass(
+    this.ao = new SharedDepthAO(
       this.scene,
       this.camera,
       container.clientWidth,
@@ -303,11 +317,11 @@ export class ArchiveScene {
     this.ao.minDistance = 0.001;
     this.ao.maxDistance = 0.09;
     this.composer.addPass(this.ao);
-    this.bokeh = new BokehPass(this.scene, this.camera, {
+    this.bokeh = new SharedDepthBokeh(this.scene, this.camera, {
       focus: 25,
       aperture: 0.0018,
       maxblur: 0.011,
-    });
+    }, () => this.ao);
     this.composer.addPass(this.bokeh);
     this.smaa.enabled = false;
     this.composer.addPass(this.smaa);
@@ -445,7 +459,8 @@ export class ArchiveScene {
       geom.setAttribute("archiveTheme", this.themeAttribute);
       themeMaterial(arrayMat, name, true, this.subduedIndex);
       const inst = new THREE.InstancedMesh(geom, arrayMat, count);
-      inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+      // All surfaces move rigidly together; share the transform buffer on the GPU.
+      inst.instanceMatrix = this.instances[0]?.instanceMatrix ?? inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
       inst.castShadow = name === "Optical_Diffuser";
       inst.receiveShadow = true;
       inst.frustumCulled = false;
@@ -587,7 +602,7 @@ export class ArchiveScene {
     this.quality = quality;
     if (quality.aoSamples && quality.aoSamples !== this.aoKernelSize) {
       const old = this.ao;
-      this.ao = new SSAOPass(this.scene, this.camera, 1, 1, quality.aoSamples);
+      this.ao = new SharedDepthAO(this.scene, this.camera, 1, 1, quality.aoSamples);
       this.ao.kernelRadius = old.kernelRadius;
       this.ao.minDistance = old.minDistance;
       this.ao.maxDistance = old.maxDistance;
@@ -758,19 +773,22 @@ export class ArchiveScene {
   private ensureInstanceCapacity(required: number) {
     if (required <= this.instanceCapacity) return;
     const capacity = Math.max(required, this.instanceCapacity * 2);
+    const matrix = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 16), 16).setUsage(THREE.DynamicDrawUsage);
+    matrix.array.set(this.instances[0].instanceMatrix.array);
     for (const inst of this.instances) {
       inst.dispose();
-      const matrix = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 16), 16).setUsage(THREE.DynamicDrawUsage);
-      matrix.array.set(inst.instanceMatrix.array);
       inst.instanceMatrix = matrix;
     }
     const previousTheme = this.themeAttribute;
     this.themeAttribute = new THREE.InstancedBufferAttribute(new Float32Array(capacity), 1).setUsage(THREE.DynamicDrawUsage);
     if (previousTheme) this.themeAttribute.array.set(previousTheme.array);
     for (const inst of this.instances) inst.geometry.setAttribute("archiveTheme", this.themeAttribute);
+    this.matrixUpdates = new InstanceUpdates(matrix);
+    this.themeUpdates = new InstanceUpdates(this.themeAttribute);
     this.instanceCapacity = capacity;
   }
   resize() {
+    this.renderState.invalidate();
     const w = this.container.clientWidth,
       h = this.container.clientHeight;
     const kind = this.container.closest<HTMLElement>("[data-layout]")?.dataset.layout ?? "";
@@ -795,6 +813,7 @@ export class ArchiveScene {
       Math.max(1, Math.floor(dimensions.width * this.quality.aoResolution)),
       Math.max(1, Math.floor(dimensions.height * this.quality.aoResolution)),
     );
+    this.ao.setSharing(this.ao.enabled && this.bokeh.enabled && this.quality.aoResolution === 1 && !this.superPerformance);
     this.container.dataset.renderQuality = JSON.stringify({
       ...JSON.parse(this.container.dataset.renderQuality!),
       aoSamples: this.ao.enabled ? this.aoKernelSize : 0,
@@ -1600,6 +1619,8 @@ export class ArchiveScene {
     hidden.add(cellKey(this.selectedCell));
     this.drawnCells = [];
     this.relayPoints.clear();
+    this.matrixUpdates ??= new InstanceUpdates(this.instances[0].instanceMatrix);
+    if (this.themeAttribute) this.themeUpdates ??= new InstanceUpdates(this.themeAttribute);
     for (const cell of this.cells) {
       const { row, lane } = cell;
       if (hidden.has(cellKey(cell))) continue;
@@ -1610,23 +1631,24 @@ export class ArchiveScene {
       const i = this.drawnCells.length;
       this.ensureInstanceCapacity(i + 1);
       this.drawnCells.push(cell);
-      this.themeAttribute?.setX(i, this.theme.sample(cell, time));
+      this.themeUpdates?.scalar(i, this.theme.sample(cell, time));
       const slope = field(row + .5, lane) - field(row - .5, lane);
       this.dummy.position.set(x, y, z);
       this.dummy.rotation.set(slope * .024 * (1 - detail), 0, 0);
       this.dummy.scale.setScalar(1);
       this.dummy.updateMatrix();
       if (play.enabled) this.relayPoints.set(cellKey(cell), { cell: { ...cell }, point: new THREE.Vector3(0, 3.5, 0).applyMatrix4(this.dummy.matrix) });
-      for (const inst of this.instances) inst.setMatrixAt(i, this.dummy.matrix);
+      this.matrixUpdates!.set(i * 16, this.dummy.matrix.elements);
     }
+    const countChanged = this.instances[0].count !== this.drawnCells.length;
+    const matricesChanged = this.matrixUpdates!.commit();
     for (const inst of this.instances) {
       inst.count = this.drawnCells.length;
-      inst.instanceMatrix.needsUpdate = true;
     }
     // Picking uses only the first instanced surface. The other batches disable
     // renderer culling and do not need an O(n) bound recomputation each frame.
-    this.instances[0]?.computeBoundingSphere();
-    if (this.themeAttribute) this.themeAttribute.needsUpdate = true;
+    if (matricesChanged || countChanged || !this.instances[0].boundingSphere) this.instances[0].computeBoundingSphere();
+    this.themeUpdates?.commit();
     let neighborTop = -Infinity;
     const lane = selectedLane,
       row = selectedRow;
@@ -1668,6 +1690,44 @@ export class ArchiveScene {
         this.quality.depthOfField) /
       100;
     this.renderer.info.reset();
+    // Keep all simulation and picking current. Reuse the composited canvas only
+    // when its actual inputs are identical, including late textures and materials.
+    const state = this.renderState;
+    this.scene.updateMatrixWorld();
+    // A changed instance buffer already proves the image changed. Avoid a
+    // material/matrix snapshot on those busy frames; capture when it settles.
+    if (matricesChanged || cinematic) {
+      state.invalidate();
+    } else {
+      state.begin();
+      state.floats(...this.camera.projectionMatrix.elements, ...this.camera.matrixWorldInverse.elements,
+        ...this.camera.position.toArray(),
+        fog.near, fog.far, this.themeAmount, this.subduedIndex.value,
+        bokehUniforms.focus.value, bokehUniforms.aperture.value);
+      this.scene.traverse(object => {
+        state.add(object.id, Number(object.visible));
+        if (!(object instanceof THREE.Mesh)) return;
+        object.modelViewMatrix.multiplyMatrices(this.camera.matrixWorldInverse, object.matrixWorld);
+        object.normalMatrix.getNormalMatrix(object.modelViewMatrix);
+        state.floats(...object.modelViewMatrix.elements, ...object.normalMatrix.elements, ...object.matrixWorld.elements);
+        const mat = object.material as THREE.MeshPhysicalMaterial;
+        // Three increments material.version for its own double-sided transmission
+        // passes. Track application-controlled inputs, not that render-side counter.
+        state.add(object.geometry.id, mat.uuid, mat.map?.uuid, mat.map?.version ?? 0);
+        state.floats(
+          mat.opacity, mat.roughness, mat.metalness, mat.transmission, mat.thickness,
+          mat.attenuationDistance, mat.clearcoat, mat.clearcoatRoughness,
+          mat.color.r, mat.color.g, mat.color.b,
+          mat.attenuationColor?.r ?? 0, mat.attenuationColor?.g ?? 0, mat.attenuationColor?.b ?? 0);
+        for (const name of ['appearance', 'glassClarity', 'themeAmount', 'subduedIndex'])
+          state.floats(object.userData[name]?.value ?? 0);
+        if (object instanceof THREE.InstancedMesh)
+          state.add(object.count, object.instanceMatrix.version, this.themeAttribute?.version ?? 0);
+      });
+      if (!state.end()) { this.reusedFrames++; return; }
+    }
+    this.renderedFrames++;
+    this.renderer.shadowMap.needsUpdate = true;
     if (this.superPerformance) this.renderer.render(this.scene, this.camera);
     else this.composer.render();
   }
@@ -1706,6 +1766,8 @@ export class ArchiveScene {
       fieldOfView: this.camera.fov,
       loaded: this.loaded,
       drawCalls: this.renderer.info.render.calls,
+      renderedFrames: this.renderedFrames,
+      reusedFrames: this.reusedFrames,
       superPerformance: this.superPerformance,
       presentation: this.presence,
       triangles: this.renderer.info.render.triangles,
