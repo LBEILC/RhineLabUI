@@ -17,6 +17,7 @@
 ## 实现与复现
 
 - `art/model_precision.py` 通过 Blender MCP 执行，来源为 `public/assets/archive-cassette.glb`；源 SHA256 记录在 `reference/model-precision/{medium,low}.json`。
+- 脚本按自身位置确定仓库根目录，支持独立壁纸仓库。Blender MCP 中使用 `import runpy; runpy.run_path('实际仓库路径/art/model_precision.py', run_name='__main__')`，不将资产写入另一仓库。
 - `art/model-precision.blend` 保留两个实验场景。先合并 glTF 法线／UV 接缝上的重合顶点，再 Decimate，最后从原始模型传递法线。首版未合并顶点的低档产生较明显分面，已修正；早期 smoke 样本不作为最终结果。
 - `reference/model-precision.ts` 只在对照页替换指定表面的几何，保留生产场景的材质对象；中档近景完全使用原模型。位置包围盒的偏差过大会直接报错。
 - 对照入口 `reference/model-precision.html` 提供高／中／低、六种场景、亮暗色与暂停，可用 `npm run dev` 在 `/reference/model-precision.html` 打开。

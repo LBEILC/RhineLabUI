@@ -7,7 +7,7 @@ Materials, UVs, transforms, shell dimensions and part count are retained.
 import bpy, bmesh, re, json, hashlib
 from pathlib import Path
 
-ROOT = Path(r'E:\AIProject\RhineLabUI')
+ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'reference/model-precision'
 ARRAY = {'Frosted_Polymer', 'Ivory_Edges', 'Optical_Diffuser', 'Index_Inlay', 'Titanium_Fasteners'}
 RATIOS = {
