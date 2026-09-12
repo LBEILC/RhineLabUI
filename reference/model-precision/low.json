@@ -1,0 +1,108 @@
+{
+  "tier": "low",
+  "sourceSha256": "dda42b9b3b471d11c69820a64084d254a64b27761287ab0e35dd8387ec0a0bed",
+  "parts": [
+    {
+      "surface": "Frosted_Polymer",
+      "before": 748,
+      "after": 748,
+      "array": true
+    },
+    {
+      "surface": "Ivory_Edges",
+      "before": 940,
+      "after": 282,
+      "array": true
+    },
+    {
+      "surface": "Optical_Diffuser",
+      "before": 188,
+      "after": 188,
+      "array": true
+    },
+    {
+      "surface": "Printed_Label",
+      "before": 188,
+      "after": 188,
+      "array": false
+    },
+    {
+      "surface": "Carbon_Ink",
+      "before": 3808,
+      "after": 3808,
+      "array": false
+    },
+    {
+      "surface": "Internal_Ceramic",
+      "before": 3496,
+      "after": 1398,
+      "array": false
+    },
+    {
+      "surface": "Optical_Edges",
+      "before": 11172,
+      "after": 3350,
+      "array": false
+    },
+    {
+      "surface": "Subsurface_Optics",
+      "before": 4688,
+      "after": 1406,
+      "array": false
+    },
+    {
+      "surface": "Optical_Film_Edge",
+      "before": 35940,
+      "after": 5390,
+      "array": false
+    },
+    {
+      "surface": "Amber_Optical_Inlay",
+      "before": 3826,
+      "after": 1146,
+      "array": false
+    },
+    {
+      "surface": "Optical_Film",
+      "before": 648,
+      "after": 648,
+      "array": false
+    },
+    {
+      "surface": "Index_Inlay",
+      "before": 188,
+      "after": 188,
+      "array": true
+    },
+    {
+      "surface": "Case_Engraving",
+      "before": 5152,
+      "after": 1544,
+      "array": false
+    },
+    {
+      "surface": "Case_Engraving_Highlight",
+      "before": 6688,
+      "after": 2005,
+      "array": false
+    },
+    {
+      "surface": "Titanium_Fasteners",
+      "before": 2136,
+      "after": 148,
+      "array": true
+    },
+    {
+      "surface": "Moulded_Lettering",
+      "before": 5652,
+      "after": 2542,
+      "array": false
+    },
+    {
+      "surface": "Champagne_Index",
+      "before": 696,
+      "after": 696,
+      "array": false
+    }
+  ]
+}
