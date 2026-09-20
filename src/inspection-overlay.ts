@@ -27,11 +27,12 @@ export class InspectionOverlay {
     frame: DecryptionFrame,
     project: (x: number, y: number) => number[],
     showLabel: boolean,
+    enabled = true,
   ) {
     const host = document.querySelector<HTMLElement>("#three-scene")!;
     this.root.setAttribute("viewBox", `0 0 ${host.clientWidth} ${host.clientHeight}`);
     this.root.style.opacity =
-      frame.intervals.length || frame.markers > 0 || frame.point > 0
+      enabled && (frame.intervals.length || frame.markers > 0 || frame.point > 0)
         ? "1"
         : "0";
     this.root.dataset.phase = frame.phase;
@@ -57,7 +58,7 @@ export class InspectionOverlay {
     this.point.setAttribute("cx", String(cx));
     this.point.setAttribute("cy", String(cy));
     this.point.style.opacity = String(frame.point);
-    this.label.style.opacity = String(showLabel ? frame.label : 0);
+    this.label.style.opacity = String(enabled && showLabel ? frame.label : 0);
     this.label.querySelector<HTMLElement>("strong")!.style.opacity = String(
       frame.labelValue,
     );

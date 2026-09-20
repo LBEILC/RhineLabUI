@@ -6,7 +6,7 @@ import ts from "typescript";
 const events = [];
 const hostWindow = { dispatchEvent: event => events.push(event) };
 vm.runInNewContext(readFileSync("wallpaper/host.js", "utf8"), {
-  window: hostWindow, Event, CustomEvent,
+  window: hostWindow, Event, CustomEvent, location: { protocol: "file:" },
 });
 const listener = hostWindow.wallpaperPropertyListener;
 listener.applyUserProperties({ sound: { value: false } });

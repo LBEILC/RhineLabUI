@@ -139,6 +139,11 @@
 :is([data-layout="compact"], [data-layout="portrait"]) .modal-bottom { position: static; margin-top: 22px; gap: 12px; font-size: 8px; flex-wrap: wrap; }
 :is([data-layout="compact"], [data-layout="portrait"]) .audio-settings { grid-template-columns: 1fr; gap: 0; }
 :is([data-layout="compact"], [data-layout="portrait"]) .settings-list label { gap: 16px; }
+:is([data-layout="compact"], [data-layout="portrait"]) .motion-settings-head { align-items: flex-start; flex-wrap: wrap; gap: 8px; }
+:is([data-layout="compact"], [data-layout="portrait"]) .motion-settings-head > div { flex-basis: 100%; }
+:is([data-layout="compact"], [data-layout="portrait"]) .motion-settings-head button { min-height: 40px; flex: 1; }
+:is([data-layout="compact"], [data-layout="portrait"]) .motion-advanced summary span { display: block; margin: 6px 0 0; }
+:is([data-layout="compact"], [data-layout="portrait"]) .motion-setting { gap: 16px; }
 :is([data-layout="compact"], [data-layout="portrait"]) .toggle { flex-shrink: 0; }
 :is([data-layout="compact"], [data-layout="portrait"]) .quality-grid { grid-template-columns: 1fr; gap: 0; }
 :is([data-layout="compact"], [data-layout="portrait"]) .quality-heading { gap: 12px; flex-wrap: wrap; }

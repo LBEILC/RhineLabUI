@@ -30,6 +30,18 @@ import {
 } from "./data";
 import { TerminalAudio } from "./audio";
 import { audioSettingsMarkup } from "./audio-settings";
+import {
+  createMotionPreferences,
+  fullMotion,
+  motionEnabled,
+  motionPresetFor,
+  motionSettingsMarkup,
+  motionSummary,
+  reducedMotion,
+  type MotionKey,
+  type MotionPreset,
+  type StoredMotion,
+} from "./motion-preferences";
 import { StartupGate } from "./startup";
 import { isWallpaper, wallpaperHost, wallpaperFrame, type WallpaperProperties } from "./wallpaper";
 import "./startup.css";
@@ -142,24 +154,33 @@ function readLocal<T>(key: string, fallback: T): T {
   }
 }
 const saved = new Set<string>(readLocal<string[]>("rhine-saved", []));
-const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; superPerformance: boolean; colorTheme: "light" | "dark" }>>("rhine-settings", {});
+const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; superPerformance: boolean; colorTheme: "light" | "dark"; motion: StoredMotion; motionPreset: MotionPreset }>>("rhine-settings", {});
+const initialMotion = createMotionPreferences(
+  storedPrefs.motion,
+  storedPrefs.reduced ?? (storedPrefs.motion === undefined
+    ? matchMedia("(prefers-reduced-motion: reduce)").matches
+    : undefined),
+);
+const initialMotionPreset = motionPresetFor(initialMotion);
 const prefs = {
-  sound: true,
-  music: storedPrefs.sound ?? true,
-  soundVolume: .55,
-  musicVolume: .5,
-  reduced: matchMedia("(prefers-reduced-motion: reduce)").matches,
-  quality: true,
-  superPerformance: false,
-  ...storedPrefs,
+  sound: storedPrefs.sound ?? true,
+  music: storedPrefs.music ?? storedPrefs.sound ?? true,
+  soundVolume: storedPrefs.soundVolume ?? .55,
+  musicVolume: storedPrefs.musicVolume ?? .5,
+  motion: initialMotion,
+  motionPreset: initialMotionPreset,
+  quality: storedPrefs.quality ?? true,
+  superPerformance: storedPrefs.superPerformance ?? false,
   rendering: normalizeQuality(storedPrefs.rendering, storedPrefs.quality !== false),
   colorTheme: storedPrefs.colorTheme === "dark" ? "dark" : "light",
 };
+const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
+const motionIsReduced = () => Object.values(prefs.motion).every((value) => !value);
 paintTheme(prefs.colorTheme === "dark" ? 1 : 0);
 const rollingMotion = {
   duration: 460,
   motionBlur: true,
-  animated: !prefs.reduced,
+  animated: motionActive("rollingNumbers"),
 };
 const updateFooterClock = createRollingClock($("#clock"));
 const numberOptions = {
@@ -182,6 +203,7 @@ const codeOptions = {
 };
 const textOptions = {
   ...rollingMotion,
+  animated: motionActive("rollingText"),
   transition: "direct" as const,
   stagger: "none" as const,
 };
@@ -251,28 +273,33 @@ function superPerformanceEnabled() { return isWallpaper ? wallpaperHost()?.prope
 function effectiveRenderQuality() { return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering; }
 function savePrefs() {
   saveAudioPrefs();
-  if (prefs.reduced) {
-    rollingTitles.forEach(title => title.finish());
+  if (!motionActive("rollingText")) rollingTitles.forEach(title => title.finish());
+  if (!motionActive("rollingNumbers")) [fileCounter, columnCounter, selectedCode, hoverCode].forEach(counter => counter.finish());
+  if (!motionActive("surfaceTransitions")) {
     detailTransition.finish();
     modalTransition?.finish();
-    tabTransition.cancel();
+    tabTransition.finish();
     bookmarkFeedback?.cancel();
   }
-  scene?.setReduced(prefs.reduced);
-  scene?.setTheme(prefs.colorTheme === "dark", prefs.reduced || !started);
+  scene?.setMotion(prefs.motion);
+  scene?.setTheme(prefs.colorTheme === "dark", !motionActive("surfaceTransitions") || !started);
   document.querySelectorAll<HTMLElement>("[data-color-theme]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.colorTheme === prefs.colorTheme)));
   scene?.setSuperPerformance(superPerformanceEnabled());
   viewer?.setSuperPerformance(superPerformanceEnabled());
   scene?.setQuality(effectiveRenderQuality());
   viewer?.setQuality(effectiveRenderQuality());
+  viewer?.setMotion(prefs.motion);
   syncQualityUI(prefs.rendering);
   updateQualitySummary();
-  fileCounter.update({ animated: !prefs.reduced && mode === "archive" });
-  rollingTitles.forEach(title => title.update({ animated: !prefs.reduced && mode === "archive" }));
-  columnCounter.update({ animated: !prefs.reduced && mode === "archive" });
-  selectedCode.update({ animated: !prefs.reduced && mode === "archive" });
-  hoverCode.update({ animated: !prefs.reduced && mode === "archive" });
-  $("#stage").classList.toggle("reduce-motion", prefs.reduced);
+  fileCounter.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
+  rollingTitles.forEach(title => title.update({ animated: motionActive("rollingText") && mode === "archive" }));
+  columnCounter.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
+  selectedCode.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
+  hoverCode.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
+  $("#stage").classList.toggle("reduce-motion", motionIsReduced());
+  $("#stage").classList.toggle("reduce-surfaces", !motionActive("surfaceTransitions"));
+  workbench?.setMotion(prefs.motion);
+  updateFooterClock(new Date(), motionActive("rollingNumbers"));
   syncWallpaperBackground();
 }
 let previousLayout = "";
@@ -333,7 +360,7 @@ const fileTicks = [...$("#file-ticks").querySelectorAll<HTMLButtonElement>("butt
 function setMode(next: Mode) {
   if (workbench?.enabled && next === "detail") next = "archive";
   const previousMode = mode;
-  rollingTitles.forEach(title => title.update({ animated: !prefs.reduced && next === "archive" }));
+  rollingTitles.forEach(title => title.update({ animated: motionActive("rollingText") && next === "archive" }));
   if (next !== "archive") {
     rollingTitles.forEach(title => title.finish());
     hoverCode.finish();
@@ -358,11 +385,11 @@ function setMode(next: Mode) {
   $(".system-nav").inert = next === "boot" || Boolean(modal);
   $(".system-footer").inert = next === "boot" || Boolean(modal);
   if (next === "detail") {
-    if (previousMode !== "detail") detailTransition.show(prefs.reduced);
+    if (previousMode !== "detail") detailTransition.show(!motionActive("surfaceTransitions"));
   } else if (previousMode === "detail" || (next === "boot" && !$("#detail-ui").hidden)) {
     pendingDetailFocus = false;
     tabTransition.cancel();
-    detailTransition.hide(prefs.reduced || next === "boot");
+    detailTransition.hide(!motionActive("surfaceTransitions") || next === "boot");
     if (!modal && next === "archive") $(".read-file").focus({ preventScroll: true });
   }
   $("#detail-ui").inert = next !== "detail" || Boolean(modal);
@@ -409,9 +436,9 @@ function updateSelection(navigation?: ArchiveNavigation) {
   const r = records[selected];
   const { lane } = fileLocation(selected);
   const files = columnFiles(lane);
-  selectionTitle.update({ text: r.title, animated: !prefs.reduced && mode === "archive" });
-  clearanceTitle.update({ text: r.clearance, animated: !prefs.reduced && mode === "archive" });
-  categoryTitle.update({ text: r.category, animated: !prefs.reduced && mode === "archive" });
+  selectionTitle.update({ text: r.title, animated: motionActive("rollingText") && mode === "archive" });
+  clearanceTitle.update({ text: r.clearance, animated: motionActive("rollingText") && mode === "archive" });
+  categoryTitle.update({ text: r.category, animated: motionActive("rollingText") && mode === "archive" });
   const direction =
     navigation && "axis" in navigation
       ? navigation.direction > 0
@@ -420,12 +447,12 @@ function updateSelection(navigation?: ArchiveNavigation) {
       : "auto";
   selectedCode.update({
     value: Number(r.id.slice(2)),
-    animated: !prefs.reduced && mode === "archive",
+    animated: motionActive("rollingNumbers") && mode === "archive",
     direction,
   });
   fileCounter.update({
     value: files.indexOf(selected) + 1,
-    animated: !prefs.reduced && mode === "archive",
+    animated: motionActive("rollingNumbers") && mode === "archive",
     direction:
       navigation && "axis" in navigation && navigation.axis === "row"
         ? direction
@@ -434,13 +461,13 @@ function updateSelection(navigation?: ArchiveNavigation) {
   $(".count-total").textContent = String(files.length).padStart(2, "0");
   columnCounter.update({
     value: lane + 1,
-    animated: !prefs.reduced && mode === "archive",
+    animated: motionActive("rollingNumbers") && mode === "archive",
     direction:
       navigation && "axis" in navigation && navigation.axis === "lane"
         ? direction
         : "auto",
   });
-  columnTitle.update({ text: archiveColumns[lane], animated: !prefs.reduced && mode === "archive" });
+  columnTitle.update({ text: archiveColumns[lane], animated: motionActive("rollingText") && mode === "archive" });
   $<HTMLButtonElement>('[data-action="column-prev"]').disabled = false;
   $<HTMLButtonElement>('[data-action="column-next"]').disabled = false;
   fileTicks.forEach((button, slot) => {
@@ -461,7 +488,7 @@ function replayBootAfterModal(forcePreview: boolean) {
   bootStart = performance.now() / 1000 - 1.76;
   frozenTime = null;
   lastStep = "";
-  setMode(prefs.reduced && !forcePreview ? "archive" : "boot");
+  setMode(!motionActive("boot") && !forcePreview ? "archive" : "boot");
   audio.restartBoot();
   scene?.select(0);
   selected = 0;
@@ -489,7 +516,7 @@ function toggleSaved() {
   button.querySelector("span")!.textContent = added ? "已收藏" : "收藏档案";
   button.setAttribute("aria-pressed", String(added));
   bookmarkFeedback?.cancel();
-  if (!prefs.reduced) bookmarkFeedback = button.animate(
+  if (motionActive("surfaceTransitions")) bookmarkFeedback = button.animate(
     [{ backgroundColor: "#67634c" }, { backgroundColor: "#252820" }],
     { duration: 220, easing: "ease-out" },
   );
@@ -511,7 +538,7 @@ function renderDetail() {
   <div class="detail-footnote"><a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">设定参考 ↗</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
   $("#detail-content").setAttribute("tabindex", "-1");
   $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.id)));
-  documentDecryption.reset($("#detail-content"), prefs.reduced || !scene || scene.decryptionFrame.phase === "clear");
+  documentDecryption.reset($("#detail-content"), !motionActive("documentReveal") || !scene || scene.decryptionFrame.phase === "clear");
   setTab(activeTab, false);
 }
 function overview() {
@@ -529,7 +556,7 @@ function setTab(tab: string, sound = true) {
   const r = records[selected];
   const tabButton = $<HTMLButtonElement>(`[data-tab="${tab}"]`);
   const indicator = $(".tab-indicator");
-  indicator.style.transition = sound ? "" : "none";
+  indicator.style.transition = sound && motionActive("surfaceTransitions") ? "" : "none";
   indicator.style.transform = `translateX(${tabButton.offsetLeft}px) scaleX(${tabButton.offsetWidth})`;
   $("#tab-panel").setAttribute("aria-labelledby", tabButton.id);
   $("#tab-panel").innerHTML =
@@ -550,7 +577,7 @@ function setTab(tab: string, sound = true) {
   $("#tab-panel").scrollTop = 0;
   documentDecryption.refresh();
   if (sound) {
-    tabTransition.reveal($("#tab-panel"), prefs.reduced);
+    tabTransition.reveal($("#tab-panel"), !motionActive("surfaceTransitions"));
     audio.play("ui-tick");
   }
 }
@@ -585,7 +612,7 @@ function closeModal(afterClose?: () => void) {
   if (modalClosing) return;
   modalClosing = true;
   audio.play("page-close");
-  modalTransition!.hide(prefs.reduced, () => {
+  modalTransition!.hide(!motionActive("surfaceTransitions"), () => {
     modal = null;
     modalClosing = false;
     $("#modal-root").replaceChildren();
@@ -606,7 +633,7 @@ function renderModal() {
   const backdrop = $(".modal-backdrop");
   backdrop.hidden = true;
   modalTransition = new SurfaceTransition(backdrop, $(".terminal-modal"));
-  modalTransition.show(prefs.reduced);
+  modalTransition.show(!motionActive("surfaceTransitions"));
   if (modal === "settings") updateQualitySummary();
   if (modal !== "settings") {
     renderResults();
@@ -653,13 +680,13 @@ function updateQualitySummary() {
   const metrics = JSON.parse(canvas.parentElement?.dataset.renderQuality ?? "{}");
   summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
-function motionSettingsMarkup() {
-  return `<div id="motion-preference-note" class="motion-preference-note"><p>${prefs.reduced
-    ? `当前已减少动态效果。${matchMedia("(prefers-reduced-motion: reduce)").matches ? "系统也请求减少动画，可仅为本站启用完整动效。" : "关闭上方开关可恢复完整动效。"}`
-    : "当前使用完整动效。"}</p>${prefs.reduced ? '<button data-action="enable-motion">启用完整动效并重播 ↻</button>' : ""}</div>`;
+function motionPreferenceNoteMarkup() {
+  const preset = prefs.motionPreset;
+  const allEnabled = Object.values(prefs.motion).every(Boolean);
+  return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} · 选择会保存在本站</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${audioSettingsMarkup(prefs)}<label><div><strong>REDUCED MOTION</strong><span>跳过开机动画，简化选档、镜头和文字动效</span></div><input type="checkbox" data-pref="reduced" ${prefs.reduced ? "checked" : ""}/><i class="toggle"></i></label></div>${motionSettingsMarkup()}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? '<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>' : '<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>'}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${audioSettingsMarkup(prefs)}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? '<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>' : '<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>'}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -691,9 +718,27 @@ document.addEventListener("change", (e) => {
   }
   if (el.dataset.pref) {
     const key = el.dataset.pref;
-    if (key === "sound" || key === "music" || key === "reduced" || key === "quality" || key === "superPerformance") prefs[key] = el.checked;
+    if (key === "sound" || key === "music" || key === "quality" || key === "superPerformance") prefs[key] = el.checked;
     if (key === "sound" || key === "music") saveAudioPrefs(); else savePrefs();
-    if (key === "reduced") $("#motion-preference-note").outerHTML = motionSettingsMarkup();
+    audio.play("confirm");
+  }
+  if (el.dataset.motion) {
+    const key = el.dataset.motion as MotionKey;
+    prefs.motion[key] = el.checked;
+    prefs.motionPreset = motionPresetFor(prefs.motion);
+    savePrefs();
+    const motionRoot = $("#motion-settings");
+    const advancedOpen = motionRoot.querySelector<HTMLDetailsElement>(".motion-advanced")?.open ?? false;
+    const settingsPanel = motionRoot.closest<HTMLElement>(".settings-modal");
+    const scrollTop = settingsPanel?.scrollTop ?? 0;
+    motionRoot.outerHTML = motionSettingsMarkup(prefs.motion, prefs.motionPreset);
+    $("#motion-preference-note").outerHTML = motionPreferenceNoteMarkup();
+    $("#motion-settings").querySelector<HTMLDetailsElement>(".motion-advanced")!.open = advancedOpen;
+    requestAnimationFrame(() => {
+      if (settingsPanel) settingsPanel.scrollTop = scrollTop;
+      document.querySelector<HTMLInputElement>(`[data-motion="${key}"]`)?.focus({ preventScroll: true });
+    });
+    notify(key === "boot" ? "开场设置将在下次重播时生效" : el.checked ? "已启用此动画" : "已关闭此动画");
     audio.play("confirm");
   }
 });
@@ -704,6 +749,17 @@ document.addEventListener("click", (e) => {
   if (modalClosing) return;
   const el = (e.target as Element).closest<HTMLElement>("button");
   if (!el) return;
+  if (el.dataset.action === "motion-preset") {
+    const preset = el.dataset.preset;
+    if (preset !== "full" && preset !== "reduced") return;
+    prefs.motionPreset = preset;
+    prefs.motion = preset === "full" ? fullMotion() : reducedMotion();
+    savePrefs();
+    renderModal();
+    requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`[data-action="motion-preset"][data-preset="${prefs.motionPreset}"]`)?.focus({ preventScroll: true }));
+    audio.play("confirm");
+    return;
+  }
   if (el.dataset.select) {
     select(Number(el.dataset.select));
     return;
@@ -754,12 +810,13 @@ document.addEventListener("click", (e) => {
     audio.setScene("viewer");
     viewer.setSuperPerformance(superPerformanceEnabled());
     viewer.setQuality(effectiveRenderQuality());
+    viewer.setMotion(prefs.motion);
     scene.finishDecryption();
     viewer.open(
       records[selected].id,
       records[selected].title,
       () => activeScene.createAssemblyModel(),
-      prefs.reduced,
+      !motionActive("viewerNavigation"),
     );
     audio.play("page-open");
   }
@@ -783,7 +840,8 @@ document.addEventListener("click", (e) => {
     replayBoot();
   }
   if (action === "enable-motion") {
-    prefs.reduced = false;
+    prefs.motion = fullMotion();
+    prefs.motionPreset = "full";
     savePrefs();
     replayBoot();
   }
@@ -952,14 +1010,14 @@ function frame(ms: number) {
     mode === "boot" && ready
       ? bootFrame(frozenTime ?? time - bootStart)
       : undefined;
-  wallpaperEffects?.update(time, prefs.reduced);
+  wallpaperEffects?.update(time, motionIsReduced(), motionActive("pointerParallax"));
   // The calibrated 2D opening fully covers the scene until array entry.
   if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
   viewer?.update(time);
   if (threeState === "closing" && scene?.presentationHidden) releaseThree();
   playground?.position();
   if (scene && mode === "detail") {
-    documentDecryption.update(time, scene.decryptionFrame, prefs.reduced);
+    documentDecryption.update(time, scene.decryptionFrame, !motionActive("documentReveal"));
     $("#detail-content").style.opacity = String(scene.detailVisibility);
     $("#detail-content").style.translate =
       `0 ${(1 - scene.detailVisibility) * 18}px`;
@@ -972,10 +1030,10 @@ function frame(ms: number) {
   $("#stage").style.setProperty("--detail-shade", String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0));
   const currentScene = scene;
   if (currentScene) inspectionOverlay.render(currentScene.decryptionFrame,
-    (x, y) => currentScene.projectCard(x, y), Boolean(cinema));
+    (x, y) => currentScene.projectCard(x, y), Boolean(cinema), motionActive("modelDecryption"));
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
-    updateFooterClock(new Date(), !prefs.reduced);
+    updateFooterClock(new Date(), motionActive("rollingNumbers"));
   }
   frameCount++;
   if (ms - frameStart > 1000) {
@@ -1006,15 +1064,16 @@ function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
         hoverTitle.finish();
         return;
       }
-      const animated = !prefs.reduced && mode === "archive";
+      const animated = motionActive("rollingText") && mode === "archive";
+      const numbersAnimated = motionActive("rollingNumbers") && mode === "archive";
       hoverCode.update({
         value: Number(records[i].id.slice(2)),
-        animated: !label.hidden && animated,
+        animated: !label.hidden && numbersAnimated,
       });
       hoverTitle.update({ text: records[i].title, animated: !label.hidden && animated });
       label.hidden = false;
       // Prepare the first visible value so the next hover can animate immediately.
-      hoverCode.update({ animated });
+      hoverCode.update({ animated: numbersAnimated });
       hoverTitle.update({ animated });
     };
 }
@@ -1047,14 +1106,14 @@ function releaseThree() {
 async function toggleThree() {
   if (!isWallpaper || !ready || threeState === "loading") return;
   if (threeState === "closing") {
-    scene?.setPresentationVisible(true, prefs.reduced);
+    scene?.setPresentationVisible(true, !motionActive("surfaceTransitions"));
     threeState = "on"; syncThreeButton(); return;
   }
   if (scene) {
     playground?.stop();
     threeState = "closing"; syncThreeButton();
-    scene.setPresentationVisible(false, prefs.reduced);
-    if (prefs.reduced) releaseThree();
+    scene.setPresentationVisible(false, !motionActive("surfaceTransitions"));
+    if (!motionActive("surfaceTransitions")) releaseThree();
     return;
   }
   threeState = "loading"; syncThreeButton();
@@ -1071,7 +1130,7 @@ async function toggleThree() {
     scene.setTheme(prefs.colorTheme === "dark", true);
     scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
     savePrefs();
-    scene.setPresentationVisible(true, prefs.reduced);
+    scene.setPresentationVisible(true, !motionActive("surfaceTransitions"));
     threeState = "on"; syncThreeButton();
   } catch (error) {
     next?.dispose(); scene = undefined;
@@ -1130,11 +1189,11 @@ function completeStartup(silent: boolean) {
   }
   audio.releaseEntry();
   audio.restartBoot();
-  const fade = prefs.reduced ? 0 : 600;
+  const fade = motionActive("boot") ? 600 : 0;
   bootStart = performance.now() / 1000 - (reviewParams.has("time") ? Number(reviewParams.get("time")) : 1.76);
   if (!reviewParams.has("time")) bootStart += fade / 1000;
   setMode("boot");
-  if (reviewParams.get("scene") === "archive" || (prefs.reduced && !reviewParams.has("time"))) setMode("archive");
+  if (reviewParams.get("scene") === "archive" || (!motionActive("boot") && !reviewParams.has("time"))) setMode("archive");
   if (reviewParams.get("scene") === "detail") setMode("detail");
   if (isWallpaper && wallpaperHost()?.properties.boot?.value === false) setMode("archive");
   $("#stage").inert = false;
@@ -1158,15 +1217,19 @@ function completeStartup(silent: boolean) {
 updateSelection();
 const customBackground = isWallpaper ? new WallpaperBackground($("#stage"), notify) : undefined;
 function syncWallpaperBackground(retry = false) {
-  customBackground?.update(wallpaperHost()?.properties ?? {}, mode !== "boot" && (threeState === "off" || threeState === "loading"), prefs.reduced, retry);
+  customBackground?.update(wallpaperHost()?.properties ?? {}, mode !== "boot" && (threeState === "off" || threeState === "loading"), !motionActive("surfaceTransitions"), retry);
 }
 if (isWallpaper) {
   const apply = (properties: WallpaperProperties) => {
     const theme = properties.colortheme?.value;
     if (theme === "light" || theme === "dark") prefs.colorTheme = theme;
     scene?.setArchiveCoverage(properties.archivecoverage?.value === "extra" || wallpaperHost()?.properties.archivecoverage?.value === "extra");
-    for (const key of ["sound", "music", "reduced"] as const)
+    for (const key of ["sound", "music"] as const)
       if (typeof properties[key]?.value === "boolean") prefs[key] = properties[key].value as boolean;
+    if (typeof properties.reduced?.value === "boolean") {
+      prefs.motion = properties.reduced.value ? reducedMotion() : fullMotion();
+      prefs.motionPreset = motionPresetFor(prefs.motion);
+    }
     for (const key of ["soundVolume", "musicVolume"] as const) {
       const value = properties[key.toLowerCase()]?.value;
       if (typeof value === "number" && Number.isFinite(value)) prefs[key] = Math.max(0, Math.min(1, value / 100));
@@ -1179,9 +1242,17 @@ if (isWallpaper) {
     if (properties.boot?.value === false && started && mode === "boot") setMode("archive");
     // Keep an already-open settings surface in sync without replacing focused controls.
     document.querySelectorAll<HTMLInputElement>("[data-pref]").forEach(input => {
-      const key = input.dataset.pref as "sound" | "music" | "reduced";
+      const key = input.dataset.pref as "sound" | "music" | "quality" | "superPerformance";
       if (key in prefs) input.checked = prefs[key];
     });
+    document.querySelectorAll<HTMLInputElement>("[data-motion]").forEach(input => {
+      input.checked = prefs.motion[input.dataset.motion as MotionKey];
+    });
+    document.querySelectorAll<HTMLElement>('[data-action="motion-preset"]').forEach(button => {
+      button.setAttribute("aria-pressed", String(button.dataset.preset === prefs.motionPreset));
+    });
+    const note = document.querySelector("#motion-preference-note");
+    if (note) note.outerHTML = motionPreferenceNoteMarkup();
     for (const key of ["soundVolume", "musicVolume"] as const) {
       const input = document.querySelector<HTMLInputElement>(`[data-volume="${key}"]`);
       if (input) { input.value = String(Math.round(prefs[key] * 100)); input.closest("label")?.querySelector("output")?.replaceChildren(`${input.value}%`); }
@@ -1208,8 +1279,9 @@ if (isWallpaper) {
   }, lane => {
     if (ready && !modal) select(columnMemory[lane]);
   });
+  workbench.setMotion(prefs.motion);
   playground = new ArchivePlayground($("#stage"), () => scene,
-    () => ({ enabled: !!workbench?.enabled && mode === "archive" && ready, paused: Boolean(modal) || modalClosing || Boolean(wallpaperHost()?.paused) || document.hidden, reduced: prefs.reduced }),
+    () => ({ enabled: !!workbench?.enabled && mode === "archive" && ready, paused: Boolean(modal) || modalClosing || Boolean(wallpaperHost()?.paused) || document.hidden, reduced: motionIsReduced() }),
     value => { musicSuppressed = value; configureAudio(); }, () => audio.play("tick"));
   wallpaperEffects = new WallpaperEffects($("#stage"), () => scene);
   document.addEventListener("click", event => {
@@ -1252,7 +1324,7 @@ Object.assign(window, {
       mode,
       ready,
       startup: started ? "started" : entry?.phase ?? "loading",
-      motion: { reduced: prefs.reduced, systemReduced: matchMedia("(prefers-reduced-motion: reduce)").matches },
+      motion: { reduced: motionIsReduced(), preset: prefs.motionPreset },
       bootTime: mode === "boot" ? started ? (frozenTime ?? performance.now() / 1000 - bootStart) + 5 : 6.76 : null,
       selected: records[selected].id,
       saved: [...saved],

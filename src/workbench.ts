@@ -1,3 +1,4 @@
+import { fullMotion, type MotionPreferences } from "./motion-preferences";
 import { rollText, patchRollingPanel } from "./workbench-rolling";
 import { escapeHtml } from "./html";
 import { wallpaperHost, type WallpaperProperties } from "./wallpaper";
@@ -12,6 +13,16 @@ const capabilityKeys = ["enabletime", "enabletasks", "enableevent", "enablemedia
 const key = "rhine-workbench-v1";
 export class Workbench {
   enabled = false;
+  private motion: MotionPreferences = fullMotion();
+  setMotion(motion: MotionPreferences) {
+    this.motion = { ...motion };
+    if (!motion.surfaceTransitions) {
+      this.root.getAnimations({ subtree: true }).forEach(animation => animation.finish());
+    }
+    this.lastSecond = -1;
+    this.tick();
+    this.renderPanel();
+  }
   private root: HTMLElement;
   private props: WallpaperProperties = {};
   private lane = 0;
@@ -82,7 +93,7 @@ export class Workbench {
   syncVisibility() {
     const hidden = !this.enabled || this.stage.dataset.mode === "boot";
     const entering = this.root.hidden && !hidden;
-    const reduced = this.stage.classList.contains("reduce-motion");
+    const reduced = !this.motion.surfaceTransitions;
     this.root.inert = hidden;
     this.root.setAttribute("aria-hidden", String(hidden));
     if (hidden && !this.root.hidden && !reduced) {
@@ -169,11 +180,11 @@ export class Workbench {
     this.lastSecond = Math.floor(now / 1000);
     this.rollDay(); this.settle(now);
     const date = new Date(now);
-    rollText(this.root.querySelector<HTMLElement>(".wb-clock")!, date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }), !this.stage.classList.contains("reduce-motion"));
+    rollText(this.root.querySelector<HTMLElement>(".wb-clock")!, date.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }), this.motion.rollingText);
     this.root.querySelector(".wb-date")!.textContent = date.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric", weekday: "long" });
     if (this.lane === 0 || this.lane === 2) this.renderPanel();
     const timer = this.root.querySelector(".wb-timer-digits");
-    if (timer) rollText(timer as HTMLElement, durationText(this.timer.status === "idle" ? this.minutes() * 60000 : timerLeft(this.timer, now)), !this.stage.classList.contains("reduce-motion"));
+    if (timer) rollText(timer as HTMLElement, durationText(this.timer.status === "idle" ? this.minutes() * 60000 : timerLeft(this.timer, now)), this.motion.rollingText);
   }
   private renderPanel() {
     if (this.lane < 0) {
@@ -204,7 +215,7 @@ export class Workbench {
       html = media.status?.enabled === false ? '<p class="wb-empty">媒体信息未启用</p><p class="wb-muted">请在 Wallpaper Engine 中启用媒体信息集成。</p>' : !p?.title ? '<p class="wb-empty">此刻，留一点安静。</p><p class="wb-muted">在支持系统媒体信息的播放器中播放音乐，歌曲与封面会显示在这里。</p>' : `<div class="wb-media">${safeCover ? `<img src="${escapeHtml(cover!)}" alt="专辑封面"/>` : '<div class="wb-cover" aria-hidden="true">♫</div>'}<div><small>${media.playing ? "正在播放" : "媒体已暂停或停止"}</small><h3 data-wb-roll>${escapeHtml(p.title)}</h3><p data-wb-roll>${escapeHtml(p.artist || "")}</p></div></div>${t && typeof t.duration === "number" && t.duration > 0 && Number.isFinite(t.duration) && typeof t.position === "number" && Number.isFinite(t.position) ? `<div class="wb-rule"><i style="width:${Math.max(0, Math.min(100, t.position / t.duration * 100))}%"></i></div><p class="wb-muted"><span data-wb-roll>${durationText(t.position * 1000)}</span> / <span data-wb-roll>${durationText(t.duration * 1000)}</span></p>` : ''}`;
     }
     if (this.lane === 4) html = `<div class="wb-timer-label">${this.timer.phase === "focus" ? "专注" : "休息"} · ${this.timer.status === "done" ? "已结束" : this.timer.status === "running" ? "进行中" : this.timer.status === "paused" ? "已暂停" : "准备开始"}</div><div class="wb-large wb-timer-digits" data-wb-roll>${durationText(this.timer.status === "idle" ? this.minutes() * 60000 : timerLeft(this.timer, Date.now()))}</div><div class="wb-timer-buttons"><button data-wb-timer="toggle">${this.timer.status === "running" ? "暂停" : this.timer.status === "paused" ? "继续" : "开始"}</button><button data-wb-timer="reset">重置</button><button data-wb-timer="phase">${this.timer.phase === "focus" ? "转入休息" : "开始专注"}</button></div><p class="wb-muted">${this.timer.status === "done" ? "这一段时间已完成。准备好后再开始下一段。" : "暂停壁纸或重新加载后按实际时间校正。"}<br>时长在 Wallpaper Engine 中设置。</p>`;
-    patchRollingPanel(this.root.querySelector<HTMLElement>(".wb-content")!, html, !this.stage.classList.contains("reduce-motion"));
+    patchRollingPanel(this.root.querySelector<HTMLElement>(".wb-content")!, html, this.motion.rollingText);
     this.root.querySelector(".wb-storage")!.textContent = this.storageOK ? "" : "当前无法保存进度，重新加载后可能丢失。";
   }
 }

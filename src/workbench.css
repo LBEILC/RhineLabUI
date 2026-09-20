@@ -10,7 +10,7 @@
 [data-workbench="true"]:not([data-mode="boot"]) :is(#archive-ui, .powered, .inspection-overlay) { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 220ms ease-out, visibility 0s 220ms; }
 [data-workbench="true"][data-mode="boot"] #archive-ui { opacity: 0; visibility: hidden; }
 [data-workbench="true"] #archive-ui button { pointer-events: none; }
-.reduce-motion[data-workbench] :is(#archive-ui, .powered) { transition: none; }
+.reduce-surfaces[data-workbench] :is(#archive-ui, .powered) { transition: none; }
 [data-workbench="true"] .system-nav > button:not(.settings-button) { display: none; }
 .wb-overview { position: absolute; top: 24%; left: var(--edge); width: min(29%, 400px); }
 .wb-kicker { font-size: 11px; letter-spacing: 1.8px; border-top: 1px solid #aaa59a; padding-top: 12px; display: flex; justify-content: space-between; gap: 12px; }

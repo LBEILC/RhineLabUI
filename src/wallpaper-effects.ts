@@ -52,7 +52,7 @@ export class WallpaperEffects {
     document.addEventListener("visibilitychange", reset);
     stage.querySelectorAll<HTMLElement>(".brand, .system-nav, .system-footer > span, .system-footer > button, .wb-time, .wb-today, .wb-module, .wb-nav button, .archive-callout, .archive-counter, .column-navigation, .archive-hint, .detail-content, .back-button, .object-caption, .relay-heading, .relay-actions, .relay-entry").forEach(node => node.classList.add("frost-surface"));
   }
-  update(time: number, reduced: boolean) {
+  update(time: number, reduced: boolean, pointerParallax = !reduced) {
     const options = effectOptions(this.props);
     const superPerformance = this.props.superperformance?.value === true;
     this.stage.dataset.superPerformance = String(superPerformance);
@@ -68,10 +68,10 @@ export class WallpaperEffects {
       this.projection.invalidate();
     }
     const active = this.stage.dataset.mode !== "boot";
-    const moving = options.parallax && options.tracking && !reduced && !this.stage.querySelector("#modal-root")?.childElementCount;
+    const moving = options.parallax && options.tracking && pointerParallax && !this.stage.querySelector("#modal-root")?.childElementCount;
     const dt = this.last ? Math.min(.1, Math.max(0, time - this.last)) : 0;
     this.last = time;
-    const blend = reduced ? 1 : 1 - Math.exp(-dt * 7);
+    const blend = !pointerParallax ? 1 : 1 - Math.exp(-dt * 7);
     const tx = moving ? this.pointer.x : 0, ty = moving ? this.pointer.y : 0;
     this.current.x += (tx - this.current.x) * blend;
     this.current.y += (ty - this.current.y) * blend;

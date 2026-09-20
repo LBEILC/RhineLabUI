@@ -44,7 +44,7 @@
 }
 .system-footer .frost-surface::after { inset: -8px -12px; }
 .relay-actions.frost-surface::after { left: auto; width: 240px; }
-.reduce-motion .frost-surface::after { transition: none; }
+.reduce-surfaces .frost-surface::after { transition: none; }
 @media(max-width:700px) { [data-ui-frost="true"] .wb-module { position: relative; } }
 
 /* Scale only the image's atmosphere; 100 preserves the original gradients. */
