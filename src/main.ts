@@ -275,8 +275,8 @@ function savePrefs() {
   saveAudioPrefs();
   if (!motionActive("rollingText")) rollingTitles.forEach(title => title.finish());
   if (!motionActive("rollingNumbers")) [fileCounter, columnCounter, selectedCode, hoverCode].forEach(counter => counter.finish());
-  if (!motionActive("detailTransition")) detailTransition.finish();
   if (!motionActive("surfaceTransitions")) {
+    detailTransition.finish();
     modalTransition?.finish();
     tabTransition.finish();
     bookmarkFeedback?.cancel();
@@ -385,11 +385,11 @@ function setMode(next: Mode) {
   $(".system-nav").inert = next === "boot" || Boolean(modal);
   $(".system-footer").inert = next === "boot" || Boolean(modal);
   if (next === "detail") {
-    if (previousMode !== "detail") detailTransition.show(!motionActive("detailTransition"));
+    if (previousMode !== "detail") detailTransition.show(!motionActive("surfaceTransitions"));
   } else if (previousMode === "detail" || (next === "boot" && !$("#detail-ui").hidden)) {
     pendingDetailFocus = false;
     tabTransition.cancel();
-    detailTransition.hide(!motionActive("detailTransition") || next === "boot");
+    detailTransition.hide(!motionActive("surfaceTransitions") || next === "boot");
     if (!modal && next === "archive") $(".read-file").focus({ preventScroll: true });
   }
   $("#detail-ui").inert = next !== "detail" || Boolean(modal);
@@ -556,7 +556,7 @@ function setTab(tab: string, sound = true) {
   const r = records[selected];
   const tabButton = $<HTMLButtonElement>(`[data-tab="${tab}"]`);
   const indicator = $(".tab-indicator");
-  indicator.style.transition = sound ? "" : "none";
+  indicator.style.transition = sound && motionActive("surfaceTransitions") ? "" : "none";
   indicator.style.transform = `translateX(${tabButton.offsetLeft}px) scaleX(${tabButton.offsetWidth})`;
   $("#tab-panel").setAttribute("aria-labelledby", tabButton.id);
   $("#tab-panel").innerHTML =

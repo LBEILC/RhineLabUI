@@ -72,6 +72,7 @@ export class ModelViewer {
   private loading = false;
   private closing = false;
   private transitions: Animation[] = [];
+  private modelTransition?: Animation;
   private transitionId = 0;
   private status = "";
   private opener: HTMLElement | null = null;
@@ -190,7 +191,19 @@ export class ModelViewer {
     this.reduced = !value.viewerNavigation;
     this.root.dataset.motionModel = value.viewerModelTransition ? "full" : "reduced";
     this.root.dataset.motionSurface = value.surfaceTransitions ? "full" : "reduced";
+    if (!value.surfaceTransitions && this.isOpen) {
+      // Settle the current lifecycle synchronously and invalidate its callbacks.
+      this.transitionId++;
+      if (this.closing) this.finishClose();
+      else {
+        this.transitions.forEach(animation => animation.cancel());
+        this.transitions = [];
+        this.root.dataset.transition = "open";
+      }
+    }
     if (!value.viewerModelTransition) {
+      this.modelTransition?.cancel();
+      this.modelTransition = undefined;
       this.clarity = { value: this.targetClarity, velocity: 0 };
       this.spread = { value: this.targetSpread, velocity: 0 };
     }
@@ -272,14 +285,12 @@ export class ModelViewer {
       // Render before revealing the canvas so a new model never flashes in.
       this.update(this.lastTime);
       if (this.motion.viewerModelTransition)
-        this.transitions.push(
-          this.canvasHost.animate(
-            [
-              { opacity: 0, transform: "scale(0.97)" },
-              { opacity: 1, transform: "scale(1)" },
-            ],
-            { duration: 380, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
-          ),
+        this.modelTransition = this.canvasHost.animate(
+          [
+            { opacity: 0, transform: "scale(0.97)" },
+            { opacity: 1, transform: "scale(1)" },
+          ],
+          { duration: 380, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
         );
     } catch (error) {
       if (!this.isOpen || this.closing || ticket !== this.request) return;
@@ -344,6 +355,8 @@ export class ModelViewer {
     const canvasStyle = getComputedStyle(this.canvasHost);
     const canvasOpacity = canvasStyle.opacity;
     const transform = canvasStyle.transform;
+    this.modelTransition?.cancel();
+    this.modelTransition = undefined;
     this.transitions.forEach((animation) => animation.cancel());
     this.transitions = [];
     this.root.dataset.transition = "closing";
@@ -382,6 +395,9 @@ export class ModelViewer {
     this.isOpen = false;
     this.closing = false;
     this.root.hidden = true;
+    this.root.dataset.transition = "closed";
+    this.modelTransition?.cancel();
+    this.modelTransition = undefined;
     this.transitions.forEach((animation) => animation.cancel());
     this.transitions = [];
     if (this.source) {

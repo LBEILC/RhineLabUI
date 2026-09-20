@@ -828,6 +828,9 @@ button {
   pointer-events: none;
   transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+.reduce-surfaces .tab-indicator {
+  transition: none;
+}
 .tab-panel {
   height: 189px;
   padding-top: 22px;
