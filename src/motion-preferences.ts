@@ -11,7 +11,6 @@ export type MotionKey =
   | "rollingText"
   | "rollingNumbers"
   | "surfaceTransitions"
-  | "smoothScroll"
   | "viewerNavigation"
   | "viewerModelTransition";
 
@@ -86,11 +85,6 @@ export const MOTION_LABELS: Record<
     description: "详情、检索、收藏与设置窗口过渡",
     group: "界面",
   },
-  smoothScroll: {
-    title: "SMOOTH SCROLL",
-    description: "目录定位时的平滑滚动",
-    group: "界面",
-  },
   viewerNavigation: {
     title: "VIEWER NAVIGATION",
     description: "360° 旋转、平移、缩放与复位阻尼",
@@ -116,7 +110,6 @@ const FULL: MotionPreferences = {
   rollingText: true,
   rollingNumbers: true,
   surfaceTransitions: true,
-  smoothScroll: true,
   viewerNavigation: true,
   viewerModelTransition: true,
 };
@@ -134,7 +127,6 @@ const REDUCED: MotionPreferences = {
   rollingText: false,
   rollingNumbers: false,
   surfaceTransitions: false,
-  smoothScroll: false,
   viewerNavigation: false,
   viewerModelTransition: false,
 };

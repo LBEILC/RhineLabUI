@@ -602,16 +602,17 @@ export class ArchiveScene {
     if (!value.idleWave) this.idleGain = 0;
     this.motion = { ...value };
     if (!value.modelDecryption) {
-      this.appearance.setClarity(this.model, 1);
+      this.appearance.setClarity(this.model, this.modelClarity());
       for (const old of this.outgoing) {
-        old.clarity = 1;
-        this.appearance.setClarity(old.group, 1);
+        old.clarity = 0;
+        this.appearance.setClarity(old.group, 0);
       }
     }
   }
   private get reduced() { return Object.values(this.motion).every(value => !value); }
   private modelClarity() {
-    return this.motion.modelDecryption ? this.decryption.clarity : 1;
+    // Disabling the reveal animation preserves the material state of each mode.
+    return this.motion.modelDecryption ? this.decryption.clarity : this.targetDetail;
   }
   setQuality(value: RenderQuality | boolean) {
     const quality =
@@ -1420,7 +1421,7 @@ export class ArchiveScene {
       const quality = ease(o.lift.value / 0.4);
       this.appearance.apply(o.group, quality);
       this.appearance.setTheme(o.group, this.theme.sample(o.cell, time), indexDim(o.lift.value));
-      o.clarity = this.motion.modelDecryption ? o.clarity * Math.exp(-dt * 9) : 1;
+      o.clarity = this.motion.modelDecryption ? o.clarity * Math.exp(-dt * 9) : 0;
       this.appearance.setClarity(o.group, o.clarity);
       const { row, lane } = o.cell;
       o.group.rotation.x =
@@ -1855,6 +1856,7 @@ export class ArchiveScene {
       fogFar: (this.scene.fog as THREE.Fog).far,
       returningAppearance: this.outgoing.map((o) => ({
         slot: o.slot,
+        clarity: o.group.children.find(child => child.userData.surface === "Frosted_Polymer")?.userData.glassClarity?.value,
         cell: { ...o.cell },
         lift: o.lift.value,
         quality: ease(o.lift.value / 0.4),

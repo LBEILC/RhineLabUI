@@ -16,7 +16,8 @@ try {
  await page.goto(process.env.REVIEW_URL||'http://127.0.0.1:5190');await load();
  assert.equal((await stats(page)).motion.preset,'full','Saved legacy full overrides system reduce');
  await page.evaluate(()=>window.rhine.archive());await settings(page);
- const keys=await page.locator('[data-motion]').evaluateAll(inputs=>inputs.map(input=>input.dataset.motion));assert.equal(keys.length,15);
+ const keys=await page.locator('[data-motion]').evaluateAll(inputs=>inputs.map(input=>input.dataset.motion));assert.equal(keys.length,14);
+ assert.ok(!keys.includes('smoothScroll'),'Do not expose an unimplemented scroll control');
  for(const key of keys){
   await page.locator(`[data-motion="${key}"]`).uncheck();
   const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('rhine-settings')));
@@ -31,6 +32,7 @@ try {
  await close(page);await page.reload();await load();
  assert.equal((await stats(page)).motion.preset,'custom');
  await page.evaluate(()=>window.rhine.archive());await page.waitForTimeout(400);
+ assert.equal((await stats(page)).decryption.modelClarity,0,'Archive stays frosted when model reveal is disabled');
  await page.evaluate(()=>window.rhine.detail());
  await page.waitForFunction(()=>document.querySelectorAll('.document-redaction-window').length>0);
  assert.equal((await stats(page)).decryption.modelClarity,1);
@@ -45,13 +47,21 @@ try {
  await page.locator('[data-viewer="assemble"]').click();
  await page.waitForFunction(()=>JSON.parse(document.querySelector('.model-viewer').dataset.stats).spread===0);
  await page.keyboard.press('Escape');await page.waitForFunction(()=>document.querySelector('.model-viewer').hidden);
- await page.evaluate(()=>window.rhine.archive());await settings(page);
+ await page.evaluate(()=>{window.rhine.archive();window.rhine.select(1);});
+ await page.waitForFunction(()=>{
+   const s=window.rhine.stats();
+   return s.returningAppearance.length>0 && s.returningAppearance.every(card=>card.clarity===0);
+ });
+ assert.equal((await stats(page)).decryption.modelClarity,0,'New selection stays frosted');
+ await page.evaluate(()=>window.rhine.select(0));
+ assert.equal((await stats(page)).decryption.modelClarity,0,'Rapidly reselected returning card stays frosted');
+ await settings(page);
  await page.locator('[data-motion="modelDecryption"]').check();await page.locator('[data-motion="documentReveal"]').uncheck();await close(page);
  await page.waitForTimeout(500);await page.evaluate(()=>window.rhine.detail());
  await page.waitForFunction(()=>document.querySelector('#inspection-marks').style.opacity==='1');
  assert.equal(await page.locator('.document-redaction-window').count(),0);
  await context.close();
- console.log('Web: 15 toggles, legacy/custom persistence, theme/performance coexistence, independent model/document reveal and viewer controls passed.');
+ console.log('Web: 14 toggles, legacy/custom persistence, theme/performance coexistence, archive/returning frost, independent model/document reveal and viewer controls passed.');
  const wall=await browser.newContext({viewport:{width:1440,height:900}}), wp=await wall.newPage();watch(wp);
  await wp.goto(process.env.WALLPAPER_URL||'http://127.0.0.1:5176');await wp.waitForFunction(()=>window.rhine?.stats().ready);
  const apply=values=>wp.evaluate(values=>window.wallpaperPropertyListener.applyUserProperties(Object.fromEntries(Object.entries(values).map(([key,value])=>[key,{value}]))),values);
@@ -61,7 +71,8 @@ try {
  await wp.waitForFunction(()=>document.querySelector('#stage').dataset.hudTracking==='false');
  await settings(wp);await apply({reduced:true});
  assert.equal((await stats(wp)).motion.preset,'reduced');assert.equal(await wp.locator('[data-motion]:checked').count(),0);
- await apply({reduced:false});assert.equal(await wp.locator('[data-motion]:checked').count(),15);
+ assert.equal((await stats(wp)).decryption.modelClarity,0,'Reduced preset keeps archive frosted');
+ await apply({reduced:false});assert.equal(await wp.locator('[data-motion]:checked').count(),14);
  await wp.locator('[data-motion="surfaceTransitions"]').uncheck();await close(wp);
  await wp.locator('[data-action="toggle-three"]').click();await wp.waitForFunction(()=>window.rhine.stats().threeState==='off');
  await wp.locator('[data-action="toggle-three"]').click();await wp.waitForFunction(()=>window.rhine.stats().threeState==='on');
