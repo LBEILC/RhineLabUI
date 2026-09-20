@@ -1,0 +1,11 @@
+# Full-size captures are reproducible and retained locally. Track representative
+# pairs; image-manifest.json records hashes of the complete visual checks.
+**/*.png
+!baseline/idle.png
+!candidate/idle.png
+!hud/1920-baseline-19.6.png
+!hud/1920-candidate-19.6.png
+!host/baseline-idle.png
+!host/candidate-idle.png
+/debug/
+/reuse/

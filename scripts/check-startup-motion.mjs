@@ -5,7 +5,7 @@ import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 const {chromium}=await import(process.env.PLAYWRIGHT_MODULE?pathToFileURL(resolve(process.env.PLAYWRIGHT_MODULE)).href:'playwright');
 const channel=process.env.REVIEW_CHANNEL || 'chrome';
-const browser=await chromium.launch({channel,headless:true,args:['--use-angle=d3d11','--enable-gpu','--ignore-gpu-blocklist']});
+const browser=await chromium.launch({channel,headless:true,args:process.platform==='win32'?['--use-angle=d3d11','--enable-gpu','--ignore-gpu-blocklist']:[]});
 const report={channel,version:browser.version(),checks:[]};
 try {for(const browserMotion of ['no-preference','reduce']) {
  const context=await browser.newContext({viewport:{width:1440,height:900},reducedMotion:browserMotion,serviceWorkers:'block'});

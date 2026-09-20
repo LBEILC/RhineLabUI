@@ -1,3 +1,4 @@
+import { createRollingClock } from "./rolling-clock";
 import { InspectionOverlay } from "./inspection-overlay";
 import { DocumentDecryption } from "./document-decryption";
 import "./document-decryption.css";
@@ -5,11 +6,12 @@ import "./decryption.css";
 import { escapeHtml } from "./html";
 import { normalizeQuality, qualityPresets, type QualityPreset, type RenderQuality } from "./render-quality";
 import { qualityMarkup, syncQualityUI } from "./quality-settings";
+import { superPerformanceQuality, wallpaperQuality } from "./wallpaper-quality";
 import "@kitlangton/rolling-number/styles.css";
 import "./style.css";
 import "./quality-settings.css";
 import "./responsive.css";
-import { viewportLayout } from "./viewport-layout";
+import { viewportLayout, openingLayout } from "./viewport-layout";
 import { assetUrl } from "./asset-url";
 import { initPwa, pwaSettingsMarkup } from "./pwa";
 import { createRollingNumber, createRollingText } from "@kitlangton/rolling-number";
@@ -17,6 +19,7 @@ import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
 import { ContentTransition, SurfaceTransition } from "./ui-transitions";
 import { BootSequence } from "./boot";
+import { loadBootWebfonts } from "./boot-lettering";
 import { wrap, type ArchiveNavigation } from "./archive-loop";
 import {
   records,
@@ -40,7 +43,18 @@ import {
   type StoredMotion,
 } from "./motion-preferences";
 import { StartupGate } from "./startup";
+import { isWallpaper, wallpaperHost, wallpaperFrame, type WallpaperProperties } from "./wallpaper";
 import "./startup.css";
+import "./wallpaper.css";
+import { Workbench } from "./workbench";
+let workbench: Workbench | undefined;
+import { ArchivePlayground } from "./archive-playground";
+import { ARRAY_OPENING_END, openingShowsDetail } from "./wallpaper-opening";
+import { paintTheme, themeSettingsMarkup } from "./theme-ui";
+let playground: ArchivePlayground | undefined;
+import { WallpaperEffects } from "./wallpaper-effects";
+import { WallpaperBackground } from "./wallpaper-background";
+let wallpaperEffects: WallpaperEffects | undefined;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
@@ -64,7 +78,6 @@ $("#stage").innerHTML = `
     <div class="scan"><svg viewBox="0 0 1920 1080" aria-hidden="true"><g fill="none" stroke="#080a08" stroke-width="2" stroke-linecap="round"><path/><path stroke="#fff"/><path/><path/><path/><path/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="scan-core" cx="960" cy="540" r="5" fill="#080a08" stroke="none"/></g></svg><span>PERMISSION AUTHORIZED</span></div>
     <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>RHINE LAB.LLC.</strong><strong class="welcome-highlight" aria-hidden="true">RHINE LAB.LLC.</strong></div><div class="welcome-database">INTERNAL DATABASE</div><div class="welcome-logo">${logo}</div></div>
   </section>
-  <div id="cinema-caption" class="cinema-caption"></div>
   <svg id="inspection-marks" viewBox="0 0 1920 1080" aria-hidden="true"><path id="inspection-lines"/><g id="inspection-corners"></g><circle id="inspection-point" r="1.8"/></svg>
   <div id="inspection-text" aria-hidden="true">CONFIDENTIALITY:<strong>GENERAL BUSINESS USE</strong></div>
   <section id="archive-ui" class="archive-ui" aria-label="档案选择">
@@ -81,7 +94,7 @@ $("#stage").innerHTML = `
     <article id="detail-content" class="detail-content"></article>
   </section>
   <div class="powered">POWERED BY <b>RHINE LAB</b><i></i></div>
-  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
+  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED${isWallpaper ? '<button type="button" class="three-toggle" data-action="toggle-three" aria-pressed="true" title="卸载三维模型，保留 2D 界面">3D 开启</button>' : ''}</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="pwa-update-notice" class="pwa-update-notice" role="status" hidden><span>新版本已就绪</span><button data-pwa-action="update">更新并重启 ↻</button></div>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
   <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i></div>
@@ -141,7 +154,7 @@ function readLocal<T>(key: string, fallback: T): T {
   }
 }
 const saved = new Set<string>(readLocal<string[]>("rhine-saved", []));
-const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; motion: StoredMotion; motionPreset: MotionPreset }>>("rhine-settings", {});
+const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; superPerformance: boolean; colorTheme: "light" | "dark"; motion: StoredMotion; motionPreset: MotionPreset }>>("rhine-settings", {});
 const initialMotion = createMotionPreferences(
   storedPrefs.motion,
   storedPrefs.reduced ?? (storedPrefs.motion === undefined
@@ -157,15 +170,19 @@ const prefs = {
   motion: initialMotion,
   motionPreset: initialMotionPreset,
   quality: storedPrefs.quality ?? true,
+  superPerformance: storedPrefs.superPerformance ?? false,
   rendering: normalizeQuality(storedPrefs.rendering, storedPrefs.quality !== false),
+  colorTheme: storedPrefs.colorTheme === "dark" ? "dark" : "light",
 };
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
 const motionIsReduced = () => Object.values(prefs.motion).every((value) => !value);
+paintTheme(prefs.colorTheme === "dark" ? 1 : 0);
 const rollingMotion = {
   duration: 460,
   motionBlur: true,
   animated: motionActive("rollingNumbers"),
 };
+const updateFooterClock = createRollingClock($("#clock"));
 const numberOptions = {
   ...rollingMotion,
   locales: "en-US",
@@ -211,7 +228,9 @@ const rollingTitles = [selectionTitle, columnTitle, hoverTitle, categoryTitle, c
 const selectedCode = createRollingNumber($("#selected-code"), codeOptions);
 const hoverCode = createRollingNumber($("#hover-code"), codeOptions);
 const audio = new TerminalAudio();
-audio.configure(prefs);
+let musicSuppressed = false;
+function configureAudio() { audio.configure({ ...prefs, music: prefs.music && !musicSuppressed }); }
+configureAudio();
 const reviewEntry = reviewParams.has("scene") || reviewParams.has("time") || reviewParams.get("review") === "1";
 let started = false;
 const loading = $("#loading");
@@ -220,7 +239,7 @@ const loading = $("#loading");
 $("#viewport").append(loading);
 $("#stage").inert = true;
 $(".mobile-entry").inert = true;
-const entry = !reviewEntry && (prefs.sound || prefs.music) ? new StartupGate({
+const entry = !isWallpaper && !reviewEntry && (prefs.sound || prefs.music) ? new StartupGate({
   root: loading,
   unlock: () => audio.unlock(),
   cancel: () => audio.cancelEntry(),
@@ -231,7 +250,10 @@ if (entry) {
   if (prefs.music) void audio.prepareMusic().catch(() => { /* Entry offers retry. */ });
 }
 let audioPreview = false, audioPreviewRequest = 0;
-let scene: ArchiveScene;
+let scene: ArchiveScene | undefined;
+let threeState: "on" | "closing" | "off" | "loading" = "on";
+let resumeCell: { lane: number; row: number } | undefined;
+let resumeSelection = -1;
 let viewer: ModelViewer | undefined;
 const accessLog: { id: string; time: string }[] = [];
 const columnMemory = archiveColumns.map((_, lane) => columnFiles(lane)[0]);
@@ -245,8 +267,10 @@ function saveAudioPrefs() {
   try {
     localStorage.setItem("rhine-settings", JSON.stringify(prefs));
   } catch {}
-  audio.configure(prefs);
+  configureAudio();
 }
+function superPerformanceEnabled() { return isWallpaper ? wallpaperHost()?.properties.superperformance?.value === true : prefs.superPerformance; }
+function effectiveRenderQuality() { return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering; }
 function savePrefs() {
   saveAudioPrefs();
   if (!motionActive("rollingText")) rollingTitles.forEach(title => title.finish());
@@ -258,8 +282,12 @@ function savePrefs() {
     bookmarkFeedback?.cancel();
   }
   scene?.setMotion(prefs.motion);
-  scene?.setQuality(prefs.rendering);
-  viewer?.setQuality(prefs.rendering);
+  scene?.setTheme(prefs.colorTheme === "dark", !motionActive("surfaceTransitions") || !started);
+  document.querySelectorAll<HTMLElement>("[data-color-theme]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.colorTheme === prefs.colorTheme)));
+  scene?.setSuperPerformance(superPerformanceEnabled());
+  viewer?.setSuperPerformance(superPerformanceEnabled());
+  scene?.setQuality(effectiveRenderQuality());
+  viewer?.setQuality(effectiveRenderQuality());
   viewer?.setMotion(prefs.motion);
   syncQualityUI(prefs.rendering);
   updateQualitySummary();
@@ -269,13 +297,20 @@ function savePrefs() {
   selectedCode.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
   hoverCode.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
   $("#stage").classList.toggle("reduce-motion", motionIsReduced());
+  $("#stage").classList.toggle("reduce-surfaces", !motionActive("surfaceTransitions"));
+  workbench?.setMotion(prefs.motion);
+  updateFooterClock(new Date(), motionActive("rollingNumbers"));
+  syncWallpaperBackground();
 }
 let previousLayout = "";
 function fit() {
   const stage = $("#stage");
   const viewport = $("#viewport");
   const coarse = matchMedia("(pointer: coarse)").matches;
-  const { width, height, scale, kind } = viewportLayout(viewport.clientWidth, viewport.clientHeight, coarse, mode === "boot");
+  const reference = reviewParams.has("time") || reviewParams.get("review") === "1";
+  const { width, height, scale, kind } = mode === "boot" && !reference
+    ? openingLayout(viewport.clientWidth, viewport.clientHeight)
+    : viewportLayout(viewport.clientWidth, viewport.clientHeight, coarse, mode === "boot");
   stage.style.width = `${width}px`;
   stage.style.height = `${height}px`;
   stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
@@ -283,6 +318,10 @@ function fit() {
   stage.dataset.touch = String(coarse);
   viewport.dataset.mobileBoot = String(mode === "boot" && (coarse || viewport.clientWidth < 1100));
   stage.style.setProperty("--stage-scale", String(scale));
+  stage.style.setProperty("--opening-width", `${width}px`);
+  stage.style.setProperty("--opening-height", `${height}px`);
+  stage.style.setProperty("--opening-scan-scale", String(Math.min(1, width / 1920)));
+  stage.dataset.openingPortrait = String(width < height);
   // The software keyboard resizes dialogs without recomposing the 3D scene.
   const visible = window.visualViewport;
   const stageTop = (viewport.clientHeight - height * scale) / 2;
@@ -319,6 +358,7 @@ $("#file-ticks").innerHTML = columnFiles(fileLocation(selected).lane)
 const fileTicks = [...$("#file-ticks").querySelectorAll<HTMLButtonElement>("button")];
 
 function setMode(next: Mode) {
+  if (workbench?.enabled && next === "detail") next = "archive";
   const previousMode = mode;
   rollingTitles.forEach(title => title.update({ animated: motionActive("rollingText") && next === "archive" }));
   if (next !== "archive") {
@@ -328,18 +368,20 @@ function setMode(next: Mode) {
   }
   if (next === "detail" && mode !== "detail") recordAccess();
   mode = next;
+  syncWallpaperBackground();
   audio.setScene(next);
   if (next !== "boot" && audioPreview) {
     audioPreview = false;
     audioPreviewRequest++;
-    audio.configure(prefs);
+    configureAudio();
   }
   $("#stage").dataset.mode = next;
+  workbench?.syncVisibility();
   if (previousMode !== next) fit();
   $("#boot").inert = next !== "boot";
   $("#boot").setAttribute("aria-hidden", String(next !== "boot"));
-  $("#archive-ui").inert = next !== "archive" || Boolean(modal);
-  $("#archive-ui").setAttribute("aria-hidden", String(next !== "archive"));
+  $("#archive-ui").inert = next !== "archive" || Boolean(modal) || Boolean(workbench?.enabled);
+  $("#archive-ui").setAttribute("aria-hidden", String(next !== "archive" || Boolean(workbench?.enabled)));
   $(".system-nav").inert = next === "boot" || Boolean(modal);
   $(".system-footer").inert = next === "boot" || Boolean(modal);
   if (next === "detail") {
@@ -356,11 +398,15 @@ function setMode(next: Mode) {
     bootSequence.reset();
     $(".file-title").firstChild!.textContent = "FILE NUMBER: ";
     $("#stage").dataset.boot = "done";
-    $("#cinema-caption").textContent = "";
   }
   if (next === "detail" && previousMode !== "detail") {
     renderDetail();
     pendingDetailFocus = true;
+    if (!scene) {
+      $("#detail-content").style.opacity = "1";
+      $("#detail-content").style.translate = "0 0";
+      $("#detail-content").inert = false;
+    }
   }
 }
 function select(index: number, navigation?: ArchiveNavigation) {
@@ -444,7 +490,7 @@ function replayBootAfterModal(forcePreview: boolean) {
   lastStep = "";
   setMode(!motionActive("boot") && !forcePreview ? "archive" : "boot");
   audio.restartBoot();
-  scene.select(0);
+  scene?.select(0);
   selected = 0;
   updateSelection();
   if (!forcePreview) audio.play("ui-tick");
@@ -492,7 +538,7 @@ function renderDetail() {
   <div class="detail-footnote"><a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">设定参考 ↗</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
   $("#detail-content").setAttribute("tabindex", "-1");
   $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.id)));
-  documentDecryption.reset($("#detail-content"), !motionActive("documentReveal") || scene.decryptionFrame.phase === "clear");
+  documentDecryption.reset($("#detail-content"), !motionActive("documentReveal") || !scene || scene.decryptionFrame.phase === "clear");
   setTab(activeTab, false);
 }
 function overview() {
@@ -573,7 +619,7 @@ function closeModal(afterClose?: () => void) {
     modalTransition = undefined;
     modalSiblings.forEach(({ node, inert }) => (node.inert = inert));
     modalSiblings = [];
-    $("#archive-ui").inert = mode !== "archive";
+    $("#archive-ui").inert = mode !== "archive" || Boolean(workbench?.enabled);
     $("#detail-ui").inert = mode !== "detail";
     previousFocus?.focus({ preventScroll: true });
     afterClose?.();
@@ -628,10 +674,11 @@ function renderResults() {
 }
 function updateQualitySummary() {
   const summary = document.querySelector("#quality-summary");
-  if (!summary || !scene) return;
+  if (!summary) return;
+  if (!scene) { summary.textContent = "3D 已关闭 · 三维模型与渲染资源已释放"; return; }
   const canvas = scene.renderer.domElement;
   const metrics = JSON.parse(canvas.parentElement?.dataset.renderQuality ?? "{}");
-  summary.textContent = `实际渲染 ${canvas.width} × ${canvas.height} · ${prefs.rendering.antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
+  summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
 function motionPreferenceNoteMarkup() {
   const preset = prefs.motionPreset;
@@ -639,7 +686,7 @@ function motionPreferenceNoteMarkup() {
   return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} · 选择会保存在本站</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p><div class="settings-list">${audioSettingsMarkup(prefs)}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts"><span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p></div><div class="settings-bottom">${document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${audioSettingsMarkup(prefs)}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? '<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>' : '<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>'}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -671,7 +718,7 @@ document.addEventListener("change", (e) => {
   }
   if (el.dataset.pref) {
     const key = el.dataset.pref;
-    if (key === "sound" || key === "music" || key === "quality") prefs[key] = el.checked;
+    if (key === "sound" || key === "music" || key === "quality" || key === "superPerformance") prefs[key] = el.checked;
     if (key === "sound" || key === "music") saveAudioPrefs(); else savePrefs();
     audio.play("confirm");
   }
@@ -696,6 +743,8 @@ document.addEventListener("change", (e) => {
   }
 });
 document.addEventListener("click", (e) => {
+  const themeButton = (e.target as Element).closest<HTMLElement>("[data-color-theme]");
+  if (themeButton) { prefs.colorTheme = themeButton.dataset.colorTheme === "dark" ? "dark" : "light"; savePrefs(); return; }
   if (!started) return;
   if (modalClosing) return;
   const el = (e.target as Element).closest<HTMLElement>("button");
@@ -741,6 +790,7 @@ document.addEventListener("click", (e) => {
     return;
   }
   const action = el.dataset.action;
+  if (action === "toggle-three") { void toggleThree(); return; }
   if (action === "sound-preview") audio.play("confirm");
   if (action === "skip") {
     setMode("archive");
@@ -751,19 +801,21 @@ document.addEventListener("click", (e) => {
   if (action === "column-prev") stepColumn(-1);
   if (action === "column-next") stepColumn(1);
   if (action === "open") openFile();
-  if (action === "model-viewer" && mode === "detail") {
+  if (action === "model-viewer" && mode === "detail" && scene) {
+    const activeScene = scene;
     // Safari does not always focus a button when it is tapped. Capture the
     // actual opener so closing the modal reliably restores the right control.
     el.focus({ preventScroll: true });
     viewer ??= new ModelViewer($("#stage"), () => { audio.setScene(mode); audio.play("page-close"); }, (sound) => audio.play(sound === "tick" ? "ui-tick" : sound));
     audio.setScene("viewer");
-    viewer.setQuality(prefs.rendering);
+    viewer.setSuperPerformance(superPerformanceEnabled());
+    viewer.setQuality(effectiveRenderQuality());
     viewer.setMotion(prefs.motion);
     scene.finishDecryption();
     viewer.open(
       records[selected].id,
       records[selected].title,
-      () => scene.createAssemblyModel(),
+      () => activeScene.createAssemblyModel(),
       !motionActive("viewerNavigation"),
     );
     audio.play("page-open");
@@ -804,6 +856,11 @@ document.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (!started) return;
   if (viewer?.isOpen) return;
+  if (playground?.active && !modal) {
+    if (e.key === "Escape") { e.preventDefault(); playground.stop(); }
+    else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "/"].includes(e.key) && !(e.target instanceof HTMLButtonElement)) e.preventDefault();
+    return;
+  }
   if (modalClosing) {
     e.preventDefault();
     return;
@@ -882,38 +939,35 @@ const ease = (t: number) => {
   return t * t * (3 - 2 * t);
 };
 function bootFrame(t: number) {
+  if (isWallpaper && !scene && frozenTime === null && t >= 21.9) {
+    setMode("archive");
+    return undefined;
+  }
+  if (isWallpaper && frozenTime === null && t >= ARRAY_OPENING_END &&
+      !openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, !!workbench?.enabled)) {
+    setMode("archive");
+    return undefined;
+  }
   audio.updateBoot(t, frozenTime !== null);
   const motion = bootSequence.update(t);
+  if (workbench?.enabled && frozenTime === null) {
+    const end = openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, true) ? 35 : ARRAY_OPENING_END;
+    if (t > end - .35) $(".powered").style.opacity = String(1 - ease((t - end + .35) / .35));
+  }
   let step: string = motion.step;
-  let caption =
-    motion.step === "auth"
-      ? t < 9.52
-        ? "身份信息确认：JOYCE MOORE"
-        : t < 11.84
-          ? "请求已接收"
-          : "开始处理"
-      : motion.step === "scan"
-        ? "权限验证通过"
-        : motion.step === "welcome"
-          ? "欢迎访问莱茵生命内部资料档案"
-          : "";
   if (t >= 22) {
     step = "array";
-    caption = "选择档案";
   }
   if (t >= 25.68) {
     step = "select";
-    caption = "编号：X-001";
   }
   if (t >= 28.3) {
     step = "inspect";
-    caption = t >= 29.3 ? "保密级别：商业区" : "编号：X-001";
   }
   if (step !== lastStep) {
     $("#stage").dataset.boot = step;
     lastStep = step;
   }
-  $("#cinema-caption").textContent = caption;
   $(".file-title").firstChild!.textContent =
     step === "array"
       ? "SELECTING FILES...".slice(0, Math.max(0, Math.floor((t - 21.94) * 18)))
@@ -944,20 +998,29 @@ let lastTime = 0,
   frameStart = performance.now(),
   fps = 0;
 function frame(ms: number) {
+  if (!wallpaperFrame(ms)) { requestAnimationFrame(frame); return; }
   if (document.hidden) { requestAnimationFrame(frame); return; }
+  workbench?.tick();
   const time = ms / 1000;
+  const theme = scene?.themeAmount ?? (prefs.colorTheme === "dark" ? 1 : 0);
+  paintTheme(theme);
+  viewer?.setTheme(theme);
+  playground?.tick(time);
   const cinema =
     mode === "boot" && ready
       ? bootFrame(frozenTime ?? time - bootStart)
       : undefined;
+  wallpaperEffects?.update(time, motionIsReduced(), motionActive("pointerParallax"));
   // The calibrated 2D opening fully covers the scene until array entry.
   if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
   viewer?.update(time);
+  if (threeState === "closing" && scene?.presentationHidden) releaseThree();
+  playground?.position();
   if (scene && mode === "detail") {
     documentDecryption.update(time, scene.decryptionFrame, !motionActive("documentReveal"));
     $("#detail-content").style.opacity = String(scene.detailVisibility);
-    $("#detail-content").style.transform =
-      `translateY(${(1 - scene.detailVisibility) * 18}px)`;
+    $("#detail-content").style.translate =
+      `0 ${(1 - scene.detailVisibility) * 18}px`;
     $("#detail-content").inert = scene.detailVisibility < 0.1;
     if (pendingDetailFocus && scene.detailVisibility >= 0.1 && !modal && !viewer?.isOpen) {
       $("#detail-content").focus({ preventScroll: true });
@@ -965,11 +1028,12 @@ function frame(ms: number) {
     }
   }
   $("#stage").style.setProperty("--detail-shade", String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0));
-  if (scene) inspectionOverlay.render(scene.decryptionFrame,
-    (x, y) => scene.projectCard(x, y), Boolean(cinema), motionActive("modelDecryption"));
+  const currentScene = scene;
+  if (currentScene) inspectionOverlay.render(currentScene.decryptionFrame,
+    (x, y) => currentScene.projectCard(x, y), Boolean(cinema), motionActive("modelDecryption"));
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
-    $("#clock").textContent = new Date().toLocaleTimeString("en-GB");
+    updateFooterClock(new Date(), motionActive("rollingNumbers"));
   }
   frameCount++;
   if (ms - frameStart > 1000) {
@@ -977,23 +1041,12 @@ function frame(ms: number) {
     frameStart = ms;
     frameCount = 0;
     $("#three-scene").dataset.fps = String(Math.round(fps));
-    $("#three-scene").dataset.renderStats = JSON.stringify(scene?.getStats());
+    $("#three-scene").dataset.renderStats = JSON.stringify(scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 });
   }
   requestAnimationFrame(frame);
 }
-async function start() {
-  try {
-    scene = new ArchiveScene($("#three-scene"));
-    await Promise.all([
-      scene.load(),
-      // With unicode-range faces, preload the opening's actual characters,
-      // not every font shard. Other archive text loads on demand.
-      document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
-      document.fonts.load("400 20px MiSans", "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE"),
-      document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
-      document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
-    ]);
-    scene.select(selected);
+function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
+    scene.select(selected, cell ? { cell } : undefined);
     scene.onSelect = (i, cell) => {
       if (mode !== "archive" || modal || viewer?.isOpen) return;
       select(i, cell ? { cell } : undefined);
@@ -1012,21 +1065,114 @@ async function start() {
         return;
       }
       const animated = motionActive("rollingText") && mode === "archive";
+      const numbersAnimated = motionActive("rollingNumbers") && mode === "archive";
       hoverCode.update({
         value: Number(records[i].id.slice(2)),
-        animated: !label.hidden && animated,
+        animated: !label.hidden && numbersAnimated,
       });
       hoverTitle.update({ text: records[i].title, animated: !label.hidden && animated });
       label.hidden = false;
       // Prepare the first visible value so the next hover can animate immediately.
-      hoverCode.update({ animated });
+      hoverCode.update({ animated: numbersAnimated });
       hoverTitle.update({ animated });
     };
+}
+function syncThreeButton() {
+  $("#stage").dataset.threeState = threeState;
+  syncWallpaperBackground();
+  const button = document.querySelector<HTMLButtonElement>('[data-action="toggle-three"]');
+  if (!button) return;
+  button.textContent = threeState === "loading" ? "3D 载入中…" : threeState === "closing" ? "3D 关闭中…" : threeState === "off" ? "3D 关闭" : "3D 开启";
+  button.disabled = threeState === "loading";
+  button.setAttribute("aria-pressed", String(threeState === "on"));
+  button.title = threeState === "off" ? "重新载入三维模型" : threeState === "closing" ? "取消关闭，恢复三维画面" : "卸载三维模型，保留 2D 界面";
+}
+function releaseThree() {
+  if (!scene) return;
+  resumeCell = { ...scene.getStats().selectedCell }; resumeSelection = selected;
+  viewer?.dispose(); viewer = undefined;
+  scene.dispose(); scene = undefined;
+  if (mode === "detail") {
+    $("#detail-content").style.opacity = "1";
+    $("#detail-content").style.translate = "0 0";
+    $("#detail-content").inert = false;
+    documentDecryption.reset($("#detail-content"), true);
+  }
+  threeState = "off"; syncThreeButton();
+  $("#hover-label").hidden = true;
+  delete $("#three-scene").dataset.renderQuality;
+  updateQualitySummary();
+}
+async function toggleThree() {
+  if (!isWallpaper || !ready || threeState === "loading") return;
+  if (threeState === "closing") {
+    scene?.setPresentationVisible(true, !motionActive("surfaceTransitions"));
+    threeState = "on"; syncThreeButton(); return;
+  }
+  if (scene) {
+    playground?.stop();
+    threeState = "closing"; syncThreeButton();
+    scene.setPresentationVisible(false, !motionActive("surfaceTransitions"));
+    if (!motionActive("surfaceTransitions")) releaseThree();
+    return;
+  }
+  threeState = "loading"; syncThreeButton();
+  let next: ArchiveScene | undefined;
+  try {
+    next = new ArchiveScene($("#three-scene"));
+    next.renderer.domElement.style.opacity = "0";
+    next.setPresentationVisible(false, true);
+    await next.load();
+    next.setMode(mode === "detail" ? "detail" : "archive");
+    bindScene(next, resumeSelection === selected ? resumeCell : undefined);
+    next.revealImmediately();
+    scene = next;
+    scene.setTheme(prefs.colorTheme === "dark", true);
+    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    savePrefs();
+    scene.setPresentationVisible(true, !motionActive("surfaceTransitions"));
+    threeState = "on"; syncThreeButton();
+  } catch (error) {
+    next?.dispose(); scene = undefined;
+    threeState = "off"; syncThreeButton();
+    notify("三维模型载入失败，请点击 3D 关闭重试。");
+    console.error(error);
+  }
+}
+
+async function start() {
+  try {
+    if (isWallpaper) await window.rhineWallpaperPropertiesReady;
+    if (!isWallpaper || wallpaperHost()?.properties.load3donstartup?.value !== false) {
+      scene = new ArchiveScene($("#three-scene"));
+      scene.setTheme(prefs.colorTheme === "dark", true);
+      scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    } else {
+      threeState = "off";
+      syncThreeButton();
+    }
+    await Promise.all([
+      scene?.load(),
+      loadBootWebfonts(),
+      // With unicode-range faces, preload the opening's actual characters,
+      // not every font shard. Other archive text loads on demand.
+      document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
+      document.fonts.load("400 20px MiSans", "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE"),
+      document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
+      document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
+    ]);
+    if (scene) bindScene(scene);
     savePrefs();
     ready = true;
     select(0);
     if (entry) entry.ready();
-    else completeStartup(false);
+    else {
+      if (isWallpaper) {
+        // CEF allows automatic audio; never block the visual on audio policy or decoding.
+        await Promise.race([audio.unlock(), new Promise(resolve => setTimeout(resolve, 3000))]);
+      }
+      completeStartup(false);
+    }
   } catch (error) {
     console.error(error);
     $("#loading").innerHTML =
@@ -1049,6 +1195,7 @@ function completeStartup(silent: boolean) {
   setMode("boot");
   if (reviewParams.get("scene") === "archive" || (!motionActive("boot") && !reviewParams.has("time"))) setMode("archive");
   if (reviewParams.get("scene") === "detail") setMode("detail");
+  if (isWallpaper && wallpaperHost()?.properties.boot?.value === false) setMode("archive");
   $("#stage").inert = false;
   $(".mobile-entry").inert = false;
   loading.classList.add("loaded");
@@ -1068,6 +1215,80 @@ function completeStartup(silent: boolean) {
   setTimeout(() => void initPwa(notify), 1500);
 }
 updateSelection();
+const customBackground = isWallpaper ? new WallpaperBackground($("#stage"), notify) : undefined;
+function syncWallpaperBackground(retry = false) {
+  customBackground?.update(wallpaperHost()?.properties ?? {}, mode !== "boot" && (threeState === "off" || threeState === "loading"), !motionActive("surfaceTransitions"), retry);
+}
+if (isWallpaper) {
+  const apply = (properties: WallpaperProperties) => {
+    const theme = properties.colortheme?.value;
+    if (theme === "light" || theme === "dark") prefs.colorTheme = theme;
+    scene?.setArchiveCoverage(properties.archivecoverage?.value === "extra" || wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    for (const key of ["sound", "music"] as const)
+      if (typeof properties[key]?.value === "boolean") prefs[key] = properties[key].value as boolean;
+    if (typeof properties.reduced?.value === "boolean") {
+      prefs.motion = properties.reduced.value ? reducedMotion() : fullMotion();
+      prefs.motionPreset = motionPresetFor(prefs.motion);
+    }
+    for (const key of ["soundVolume", "musicVolume"] as const) {
+      const value = properties[key.toLowerCase()]?.value;
+      if (typeof value === "number" && Number.isFinite(value)) prefs[key] = Math.max(0, Math.min(1, value / 100));
+    }
+    const qualityProperties = { ...wallpaperHost()?.properties, ...properties };
+    if (Object.keys(properties).some(key => key === "renderquality" || key.startsWith("quality")))
+      prefs.rendering = wallpaperQuality(qualityProperties, prefs.rendering);
+    savePrefs();
+    if (properties.customwallpaperfile || properties.customwallpaper?.value === true) syncWallpaperBackground(true);
+    if (properties.boot?.value === false && started && mode === "boot") setMode("archive");
+    // Keep an already-open settings surface in sync without replacing focused controls.
+    document.querySelectorAll<HTMLInputElement>("[data-pref]").forEach(input => {
+      const key = input.dataset.pref as "sound" | "music" | "quality" | "superPerformance";
+      if (key in prefs) input.checked = prefs[key];
+    });
+    document.querySelectorAll<HTMLInputElement>("[data-motion]").forEach(input => {
+      input.checked = prefs.motion[input.dataset.motion as MotionKey];
+    });
+    document.querySelectorAll<HTMLElement>('[data-action="motion-preset"]').forEach(button => {
+      button.setAttribute("aria-pressed", String(button.dataset.preset === prefs.motionPreset));
+    });
+    const note = document.querySelector("#motion-preference-note");
+    if (note) note.outerHTML = motionPreferenceNoteMarkup();
+    for (const key of ["soundVolume", "musicVolume"] as const) {
+      const input = document.querySelector<HTMLInputElement>(`[data-volume="${key}"]`);
+      if (input) { input.value = String(Math.round(prefs[key] * 100)); input.closest("label")?.querySelector("output")?.replaceChildren(`${input.value}%`); }
+    }
+  };
+  window.addEventListener("rhine-wallpaper-properties", event => apply((event as CustomEvent<WallpaperProperties>).detail));
+  let pausedAt: number | undefined;
+  const pause = () => {
+    const paused = wallpaperHost()?.paused ?? false;
+    if (paused && pausedAt === undefined) pausedAt = performance.now();
+    if (!paused && pausedAt !== undefined) {
+      if (started && mode === "boot") bootStart += (performance.now() - pausedAt) / 1000;
+      pausedAt = undefined;
+    }
+    audio.setHostPaused(paused);
+  };
+  window.addEventListener("rhine-wallpaper-pause", pause);
+  apply(wallpaperHost()?.properties ?? {});
+  pause();
+}
+if (isWallpaper) {
+  workbench = new Workbench($("#stage"), () => {
+    if (ready && mode !== "boot") setMode("archive");
+  }, lane => {
+    if (ready && !modal) select(columnMemory[lane]);
+  });
+  workbench.setMotion(prefs.motion);
+  playground = new ArchivePlayground($("#stage"), () => scene,
+    () => ({ enabled: !!workbench?.enabled && mode === "archive" && ready, paused: Boolean(modal) || modalClosing || Boolean(wallpaperHost()?.paused) || document.hidden, reduced: motionIsReduced() }),
+    value => { musicSuppressed = value; configureAudio(); }, () => audio.play("tick"));
+  wallpaperEffects = new WallpaperEffects($("#stage"), () => scene);
+  document.addEventListener("click", event => {
+    const button = (event.target as Element).closest<HTMLElement>("[data-workbench-mode]");
+    if (button) closeModal(() => { workbench!.setEnabled(button.dataset.workbenchMode === "workbench"); });
+  });
+}
 void start();
 // Deterministic review controls: the running application, never a video surrogate.
 Object.assign(window, {
@@ -1082,7 +1303,7 @@ Object.assign(window, {
       if (request !== audioPreviewRequest) return false;
       if (!unlocked) {
         audioPreview = false;
-        audio.configure(prefs);
+        configureAudio();
         return false;
       }
       replayBoot(true);
@@ -1098,6 +1319,7 @@ Object.assign(window, {
     select: (i: number) => select(i),
     stats: () => ({
       ...scene?.getStats(),
+      threeState,
       fps: Math.round(fps),
       mode,
       ready,
@@ -1107,7 +1329,9 @@ Object.assign(window, {
       selected: records[selected].id,
       saved: [...saved],
       audio: audio.stats(),
+      wallpaper: isWallpaper ? wallpaperHost() : null,
     }),
   },
 });
 if (import.meta.hot) import.meta.hot.dispose(() => audio.dispose());
+

@@ -1,0 +1,176 @@
+[
+  {
+    "scenario": "static",
+    "before": {
+      "cpu": 2.099999999627471,
+      "total": 2.099999999627471,
+      "gpu": 5.130528,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5834355,
+      "cpuP95": 3.099999999627471
+    },
+    "after": {
+      "cpu": 1,
+      "total": 1,
+      "gpu": 0,
+      "uploads": 0,
+      "uploadBytes": 0,
+      "calls": 0,
+      "triangles": 0,
+      "cpuP95": 1.5
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle",
+    "before": {
+      "cpu": 2.599999999627471,
+      "total": 2.599999999627471,
+      "gpu": 5.789472,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5816991,
+      "cpuP95": 3.799999998882413
+    },
+    "after": {
+      "cpu": 2,
+      "total": 2,
+      "gpu": 4.763584,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 75,
+      "triangles": 4288249,
+      "cpuP95": 2.599999999627471
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "navigate",
+    "before": {
+      "cpu": 3.099999999627471,
+      "total": 3.099999999627471,
+      "gpu": 6.200768,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 308,
+      "triangles": 6685305,
+      "cpuP95": 5.299999998882413
+    },
+    "after": {
+      "cpu": 3,
+      "total": 3,
+      "gpu": 6.16672,
+      "uploads": 1,
+      "uploadBytes": 19876,
+      "calls": 225,
+      "triangles": 4940423,
+      "cpuP95": 4.200000001117587
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "detail",
+    "before": {
+      "cpu": 1.799999998882413,
+      "total": 1.799999998882413,
+      "gpu": 5.63904,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 3004023,
+      "cpuP95": 2.699999999254942
+    },
+    "after": {
+      "cpu": 0.5,
+      "total": 0.599999999627471,
+      "gpu": 0,
+      "uploads": 0,
+      "uploadBytes": 0,
+      "calls": 0,
+      "triangles": 0,
+      "cpuP95": 1.199999999254942
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "music",
+    "before": {
+      "cpu": 2.400000000372529,
+      "total": 2.400000000372529,
+      "gpu": 5.237984,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5764899,
+      "cpuP95": 3.800000000745058
+    },
+    "after": {
+      "cpu": 2.200000001117587,
+      "total": 2.200000001117587,
+      "gpu": 4.721696,
+      "uploads": 1,
+      "uploadBytes": 20008,
+      "calls": 75,
+      "triangles": 4249885,
+      "cpuP95": 3.100000001490116
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "opening",
+    "before": {
+      "cpu": 1.400000000372529,
+      "total": 1.400000000372529,
+      "gpu": 3.208832,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 3090843,
+      "cpuP95": 2
+    },
+    "after": {
+      "cpu": 1.400000000372529,
+      "total": 1.400000000372529,
+      "gpu": 3.795968,
+      "uploads": 1,
+      "uploadBytes": 10148,
+      "calls": 75,
+      "triangles": 2280533,
+      "cpuP95": 3
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  }
+]

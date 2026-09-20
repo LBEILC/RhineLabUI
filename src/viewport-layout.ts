@@ -1,4 +1,9 @@
 /** Reference coordinates remain exact during the film and at 1920 × 1080. */
+export function openingLayout(width: number, height: number) {
+  width = Math.max(1, width); height = Math.max(1, height);
+  const scale = Math.min(height / 1080, width / 1280);
+  return { width: width / scale, height: height / scale, scale, kind: "opening" as const };
+}
 export function viewportLayout(width: number, height: number, coarse: boolean, cinematic = false) {
   width = Math.max(1, width);
   height = Math.max(1, height);

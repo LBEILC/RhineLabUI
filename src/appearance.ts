@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { glassRevealGLSL, frostedTransmissionGLSL, FROSTED_ROUGHNESS } from "./glass-reveal.ts";
 import { internalOpticsFragment } from "./internal-optics.ts";
+import { themeMaterial } from "./theme-material";
 
 type Surface = THREE.MeshPhysicalMaterial;
 type Palette = { high: Surface; low?: Surface };
@@ -9,6 +10,10 @@ type Palette = { high: Surface; low?: Surface };
 // on one mesh so transparent shells never overlap during a quality change.
 export class CardAppearance {
   private palettes = new Map<string, Palette>();
+  disposeSources() {
+    for (const palette of this.palettes.values()) { palette.high.dispose(); palette.low?.dispose(); }
+    this.palettes.clear();
+  }
 
   register(name: string, high: Surface, low?: Surface) {
     this.palettes.set(name, { high, low });
@@ -19,7 +24,10 @@ export class CardAppearance {
       const mesh = child as THREE.Mesh;
       const name = mesh.userData.surface as string;
       const palette = this.palettes.get(name);
-      if (!palette) continue;
+      if (!palette) {
+        mesh.userData.themeAmount = themeMaterial(mesh.material as THREE.Material, "Printed_Canvas");
+        continue;
+      }
       const mat = palette.high.clone();
       const amount = { value: 0 };
       const clarity = { value: 0 };
@@ -77,6 +85,8 @@ export class CardAppearance {
       };
       mat.customProgramCacheKey = () =>
         `archive-surface-clarity-${name}-${Boolean(palette.low)}`;
+      mesh.userData.subduedIndex = { value: 0 };
+      mesh.userData.themeAmount = themeMaterial(mat, name, false, mesh.userData.subduedIndex);
     }
   }
 
@@ -114,6 +124,13 @@ export class CardAppearance {
         8,
         clarity,
       );
+    });
+  }
+
+  setTheme(group: THREE.Group, value: number, subduedIndex: boolean | number = false) {
+    group.traverse(child => {
+      if (child.userData.themeAmount) child.userData.themeAmount.value = value;
+      if (child.userData.subduedIndex) child.userData.subduedIndex.value = THREE.MathUtils.clamp(Number(subduedIndex), 0, 1);
     });
   }
 

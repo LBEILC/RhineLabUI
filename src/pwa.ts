@@ -1,4 +1,5 @@
 import { assetUrl } from "./asset-url";
+import { isWallpaper } from "./wallpaper";
 
 interface InstallPrompt extends Event {
   prompt(): Promise<void>;
@@ -21,6 +22,7 @@ window.addEventListener("appinstalled", () => { installPrompt = undefined; refre
 matchMedia("(display-mode: standalone)").addEventListener("change", refresh);
 
 export function pwaSettingsMarkup() {
+  if (isWallpaper) return "";
   const status = !import.meta.env.PROD ? "开发预览不保存离线副本。"
     : !window.isSecureContext ? "使用 HTTPS 地址后可保存离线副本。"
     : !("serviceWorker" in navigator) ? "当前浏览器支持在线使用。"
@@ -45,6 +47,7 @@ function refresh() {
 }
 
 export async function initPwa(notify: (message: string) => void) {
+  if (isWallpaper) return;
   tell = notify;
   if (started || !import.meta.env.PROD || !window.isSecureContext || !("serviceWorker" in navigator)) return;
   started = true;

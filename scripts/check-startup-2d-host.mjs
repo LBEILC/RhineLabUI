@@ -1,0 +1,12 @@
+import {createServer} from 'node:http';
+import {spawn} from 'node:child_process';
+import {readFile,writeFile,mkdir,cp} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import assert from 'node:assert/strict';
+const dir=resolve('verification/startup-2d/host');await mkdir(dir,{recursive:true});await cp('release/wallpaper',dir,{recursive:true});
+const project=JSON.parse(await readFile(dir+'/project.json','utf8'));delete project.workshopid;delete project.workshopurl;project.general.properties.load3donstartup.value=false;project.general.properties.boot.value=true;await writeFile(dir+'/project.json',JSON.stringify(project));
+const html=await readFile(dir+'/index.html','utf8');
+await writeFile(dir+'/index.html',html.replace('</head>',`<script>let checked=false;const probe=setInterval(()=>{if(!window.rhine?.stats().ready)return;if(!checked){checked=true;rhine.seek(21.8);return}if(rhine.stats().mode!=='archive')return;clearInterval(probe);fetch('http://127.0.0.1:5185/',{method:'POST',body:JSON.stringify({state:rhine.stats().threeState,mode:rhine.stats().mode,property:rhine.stats().wallpaper.properties.load3donstartup.value,canvas:document.querySelectorAll('canvas').length,models:performance.getEntriesByType('resource').filter(x=>x.name.includes('.glb')).length})})},100)</script></head>`));
+let finish;const result=new Promise(r=>finish=r);const server=createServer((req,res)=>{let body='';req.on('data',b=>body+=b);req.on('end',()=>{res.setHeader('Access-Control-Allow-Origin','*');res.end('ok');try{finish(JSON.parse(body))}catch{}})});await new Promise(r=>server.listen(5185,'127.0.0.1',r));
+const exe='D:/Game/Steam/steamapps/common/wallpaper_engine/wallpaper64.exe',location='Rhine Lab startup diagnostic';const run=args=>new Promise((ok,no)=>{const child=spawn(exe,args,{windowsHide:true,stdio:'ignore'});child.once('error',no);child.once('exit',ok)});let timeout;
+try{await run(['-control','openWallpaper','-file',dir+'/project.json','-playInWindow',location,'-width','640','-height','360','-x','-30000','-y','-30000']);const data=await Promise.race([result,new Promise((_,no)=>timeout=setTimeout(()=>no(Error('Host timeout')),30000))]);console.log(data);await writeFile('verification/startup-2d/host-results.json',JSON.stringify(data,null,2));assert.deepEqual(data,{state:'off',mode:'archive',property:false,canvas:0,models:0})}finally{clearTimeout(timeout);server.close();await run(['-control','closeWallpaper','-location',location])}

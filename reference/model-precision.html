@@ -1,0 +1,7 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>模型精度对照</title>
+<style>html,body{margin:0;height:100%;font-family:system-ui,sans-serif;background:#eeebe5;color:#252523}main{position:fixed;inset:0}iframe{width:100%;height:100%;border:0}nav{position:fixed;top:16px;left:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center;padding:12px 16px;background:#f8f6f0ee;border:1px solid #aaa69c;font-size:14px}select,button{font:inherit;padding:5px 8px}#note{max-width:380px;font-size:12px}a{color:inherit}</style></head>
+<body><main><iframe title="档案模型对照" id="view"></iframe></main><nav>
+<label>模型精度 <select id="tier"><option value="high">高 · 原始模型</option><option value="medium">中 · 简化背景</option><option value="low">低 · 背景与近景简化</option></select></label>
+<label>场景 <select id="scenario"><option value="idle">阵列呼吸</option><option value="static">静止阵列</option><option value="navigate">连续选档</option><option value="detail">详情近景</option><option value="inspect">近景旋转</option><option value="music">音乐律动</option></select></label>
+<label><input type="checkbox" id="dark">暗色</label><button id="pause">暂停</button>
+<span id="note">正在准备…</span></nav><script type="module" src="./model-precision-review.ts"></script></body></html>

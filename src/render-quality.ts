@@ -131,6 +131,7 @@ export function renderDimensions(
   stageScale: number,
   deviceRatio: number,
   maxTextureSize: number,
+  pixelBudget = 8_294_400,
 ) {
   const requested =
     (Math.min(deviceRatio, quality.pixelRatio) * stageScale * quality.scale) /
@@ -138,7 +139,7 @@ export function renderDimensions(
   // Bound all full-resolution postprocessing targets to 8.3 MP and device limits.
   const ratio = Math.min(
     requested,
-    Math.sqrt(8_294_400 / Math.max(1, width * height)),
+    Math.sqrt(pixelBudget / Math.max(1, width * height)),
     maxTextureSize / Math.max(1, width, height),
   );
   return {

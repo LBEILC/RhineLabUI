@@ -1,0 +1,16 @@
+# Preserve raw final samples and first-round representative visuals. Other
+# screenshots remain reproducible locally without expanding the repository.
+*-smoke/
+*.png
+!browser/high-1-idle.png
+!browser/medium-1-idle.png
+!browser/low-1-idle.png
+!browser/high-1-inspect.png
+!browser/medium-1-inspect.png
+!browser/low-1-inspect.png
+!host/high-1-idle.png
+!host/medium-1-idle.png
+!host/low-1-idle.png
+!host/high-1-inspect.png
+!host/medium-1-inspect.png
+!host/low-1-inspect.png

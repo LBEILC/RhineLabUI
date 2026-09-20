@@ -1,0 +1,164 @@
+[
+  {
+    "scenario": "static",
+    "before": {
+      "cpu": 3.7999999998137355,
+      "total": 3.7999999998137355,
+      "gpu": 7.607296,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5834355
+    },
+    "after": {
+      "cpu": 3,
+      "total": 3,
+      "gpu": 6.675136,
+      "uploads": 0,
+      "uploadBytes": 0,
+      "calls": 98,
+      "triangles": 5714787
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle",
+    "before": {
+      "cpu": 5.1000000005587935,
+      "total": 5.1000000005587935,
+      "gpu": 7.952672,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5816991
+    },
+    "after": {
+      "cpu": 4.400000000372529,
+      "total": 4.400000000372529,
+      "gpu": 5.674112,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 98,
+      "triangles": 5697799
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "navigate",
+    "before": {
+      "cpu": 6.099999999627471,
+      "total": 6.099999999627471,
+      "gpu": 8.397568,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 308,
+      "triangles": 6685305
+    },
+    "after": {
+      "cpu": 7.699999999254942,
+      "total": 7.699999999254942,
+      "gpu": 7.97056,
+      "uploads": 1,
+      "uploadBytes": 19876,
+      "calls": 298,
+      "triangles": 6567617
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "detail",
+    "before": {
+      "cpu": 3.2999999998137355,
+      "total": 3.300000000745058,
+      "gpu": 7.80272,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 3004023
+    },
+    "after": {
+      "cpu": 3,
+      "total": 3,
+      "gpu": 7.338976,
+      "uploads": 0,
+      "uploadBytes": 0,
+      "calls": 98,
+      "triangles": 2945743
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "music",
+    "before": {
+      "cpu": 4.099999999627471,
+      "total": 4.099999999627471,
+      "gpu": 7.285472,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5764899
+    },
+    "after": {
+      "cpu": 4.7000000001862645,
+      "total": 4.7000000001862645,
+      "gpu": 7.308896,
+      "uploads": 1,
+      "uploadBytes": 20008,
+      "calls": 98,
+      "triangles": 5646835
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "opening",
+    "before": {
+      "cpu": 3,
+      "total": 3,
+      "gpu": 4.401664,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 3090843
+    },
+    "after": {
+      "cpu": 3.2000000001862645,
+      "total": 3.2000000001862645,
+      "gpu": 3.852096,
+      "uploads": 1,
+      "uploadBytes": 10148,
+      "calls": 98,
+      "triangles": 3030683
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  }
+]

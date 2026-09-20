@@ -1,0 +1,83 @@
+[
+  {
+    "scenario": "static",
+    "before": {
+      "cpu": 3.7999999998137355,
+      "total": 3.7999999998137355,
+      "gpu": 7.607296,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5834355
+    },
+    "after": {
+      "cpu": 1,
+      "total": 1.099999999627471,
+      "gpu": 0,
+      "uploads": 0,
+      "uploadBytes": 0,
+      "calls": 0,
+      "triangles": 0
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "idle",
+    "before": {
+      "cpu": 5.1000000005587935,
+      "total": 5.1000000005587935,
+      "gpu": 7.952672,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 5816991
+    },
+    "after": {
+      "cpu": 3.199999999254942,
+      "total": 3.2000000001862645,
+      "gpu": 5.3576,
+      "uploads": 1,
+      "uploadBytes": 20192,
+      "calls": 75,
+      "triangles": 4288249
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  },
+  {
+    "scenario": "detail",
+    "before": {
+      "cpu": 3.2999999998137355,
+      "total": 3.300000000745058,
+      "gpu": 7.80272,
+      "uploads": 6,
+      "uploadBytes": 186624,
+      "calls": 102,
+      "triangles": 3004023
+    },
+    "after": {
+      "cpu": 0.7000000001862645,
+      "total": 0.7999999998137355,
+      "gpu": 0,
+      "uploads": 0,
+      "uploadBytes": 0,
+      "calls": 0,
+      "triangles": 0
+    },
+    "image": {
+      "pixels": 0,
+      "over2": 0,
+      "max": 0,
+      "mean": 0
+    }
+  }
+]

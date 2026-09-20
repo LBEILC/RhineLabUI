@@ -1,5 +1,15 @@
 /* The film keeps its reference stage. Interactive layouts share the same DOM. */
 #stage { --edge: 59px; }
+/* Opening artwork keeps undistorted local coordinates while its backdrop and
+   3D canvas fill the actual display. Corner identity remains edge anchored. */
+[data-layout="opening"] .boot { inset: auto; left: calc(50% - 960px); top: calc(50% - 540px); width: 1920px; height: 1080px; }
+[data-layout="opening"] .boot-white { left: calc((1920px - var(--opening-width)) / 2); top: calc((1080px - var(--opening-height)) / 2); width: var(--opening-width); height: var(--opening-height); right: auto; bottom: auto; }
+[data-layout="opening"] .scan { transform: scale(var(--opening-scan-scale)); transform-origin: center; }
+[data-layout="opening"][data-opening-portrait="true"] :is(.access-text, .auth-status) { font-size: 36px; }
+[data-layout="opening"][data-opening-portrait="true"] .scan > span { font-size: 52px !important; letter-spacing: 1px !important; }
+[data-layout="opening"] .archive-callout { left: 50.520833%; width: 49.479167%; }
+[data-layout="opening"] .file-title { font-size: clamp(22px, 2vw, 32px); }
+[data-mobile-boot="true"] [data-layout="opening"] .powered { left: var(--edge); right: auto; bottom: 50px; }
 .mobile-entry { display: none; }
 .system-nav .settings-button { position: relative; }
 .settings-label { position: absolute; left: 50%; top: calc(100% + 3px); transform: translateX(-50%); font-size: 10px; white-space: nowrap; letter-spacing: 1px; }

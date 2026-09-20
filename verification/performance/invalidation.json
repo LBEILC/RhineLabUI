@@ -1,0 +1,57 @@
+{
+  "checks": [
+    {
+      "name": "unchanged",
+      "rendered": false
+    },
+    {
+      "name": "resize",
+      "rendered": true
+    },
+    {
+      "name": "theme",
+      "rendered": true
+    },
+    {
+      "name": "selection",
+      "rendered": true
+    },
+    {
+      "name": "late label texture",
+      "rendered": true
+    },
+    {
+      "name": "depth fallback",
+      "rendered": true
+    },
+    {
+      "name": "disable AO",
+      "rendered": true
+    },
+    {
+      "name": "restore shared depth",
+      "rendered": true
+    },
+    {
+      "name": "AA",
+      "rendered": true
+    },
+    {
+      "name": "release transition",
+      "rendered": true
+    },
+    {
+      "name": "reverse release",
+      "rendered": true
+    },
+    {
+      "name": "music wakes canvas",
+      "rendered": true
+    },
+    {
+      "name": "grown buffers shared",
+      "rendered": true
+    }
+  ],
+  "errors": []
+}

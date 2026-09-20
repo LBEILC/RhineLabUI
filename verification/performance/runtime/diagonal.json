@@ -1,0 +1,223 @@
+[
+  {
+    "width": 1920,
+    "height": 1080,
+    "mobile": false,
+    "results": [
+      {
+        "axis": "lane",
+        "sign": 1,
+        "direction": {
+          "x": -395.9196091084518,
+          "y": 207.74092635269935
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "lane",
+        "sign": -1,
+        "direction": {
+          "x": -395.96375463206635,
+          "y": 207.9124693122009
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "row",
+        "sign": 1,
+        "direction": {
+          "x": -76.5578049346622,
+          "y": -14.893827047583128
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "row",
+        "sign": -1,
+        "direction": {
+          "x": -76.55900543169001,
+          "y": -14.89205208858483
+        },
+        "mapping": "free"
+      },
+      {
+        "screenPath": [
+          [
+            45,
+            0
+          ],
+          [
+            45,
+            50
+          ],
+          [
+            -35,
+            50
+          ],
+          [
+            -35,
+            -30
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "checks": "free turns passed"
+      },
+      {
+        "checks": "free coast and two-track catch passed",
+        "release": {
+          "phase": "coasting",
+          "value": {
+            "lane": 2.3999956551101347,
+            "row": 14.80003530051251
+          },
+          "velocity": {
+            "lane": 1.3037679128722215,
+            "row": 5.86713144918363
+          }
+        }
+      }
+    ],
+    "checks": "passed"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "mobile": true,
+    "results": [
+      {
+        "axis": "lane",
+        "sign": 1,
+        "direction": {
+          "x": -124.37223380634994,
+          "y": 63.83284794346765
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "lane",
+        "sign": -1,
+        "direction": {
+          "x": -124.36809598374839,
+          "y": 63.85246016316641
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "row",
+        "sign": 1,
+        "direction": {
+          "x": -24.673200604995962,
+          "y": -4.573444349259648
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "row",
+        "sign": -1,
+        "direction": {
+          "x": -24.67373516609503,
+          "y": -4.5726559712874515
+        },
+        "mapping": "free"
+      },
+      {
+        "screenPath": [
+          [
+            45,
+            0
+          ],
+          [
+            45,
+            50
+          ],
+          [
+            -35,
+            50
+          ],
+          [
+            -35,
+            -30
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "checks": "free turns passed"
+      }
+    ],
+    "checks": "passed"
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "mobile": true,
+    "results": [
+      {
+        "axis": "lane",
+        "sign": 1,
+        "direction": {
+          "x": -142.96921007675635,
+          "y": 75.01404503945741
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "lane",
+        "sign": -1,
+        "direction": {
+          "x": -142.96434203591375,
+          "y": 75.03563204490824
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "row",
+        "sign": 1,
+        "direction": {
+          "x": -27.645650859286274,
+          "y": -5.374476501338692
+        },
+        "mapping": "free"
+      },
+      {
+        "axis": "row",
+        "sign": -1,
+        "direction": {
+          "x": -27.646177572537088,
+          "y": -5.373697162147155
+        },
+        "mapping": "free"
+      },
+      {
+        "screenPath": [
+          [
+            45,
+            0
+          ],
+          [
+            45,
+            50
+          ],
+          [
+            -35,
+            50
+          ],
+          [
+            -35,
+            -30
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "checks": "free turns passed"
+      }
+    ],
+    "checks": "passed"
+  }
+]
