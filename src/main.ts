@@ -142,12 +142,13 @@ function readLocal<T>(key: string, fallback: T): T {
 }
 const saved = new Set<string>(readLocal<string[]>("rhine-saved", []));
 const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; motion: StoredMotion; motionPreset: MotionPreset }>>("rhine-settings", {});
-const initialMotion = createMotionPreferences(storedPrefs.motion, storedPrefs.reduced);
-const initialMotionPreset: MotionPreset = storedPrefs.motion
-  ? motionPresetFor(initialMotion)
-  : storedPrefs.reduced === undefined
-    ? "full"
-    : storedPrefs.reduced ? "reduced" : "full";
+const initialMotion = createMotionPreferences(
+  storedPrefs.motion,
+  storedPrefs.reduced ?? (storedPrefs.motion === undefined
+    ? matchMedia("(prefers-reduced-motion: reduce)").matches
+    : undefined),
+);
+const initialMotionPreset = motionPresetFor(initialMotion);
 const prefs = {
   sound: storedPrefs.sound ?? true,
   music: storedPrefs.music ?? storedPrefs.sound ?? true,

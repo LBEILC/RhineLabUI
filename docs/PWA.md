@@ -26,7 +26,7 @@
 
 ## 开机动画与选档动效
 
-首次进入时，本站默认使用完整动画。之后可在设置中选择“完整 / 减少 / 自定义”，选择会保存在本地，资源更新不会重置它。
+首次进入时，本站跟随系统“减少动态效果”偏好；系统未要求减少时使用完整动画。之后可在设置中选择“完整 / 减少 / 自定义”，选择会保存在本地，资源更新不会重置它。
 
 需要完整动效时，打开右上角圆形图标下标有“设置”的按钮，选择“启用完整动效并重播”。这只调整本站，无需修改系统设置。减少动态效果开关也可随时重新开启。
 
@@ -36,7 +36,7 @@
 
 本地验证：运行 `npm run build`，再运行 `npm run preview`。浏览器测试见 `scripts/check-pwa.mjs`，需要本机可用的 Playwright 与 Chrome；可通过 `PLAYWRIGHT_MODULE` 指定已有 Playwright 模块路径。
 
-`scripts/check-startup-motion.mjs` 验证不同浏览器动效环境下均默认进入完整动画，以及本站的完整 / 减少 / 自定义选择、重播和正文解密；`scripts/check-pwa-recovery.mjs` 验证旧版迁移，需要以 `PWA_PREVIOUS_DIST` 指定保留的旧生产构建。两个脚本可设 `REVIEW_CHANNEL=msedge` 验证 Edge。更新恢复页保持网络获取，未加入离线资源清单。
+`scripts/check-startup-motion.mjs` 验证首次进入跟随浏览器动效偏好，以及本站的完整 / 减少 / 自定义选择、重播和正文解密；`scripts/check-pwa-recovery.mjs` 验证旧版迁移，需要以 `PWA_PREVIOUS_DIST` 指定保留的旧生产构建。两个脚本可设 `REVIEW_CHANNEL=msedge` 验证 Edge。更新恢复页保持网络获取，未加入离线资源清单。
 
 图标源自项目共享莱茵生命 SVG 路径，生成脚本为 `scripts/build-icons.mjs`，通过 `SHARP_MODULE` 可指定本地 Sharp 模块。修改资源后重新构建即可生成新的离线版本，无需手动修改缓存编号。
 
