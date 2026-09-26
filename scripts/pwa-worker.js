@@ -19,7 +19,15 @@ self.addEventListener("install", event => {
         while (next < urls.length) {
           const url = urls[next++];
           const immutable = /\/fonts\/misans-webfont-4\.3\.1\//.test(url) || /\/assets\/archive-(cassette|assembly)\.[a-f0-9]{16}\.glb$/.test(url);
-          await cache.add(new Request(url, { cache: immutable ? "default" : "no-cache" }));
+          if (url === index) {
+            // Pages redirects index.html to the directory URL. Keep the release's
+            // cache key, but fetch the canonical page without a followed redirect.
+            const response = await fetch(new Request(self.registration.scope, { cache: "no-cache" }));
+            if (!response.ok) throw new Error(`Homepage download failed: ${response.status}`);
+            await cache.put(url, response);
+          } else {
+            await cache.add(new Request(url, { cache: immutable ? "default" : "no-cache" }));
+          }
         }
       });
       const results = await Promise.allSettled(workers);
@@ -56,6 +64,15 @@ self.addEventListener("fetch", event => {
     // HTML, hashed bundles and stable model URLs come from the same release.
     // A new release stays waiting until the user chooses to restart or exits.
     const cached = await cache.match(key);
+    // A navigation uses redirect: manual and cannot consume a response whose
+    // URL list contains a followed redirect (including older cached releases).
+    if (navigation && cached?.redirected) {
+      return new Response(cached.body, {
+        status: cached.status,
+        statusText: cached.statusText,
+        headers: cached.headers,
+      });
+    }
     return cached ?? fetch(event.request);
   })());
 });

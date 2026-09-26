@@ -1,5 +1,13 @@
 # Cloudflare Pages 部署
 
+## 2026-09-26 首页 ERR_FAILED 修复
+
+线上首页、JS 和 CSS 均返回 HTTP 200；Pages 生产部署成功，自定义域名处于 active 状态，未启用 Functions。Edge 在 Service Worker 控制下报 ERR_FAILED，临时绕过 Service Worker 即恢复。
+
+根因是 Pages 将 `/index.html` 308 重定向至 `/`，原预缓存直接保存跟随重定向后的 Response。首页导航使用 manual 重定向模式，不能直接消费该响应。现在预缓存从作用域目录 URL 获取首页，仍以 index.html 作为版本内缓存键；读取历史 redirected 首页响应时重建 Response，保留正文、状态和标头。
+
+验证：`node --test scripts/check-pwa-redirect.mjs` 使用真实 308 响应覆盖子路径、首页别名、查询参数、历史重定向响应和离线读取；`npm run build:cloudflare` 通过。实际 Edge 本地对照：旧 worker 首次载入后刷新复现 ERR_FAILED，新 worker 刷新与断网读取均正常。恢复入口仍为 `/update.html`，不清除收藏与偏好。
+
 ## Git 自动部署
 
 生产仓库为 `LBEILC/RhineLabUI`，分支 `main`，构建命令 `npm run build:cloudflare`，输出目录 `release/cloudflare/site`，根目录为仓库根目录。Pages 注入 `CF_PAGES=1` 时打包到固定输出目录；本机构建继续使用版本号目录。
