@@ -4,6 +4,10 @@
 
 原始视觉、场景、模型、动效与原创环境声来自 [LBEILC / RhineLabUI](https://github.com/LBEILC/RhineLabUI)。DSH 适配、性能优化和发布工具由贡献者与 **OpenAI Codex** 协作完成。第三方资源与上游版权保留于 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
+## 友情链接
+
+- [LINUX DO](https://linux.do/) · 技术交流社区
+
 ## 功能
 
 - 项目档案阵列、会话工作区、浅深色主题、中文与英文界面。
