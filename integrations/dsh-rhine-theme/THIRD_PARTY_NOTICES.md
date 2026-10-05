@@ -14,8 +14,6 @@ The refinement also includes the upstream `boot-tracks.ts`, `boot-orbit-tracks.t
 
 ## Typography
 
-Novecento Sans Wide is not included in the release or embedded client. Its free license does not grant application embedding (https://www.fontsquirrel.com/license/novecento-wide). The unused custom-phrase font fallback now uses MiSans; the authored SVG phrase artwork remains unchanged.
-
 This software uses MiSans fonts, Copyright Xiaomi Inc. Chinese text and body copy embed the unchanged `MiSans-Regular.woff2` and `MiSans-Bold.woff2` reference-site assets, with system font fallbacks. MiSans is governed by its own license, not this project's MIT license. The complete upstream-supplied agreement is included in `licenses/MiSans-license.pdf`, with a text extraction in `licenses/MiSans-license.txt`. Section 2 permits distribution of works such as applications using the fonts, requires attribution and preservation of the agreement, and prohibits standalone font redistribution and modification. The release embeds the fonts in the theme application rather than shipping standalone font assets. No OS font files are distributed.
 
 ## Three.js

@@ -80,10 +80,10 @@ node ./native/rhine-native.cjs uninstall "C:\Path\To\DeepSeek Harness.exe"
 - **窗口按钮或 F11 不生效**：检查原生工具是否成功执行，以及 EXE 是否对应正在启动的那份 DSH。
 - **版本不支持或代码特征不匹配**：不要跳过检查强行注入；本包只验证 0.2.0-rc.2。
 - **出现旧模块 404**：退出并重启；仅刷新界面可能仍请求旧哈希地址。
-- **性能设置**：先使用高精度和适合显示器的帧率上限，再按实际帧时间调整。GTX 1060 / Ryzen 5 3600X / 1440p 90 FPS 是优化目标，尚无该硬件稳定达标保证。
+- **性能设置**：先使用高精度和适合显示器的帧率上限，再按实际流畅度调整。
 
 ## 校验与许可
 
 可用 `Get-FileHash 文件名 -Algorithm SHA256` 对照 Release 的 `SHA256SUMS.txt`。不要混用不同版本的 `.tgz` 与原生工具。
 
-主题代码及上游参考代码采用 MIT 许可；MiSans 使用单独许可，本文档与包内 `THIRD_PARTY_NOTICES.md`、`licenses/` 一并保留。现有 SVG 开场字形保留，发布版不含 Novecento 字体。此项目为非官方同人主题，与原 IP 所有者无隶属关系。
+主题代码及上游参考代码采用 MIT 许可；MiSans 使用单独许可，本文档与包内 `THIRD_PARTY_NOTICES.md`、`licenses/` 一并保留。此项目为非官方同人主题，与原 IP 所有者无隶属关系。
