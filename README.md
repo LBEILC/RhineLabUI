@@ -16,6 +16,10 @@ iPhone 可用 Safari 打开在线版，通过“分享 → 添加到主屏幕”
 
 [快速运行](#快速运行) · [界面与动效](#界面与动效) · [操作说明](#操作说明) · [源码与 Blender 工程下载](https://pan.quark.cn/s/762d9ee9dfc3) · [参考原 PV](https://www.bilibili.com/video/BV1rr4y1b7sz/)
 
+## DSH Desktop 衍生主题
+
+[RHINE Observatory · DSH 主题](integrations/dsh-rhine-theme/README.md) 将三维档案阵列、开场动画与专注阅读接入 DeepSeek Harness 的真实项目和会话。适配 Windows Desktop **0.2.0-rc.2**，提供独立源码、构建与发布脚本，以及[安装说明](integrations/dsh-rhine-theme/distribution/INSTALL.md)。DSH 适配由贡献者与 OpenAI Codex 协作完成，保留 RhineLabUI 的来源和许可。
+
 ## Wallpaper Engine 壁纸与独立仓库
 
 壁纸版已从本项目拆分为独立公共仓库，后续功能在 **[RhineLabWallpaper](https://github.com/LBEILC/RhineLabWallpaper)** 的 `main` 分支开发。本仓库继续维护网页版本；[原壁纸分支 codex/wallpaper-engine](https://github.com/LBEILC/RhineLabUI/tree/codex/wallpaper-engine) 保留迁移记录。需要最新壁纸源码，请前往独立仓库。

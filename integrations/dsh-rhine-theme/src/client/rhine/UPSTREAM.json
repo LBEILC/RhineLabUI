@@ -1,0 +1,184 @@
+{
+  "repository": "https://github.com/LBEILC/RhineLabUI",
+  "retrieved": "2026-10-02T16:22:22.101Z",
+  "adapters": [
+    "data.ts",
+    "asset-url.ts",
+    "viewport-layout.ts"
+  ],
+  "files": [
+    {
+      "file": "appearance.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/appearance.ts",
+      "sha256": "990ed15bed5206bfd8d27fd8be71639b0fb227d9a5a643cf8e78514534b8e053"
+    },
+    {
+      "file": "archive-drag.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/archive-drag.ts",
+      "sha256": "83497cc279508e936b4afd11950d07be2ce552f6a4c56228dd96e523d00c006e"
+    },
+    {
+      "file": "archive-lighting.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/archive-lighting.ts",
+      "sha256": "fc14af44039728419a0338770e13774697b6eea20ce61abc59e76b99f0c0d349"
+    },
+    {
+      "file": "archive-loop.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/archive-loop.ts",
+      "sha256": "90fd248f1651d340b674e103f96a58031581d79ac5ec622b902eeef54cfa2760"
+    },
+    {
+      "file": "archive-play-motion.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/archive-play-motion.ts",
+      "sha256": "f994dca369ebfe1d0470b4905d8d3d2a3cb28c6bfcb12287c2c107405d457144"
+    },
+    {
+      "file": "archive-visibility.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/archive-visibility.ts",
+      "sha256": "4ad9787d6c2d626b009de71425d9a771858c83fcd85dbbf0118e4d31e31c457d"
+    },
+    {
+      "file": "brand.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/brand.ts",
+      "sha256": "36f88bda7e6d92338245581613585a75c58982669a30a5751bf8f6614143525a"
+    },
+    {
+      "file": "decryption.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/decryption.ts",
+      "sha256": "e0ad3554df74d8b0cc8ca8e84f2084e842d60824a5b6177daea9b81804684ec1"
+    },
+    {
+      "file": "glass-reveal.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/glass-reveal.ts",
+      "sha256": "26a16d2b4ad9447390f53e0956b8691001e12182827e68a713e9cb40598db513"
+    },
+    {
+      "file": "instance-updates.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/instance-updates.ts",
+      "sha256": "d14f71822b6b1bd584e4cd7fe15c9b860f83de6b27e25bbad19061fba5b4d7b7"
+    },
+    {
+      "file": "internal-optics.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/internal-optics.ts",
+      "sha256": "51001ae8df1a5050fb14214058ff21e7a957b0dc5e97207eb8e87c6b2ffddc21"
+    },
+    {
+      "file": "motion-preferences.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/motion-preferences.ts",
+      "sha256": "ab770f511ed73ef1bc003ec1587e80c84024db4ba606b1bab2dc650669ead0ba"
+    },
+    {
+      "file": "motion.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/motion.ts",
+      "sha256": "60c4bbef70f34f69e36ff60aa631b3b88b2eb42a6e9b431b6af3c6fd69eb744e"
+    },
+    {
+      "file": "quality-renderer.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/quality-renderer.ts",
+      "sha256": "bc5604e0fb79182206ad929d8ac581615af365ed12dc2792e182f61ac9959128"
+    },
+    {
+      "file": "render-quality.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/render-quality.ts",
+      "sha256": "ca254f48e5e80afecd415892dcea877c398b989f9e9132a5ce56cbeb67cfc4f1"
+    },
+    {
+      "file": "render-state.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/render-state.ts",
+      "sha256": "119d72fa67a773ae9a063b11927b99c4692f178068e24ea66c90e343bcc1b57b"
+    },
+    {
+      "file": "scene.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/scene.ts",
+      "sha256": "b0a89e6b9767048cbd7541debf2aef8fad2a8c819596fe1474f4c2cf0d465e03"
+    },
+    {
+      "file": "shared-depth.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/shared-depth.ts",
+      "sha256": "72eb6d06d2478d69f4106d3d158f485ccce91cf3801395b308f4033763f48f42"
+    },
+    {
+      "file": "theme-material.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/theme-material.ts",
+      "sha256": "a43f7f65442984ff453c320e592125fab300abb032773a99e120cdfb40e1c9c7"
+    },
+    {
+      "file": "theme-motion.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/theme-motion.ts",
+      "sha256": "86cc0a73a159a39d9d3fadf26ccbe53dc009db1b8c910e0f2ea78afb9bbde2a9"
+    },
+    {
+      "file": "three-resources.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/three-resources.ts",
+      "sha256": "ed72853f717c28647a88e3c4206dbb6f7a9efa11ee8fdf240be0795516af754f"
+    },
+    {
+      "file": "boot-tracks.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/boot-tracks.ts",
+      "sha256": "3163389299c486367c1b96e3aca412501ed7093acbffba3266944feaeb90acc0"
+    },
+    {
+      "file": "boot-orbit-tracks.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/boot-orbit-tracks.ts",
+      "sha256": "ba21662b3c108701d63a169662d66845a302603a62c97e19e676823218abcf10"
+    },
+    {
+      "file": "boot-logo-tracks.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/boot-logo-tracks.ts",
+      "sha256": "3311a6cf99edefa4175ecd3d89c80f21a40f56551b9980fac4b1e17f5bb0df90"
+    },
+    {
+      "file": "boot-lettering-art.json",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/main/src/boot-lettering-art.json",
+      "sha256": "7445cb1596b024659de0e30e853f85cf2d9a13620487265f0792a673535c871e"
+    },
+    {
+      "file": "boot.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/boot.ts",
+      "sha256": "2d4f97c2d3fe0016add899a4c7c6f0f9e6ef352b70fbb048862fa1e699e210ea"
+    },
+    {
+      "file": "boot-motion.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/boot-motion.ts",
+      "sha256": "2619e517878efe49f4c3e5e4052dfdab11759e3b45e665b568c38d20e3dac2d4"
+    },
+    {
+      "file": "boot-lettering.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/boot-lettering.ts",
+      "sha256": "093309873c028a23bf9a5d4f3d383feecc4ccb416637cac78e44e2e333f57d6c"
+    },
+    {
+      "file": "boot-lettering.css",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/boot-lettering.css",
+      "sha256": "5354cc0e9d42e3918472a38ae6c1605d57f0b6df687ed5891c0f7c8dc472bc7b"
+    },
+    {
+      "file": "startup-markup.ts",
+      "source": "src/main.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/main.ts",
+      "sha256": "c80b2ad26548a49a0d7a5acc6d9312e44e082085546f7f855b53769ddafe57c4"
+    },
+    {
+      "file": "startup.css",
+      "source": "src/style.css",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/style.css",
+      "sha256": "eeb99078b8db32f3a0c0681c373cef137b8e117bff1a96a6c75a52f04e076794"
+    },
+    {
+      "file": "wallpaper-opening.ts",
+      "url": "https://raw.githubusercontent.com/LBEILC/RhineLabUI/129553bce3496f3826ef343b539ca46d25b94852/src/wallpaper-opening.ts",
+      "sha256": "37cf360ff8da4d88e356d2624a229a02dbddb84578a879e4b887525e9688dbfe"
+    }
+  ],
+  "startupIntegration": {
+    "date": "2026-10-04",
+    "commit": "129553bce3496f3826ef343b539ca46d25b94852",
+    "notes": "Original DOM/SVG boot controller and calibrated tracks; adapted local workspace text, theme colors, low-flash welcome, startup lifecycle and scoped CSS. Existing artwork/track assets retained."
+  },
+  "cinematicStartupIntegration": {
+    "date": "2026-10-04",
+    "source": "src/main.ts bootFrame + existing src/scene.ts cinematic update",
+    "boundary": "src/wallpaper-opening.ts ARRAY_OPENING_END = 25.9",
+    "handoff": "Preserve camera and blend final authored field into live archive over 1.2s; Esc retains 640ms quick path."
+  }
+}

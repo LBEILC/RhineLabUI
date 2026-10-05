@@ -1,0 +1,130 @@
+/* RhineLabUI's measured opening, isolated from host and theme selectors. */
+.rh-startup { position: absolute; inset: var(--rh-caption) 0 0; z-index: 70; overflow: hidden; isolation: isolate; background: var(--rh-paper); color: var(--rh-ink); }
+.rh-startup-stage { position: absolute; width: 1920px; height: 1080px; left: 50%; top: 50%; transform-origin: center; pointer-events: none; font-family: MiSans, sans-serif; }
+.rh-startup-stage *, .rh-startup-stage *::before, .rh-startup-stage *::after { box-sizing: border-box; animation: none; transition: none; }
+.rh-startup-stage .brand { position: absolute; left: 59px; top: 114px; z-index: 5; line-height: 1; user-select: none; width: 270px; white-space: nowrap; }
+.rh-startup-stage .brand h1 { font-size: 44px; letter-spacing: 2.324px; line-height: 48px; margin: 0; font-weight: 750; }
+.rh-startup-stage .brand > div { font-size: 19px; line-height: 23px; letter-spacing: .587px; font-weight: 600; }
+.rh-startup-stage .brand p { margin: 0; font-size: 35px; line-height: 40px; display: flex; justify-content: space-between; }
+.rh-startup-stage .brand p b { font-weight: 750; letter-spacing: 3px; }
+.rh-startup-stage .brand-analysis { position: relative; display: block; width: 189px; height: 40px; }
+.rh-startup-stage .brand-analysis > span { position: absolute; top: 0; letter-spacing: 0; font-kerning: none; }
+.rh-startup-stage .powered { position: absolute; right: 59px; bottom: 108px; font-size: 18px; z-index: 5; display: flex; align-items: center; gap: 5px; line-height: 24px; }
+.rh-startup-stage .powered b { font-weight: 750; }
+.rh-startup-stage .powered i { height: 6px; width: 25px; background: currentColor; margin-left: 11px; }
+.rh-startup-stage .boot-background { position: absolute; inset: 0; background: radial-gradient(ellipse at 51% 48%, color-mix(in srgb, var(--rh-paper) 82%, var(--rh-sheet)), var(--rh-paper) 76%); pointer-events: none; }
+.rh-startup-stage .boot-background svg { width: 100%; height: 100%; opacity: .15; filter: blur(2px); }
+.rh-startup-stage .boot { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.rh-startup-stage .boot-logo { position: absolute; width: 296px; height: 177px; left: 518px; top: 462px; opacity: 0; }
+.rh-startup-stage .boot-logo svg, .rh-startup-stage .welcome-logo svg { width: 100%; height: 100%; }
+.rh-startup-stage .auth-status { position: absolute; left: 931px; top: 527px; font-size: 21.35px; display: flex; align-items: center; gap: 10px; white-space: nowrap; opacity: 0; }
+.rh-startup-stage .auth-status > span:first-child { font-size: 14px; }
+.rh-startup-stage .auth-status i { display: none; }
+.rh-startup-stage .access-text { position: absolute; top: 532px; left: 800px; width: 480px; text-align: left; font-size: 18px; opacity: 0; }
+.rh-startup-stage .scan { position: absolute; inset: 0; width: 1920px; height: 1080px; opacity: 0; }
+.rh-startup-stage .scan svg { width: 100%; height: 100%; }
+.rh-startup-stage .scan > span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 22px; white-space: nowrap; }
+.rh-startup-stage .welcome { position: absolute; left: 720px; top: 403px; width: 480px; height: 340px; text-align: center; font-size: 55px; font-weight: 700; line-height: 1.05; opacity: 0; transform-origin: 50% 44%; }
+.rh-startup-stage .welcome-heading { position: relative; z-index: 1; line-height: 65px; font-size: 55px; white-space: nowrap; }
+.rh-startup-stage .welcome-panel { position: absolute; top: -59px; left: 5px; width: 470px; height: 392px; background: var(--rh-ink); }
+.rh-startup-stage .welcome-company { position: absolute; top: 67px; left: 35px; width: 410px; height: 60px; }
+.rh-startup-stage .welcome-company strong { display: block; position: absolute; inset: 0; padding: 5px 8px; background: transparent; color: var(--rh-ink); font-size: 48px; line-height: 50px; white-space: nowrap; letter-spacing: -.5px; }
+.rh-startup-stage .welcome-company .welcome-highlight { background: var(--rh-ink); color: var(--rh-sheet); }
+.rh-startup-stage .welcome-database { position: absolute; top: 134px; left: 0; width: 100%; font-size: 36px; line-height: 43px; white-space: nowrap; }
+.rh-startup-stage .welcome-logo { position: absolute; top: 187px; left: 138.5px; width: 203px; height: 121px; margin: 0; }
+.rh-startup-stage .boot-white { position: absolute; inset: 0; background: var(--rh-paper); opacity: 0; }
+.rh-startup-stage .boot-lettering-fallback { font-family: MiSans, sans-serif; }
+.rh-startup-skip { position: absolute; top: clamp(52px, 10.8vh, 150px); right: 3.2vw; display: flex; align-items: center; gap: 20px; padding: 12px 0; min-height: 44px; color: var(--rh-ink); background: transparent; border: 0; font: inherit; font-size: 13px; cursor: pointer; }
+.rh-startup-skip kbd { font: inherit; font-size: 11px; border: 1px solid var(--rh-line); padding: 3px 7px; }
+.rh-startup-skip:hover { color: var(--rh-accent); }
+.rh-startup-status { position: absolute; bottom: 3.2vh; left: 3.2vw; margin: 0; color: var(--rh-muted); font-size: 12px; }
+.rh-system-bar[data-startup='true'] { z-index: 85; }
+.rh-system-bar[data-startup='true'] .rh-system-open, .rh-system-bar[data-startup='true'] .rh-system-settings { visibility: hidden; }
+@media (prefers-reduced-motion: reduce), (forced-colors: active) { .rh-startup-stage { visibility: hidden; } }
+@media (forced-colors: active) { .rh-startup { background: Canvas; color: CanvasText; } .rh-startup-skip, .rh-startup-status { color: CanvasText; } }
+
+.rh-startup-stage .boot-phrase {
+  display: inline-flex;
+  height: 1em;
+  align-items: stretch;
+  vertical-align: -0.16em;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.rh-startup-stage .boot-phrase-letter {
+  position: relative;
+  display: block;
+  flex: 0 0 auto;
+  height: 1em;
+  margin-inline-end: var(--boot-phrase-tracking, 0px);
+}
+.rh-startup-stage .boot-font-letter::before {
+  content: attr(data-letter);
+  position: absolute;
+  left: 0;
+
+  top: -0.121em;
+  font-family: var(--boot-webfont-family);
+  font-size: inherit;
+  font-weight: 400;
+  font-style: normal;
+  font-synthesis: none;
+  font-kerning: none;
+  line-height: 1;
+  white-space: pre;
+}
+.rh-startup-stage .boot-phrase-letter:last-child { margin-inline-end: 0; }
+.rh-startup-stage .boot-phrase[hidden], .rh-startup-stage .boot-phrase-letter[hidden] { display: none; }
+.rh-startup-stage .boot-phrase svg.boot-letter-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: currentColor;
+}
+.rh-startup-stage .boot-phrase-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: pre;
+}
+.rh-startup-stage .boot-lettering-fallback > .boot-phrase-label {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip-path: none;
+}
+.rh-startup-stage #auth-message { --boot-phrase-tracking: -0.00909em; }
+.rh-startup-stage .auth-status { top: 527px; gap: 10px; font-size: 21.35px; }
+.rh-startup-stage .welcome-company { --boot-phrase-tracking: -0.5px; }
+.rh-startup-stage .brand h1 {
+  position: relative;
+  height: 48px;
+  font-size: 50.75px;
+  letter-spacing: 0;
+  --boot-phrase-tracking: 1px;
+}
+.rh-startup-stage .brand h1 > .boot-phrase {
+  position: absolute;
+  left: 0;
+  top: 1.425px;
+}
+.rh-startup-stage [data-layout="opening"][data-opening-portrait="true"] .scan > span {
+  --boot-phrase-tracking: 1px !important;
+}
+
+
+/* Full playback exposes the original 3D shot; quick skip retains the old fade.
+   The UI progress is written as inline opacity on the workspace elements from
+   StartupSequence, so playback never invalidates styles across the document. */
+.rh-startup[data-transparent='true'] { background: transparent; }
+.rh-startup-pending { position: absolute; inset: var(--rh-caption) 0 0; z-index: 70; background: var(--rh-paper); }
+.rh-preferences .rh-startup-setting-hint { margin: 4px 0 14px; color: var(--rh-muted); font-size: 12px; line-height: 1.6; }
+@media (forced-colors: active) { .rh-startup-pending { background: Canvas; } .rh-preferences .rh-startup-setting-hint { color: CanvasText; } }
+
+/* Keep the added preference reachable on shorter windowed displays. */
+.rh-quick-settings { max-height: calc(100dvh - var(--rh-caption) - 13vh - 24px); overflow-y: auto; overscroll-behavior: contain; }

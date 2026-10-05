@@ -1,0 +1,39 @@
+name: DSH theme
+
+on:
+  pull_request:
+    paths:
+      - 'integrations/dsh-rhine-theme/**'
+      - '.github/workflows/dsh-theme.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'integrations/dsh-rhine-theme/**'
+      - '.github/workflows/dsh-theme.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: integrations/dsh-rhine-theme
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: integrations/dsh-rhine-theme/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run release
+      - run: node scripts/verify-release.mjs releases/1.0.0/dsh-rhine-theme-1.0.0-windows.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dsh-rhine-theme-windows
+          path: integrations/dsh-rhine-theme/releases/1.0.0/*
+          if-no-files-found: error
