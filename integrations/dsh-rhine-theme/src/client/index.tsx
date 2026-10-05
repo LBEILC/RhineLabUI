@@ -84,7 +84,9 @@ export function apply(ctx: Context): void {
     const clear = () => { restore?.(); restore = undefined; document.body.removeAttribute('data-rhine'); document.body.removeAttribute('data-rhine-motion'); clearTokens?.(); clearTokens = undefined; void setDesktopScene(false) }
     const scheme = () => { if (clearTokens) document.body.dataset.rhine = ctx.theme.getTheme().active.colorScheme }
     const adopt = () => {
-      const preference = resolvePreferences(scope.getSnapshot().value)
+      const snapshot = scope.getSnapshot()
+      if (snapshot.status !== 'ready') { publish(); return }
+      const preference = resolvePreferences(snapshot.value)
       if (preference.enabled) {
         if (!clearTokens) clearTokens = ctx.theme.overrideTokens(NAMESPACE, TOKENS)
         scheme(); document.body.dataset.rhineMotion = preference.motion
@@ -99,6 +101,11 @@ export function apply(ctx: Context): void {
           } catch (error) { for (const fn of disposers.reverse()) fn(); clear(); throw error }
           restore = () => { for (const fn of disposers.toReversed()) fn() }
         }
+      } else if (restore) {
+        // This host keeps mounted slot bindings alive during registry updates.
+        // Reload from the saved disabled preference before revoking their contracts.
+        window.location.reload()
+        return
       } else clear()
       publish()
     }
