@@ -12,6 +12,7 @@ import {
   resizeQuality,
 } from "./quality-renderer";
 import { fullMotion, type MotionPreferences } from "./motion-preferences";
+import { inputDevice, onInputDevice } from "./gamepad";
 
 const PARTS = [
   { id: "fasteners", label: "紧固件", en: "FASTENERS", depth: 2.75 },
@@ -27,10 +28,16 @@ const PARTS = [
   { id: "carrier", label: "背板与框架", en: "CARRIER", depth: -2.05 },
 ] as const;
 
-type ModelSource = { model: THREE.Group; dispose: () => void; setClarity?: (value: number) => void };
+type ModelSource = {
+  model: THREE.Group;
+  dispose: () => void;
+  setClarity?: (value: number) => void;
+};
 export class ModelViewer {
   private themeAmount = 0;
-  setTheme(value: number) { this.themeAmount = value; }
+  setTheme(value: number) {
+    this.themeAmount = value;
+  }
   readonly root: HTMLElement;
   private canvasHost: HTMLElement;
   private renderer: THREE.WebGLRenderer;
@@ -38,6 +45,7 @@ export class ModelViewer {
   private quality = normalizeQuality(undefined);
   private superPerformance = false;
   dispose() {
+    this.disposeDeviceListener?.();
     this.request++;
     if (this.isOpen) this.finishClose();
     this.controls.dispose();
@@ -72,6 +80,7 @@ export class ModelViewer {
   private loading = false;
   private closing = false;
   private transitions: Animation[] = [];
+  private disposeDeviceListener?: () => void;
   private modelTransition?: Animation;
   private transitionId = 0;
   private status = "";
@@ -114,6 +123,7 @@ export class ModelViewer {
       </footer>
       <div class="viewer-state" aria-live="polite">已组装</div>`;
     parent.appendChild(this.root);
+    this.disposeDeviceListener = onInputDevice(() => this.updateHelp());
     this.canvasHost = this.root.querySelector(".viewer-canvas")!;
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -189,14 +199,18 @@ export class ModelViewer {
   setMotion(value: MotionPreferences) {
     this.motion = { ...value };
     this.reduced = !value.viewerNavigation;
-    this.root.dataset.motionModel = value.viewerModelTransition ? "full" : "reduced";
-    this.root.dataset.motionSurface = value.surfaceTransitions ? "full" : "reduced";
+    this.root.dataset.motionModel = value.viewerModelTransition
+      ? "full"
+      : "reduced";
+    this.root.dataset.motionSurface = value.surfaceTransitions
+      ? "full"
+      : "reduced";
     if (!value.surfaceTransitions && this.isOpen) {
       // Settle the current lifecycle synchronously and invalidate its callbacks.
       this.transitionId++;
       if (this.closing) this.finishClose();
       else {
-        this.transitions.forEach(animation => animation.cancel());
+        this.transitions.forEach((animation) => animation.cancel());
         this.transitions = [];
         this.root.dataset.transition = "open";
       }
@@ -422,9 +436,14 @@ export class ModelViewer {
   private setSurface(clear: boolean) {
     this.targetClarity = clear ? 1 : 0;
     this.root.dataset.surface = clear ? "clear" : "frosted";
-    this.root.querySelector('[data-viewer="clear"]')!.setAttribute("aria-pressed", String(clear));
-    this.root.querySelector('[data-viewer="frosted"]')!.setAttribute("aria-pressed", String(!clear));
-    if (!this.motion.viewerModelTransition) this.clarity = { value: this.targetClarity, velocity: 0 };
+    this.root
+      .querySelector('[data-viewer="clear"]')!
+      .setAttribute("aria-pressed", String(clear));
+    this.root
+      .querySelector('[data-viewer="frosted"]')!
+      .setAttribute("aria-pressed", String(!clear));
+    if (!this.motion.viewerModelTransition)
+      this.clarity = { value: this.targetClarity, velocity: 0 };
   }
   private setExploded(value: boolean) {
     this.targetSpread = value ? 1 : 0;
@@ -438,7 +457,8 @@ export class ModelViewer {
     this.setStatus(
       value ? "正在拆解" : this.spread.value > 0.001 ? "正在重组" : "已组装",
     );
-    if (!this.motion.viewerModelTransition) this.spread = { value: this.targetSpread, velocity: 0 };
+    if (!this.motion.viewerModelTransition)
+      this.spread = { value: this.targetSpread, velocity: 0 };
   }
   private setStatus(value: string) {
     if (value !== this.status) {
@@ -572,25 +592,39 @@ export class ModelViewer {
     this.camera.updateProjectionMatrix();
     this.controlCamera.aspect = this.camera.aspect;
     this.controlCamera.updateProjectionMatrix();
+    this.updateHelp();
+  }
+
+  private updateHelp() {
     const touch = matchMedia("(pointer: coarse)").matches;
     const help = this.root.querySelector(".viewer-help")!;
-    help.innerHTML = touch
-      ? "<span>单指旋转</span><span>双指缩放 / 平移</span>"
-      : "<span>拖动旋转</span><span>↑ ↓ ← → 平移</span><span>滚轮缩放</span>";
+    help.innerHTML =
+      inputDevice() === "gamepad"
+        ? "<span>LS · DP 平移</span><span>Y 复位视角</span><span>LB · RB 选择操作 / A 确认 / B 返回</span>"
+        : touch
+          ? "<span>单指旋转</span><span>双指缩放 / 平移</span>"
+          : "<span>拖动旋转</span><span>↑ ↓ ← → 平移</span><span>滚轮缩放</span>";
   }
 
   update(time: number) {
     if (!this.isOpen) return;
     themeEnvironment(this.scene, this.renderer, this.themeAmount);
-    this.source?.model.traverse(child => { if (child.userData.themeAmount) child.userData.themeAmount.value = this.themeAmount; });
+    this.source?.model.traverse((child) => {
+      if (child.userData.themeAmount)
+        child.userData.themeAmount.value = this.themeAmount;
+    });
     const dt = Math.min(this.lastTime ? time - this.lastTime : 1 / 60, 0.05);
     this.lastTime = time;
     if (this.source) {
       damp(this.clarity, this.targetClarity, 8, dt);
-      if (Math.abs(this.clarity.value - this.targetClarity) < .0001 && Math.abs(this.clarity.velocity) < .001)
+      if (
+        Math.abs(this.clarity.value - this.targetClarity) < 0.0001 &&
+        Math.abs(this.clarity.velocity) < 0.001
+      )
         this.clarity = { value: this.targetClarity, velocity: 0 };
       this.source.setClarity?.(this.clarity.value);
-      if (this.motion.viewerModelTransition) damp(this.spread, this.targetSpread, 5.5, dt);
+      if (this.motion.viewerModelTransition)
+        damp(this.spread, this.targetSpread, 5.5, dt);
       else this.spread = { value: this.targetSpread, velocity: 0 };
       if (
         Math.abs(this.spread.value - this.targetSpread) < 0.0001 &&
@@ -610,8 +644,13 @@ export class ModelViewer {
       dt,
       this.reduced,
     );
-    const portrait = this.root.closest<HTMLElement>("[data-layout]")?.dataset.layout === "portrait";
-    const zoom = portrait ? Math.min(1.15, this.camera.aspect / 0.85) / (1 + 0.08 * this.spread.value) : 1;
+    const portrait =
+      this.root.closest<HTMLElement>("[data-layout]")?.dataset.layout ===
+      "portrait";
+    const zoom = portrait
+      ? Math.min(1.15, this.camera.aspect / 0.85) /
+        (1 + 0.08 * this.spread.value)
+      : 1;
     if (this.camera.zoom !== zoom) {
       this.camera.zoom = zoom;
       this.controlCamera.zoom = zoom;

@@ -4,7 +4,12 @@ import { DocumentDecryption } from "./document-decryption";
 import "./document-decryption.css";
 import "./decryption.css";
 import { escapeHtml } from "./html";
-import { normalizeQuality, qualityPresets, type QualityPreset, type RenderQuality } from "./render-quality";
+import {
+  normalizeQuality,
+  qualityPresets,
+  type QualityPreset,
+  type RenderQuality,
+} from "./render-quality";
 import { qualityMarkup, syncQualityUI } from "./quality-settings";
 import { superPerformanceQuality, wallpaperQuality } from "./wallpaper-quality";
 import "@kitlangton/rolling-number/styles.css";
@@ -14,7 +19,10 @@ import "./responsive.css";
 import { viewportLayout, openingLayout } from "./viewport-layout";
 import { assetUrl } from "./asset-url";
 import { initPwa, pwaSettingsMarkup } from "./pwa";
-import { createRollingNumber, createRollingText } from "@kitlangton/rolling-number";
+import {
+  createRollingNumber,
+  createRollingText,
+} from "@kitlangton/rolling-number";
 import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
 import { ContentTransition, SurfaceTransition } from "./ui-transitions";
@@ -43,7 +51,12 @@ import {
   type StoredMotion,
 } from "./motion-preferences";
 import { StartupGate } from "./startup";
-import { isWallpaper, wallpaperHost, wallpaperFrame, type WallpaperProperties } from "./wallpaper";
+import {
+  isWallpaper,
+  wallpaperHost,
+  wallpaperFrame,
+  type WallpaperProperties,
+} from "./wallpaper";
 import "./startup.css";
 import "./wallpaper.css";
 import { Workbench } from "./workbench";
@@ -54,6 +67,7 @@ import { paintTheme, themeSettingsMarkup } from "./theme-ui";
 let playground: ArchivePlayground | undefined;
 import { WallpaperEffects } from "./wallpaper-effects";
 import { WallpaperBackground } from "./wallpaper-background";
+import { enableGamepad, isGamepadEvent, onInputDevice } from "./gamepad";
 let wallpaperEffects: WallpaperEffects | undefined;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
@@ -94,7 +108,7 @@ $("#stage").innerHTML = `
     <article id="detail-content" class="detail-content"></article>
   </section>
   <div class="powered">POWERED BY <b>RHINE LAB</b><i></i></div>
-  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED${isWallpaper ? '<button type="button" class="three-toggle" data-action="toggle-three" aria-pressed="true" title="卸载三维模型，保留 2D 界面">3D 开启</button>' : ''}</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
+  <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED${isWallpaper ? '<button type="button" class="three-toggle" data-action="toggle-three" aria-pressed="true" title="卸载三维模型，保留 2D 界面">3D 开启</button>' : ""}</span><span>JOYCE MOORE <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="pwa-update-notice" class="pwa-update-notice" role="status" hidden><span>新版本已就绪</span><button data-pwa-action="update">更新并重启 ↻</button></div>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
   <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO INTERNAL DATABASE</span><i></i></div>
@@ -105,7 +119,10 @@ $("#boot-background").insertAdjacentHTML(
   '<div class="boot-white"></div>',
 );
 const bootSequence = new BootSequence($("#stage"));
-$("#viewport").insertAdjacentHTML("beforeend", '<button class="mobile-entry" data-action="skip">进入档案 <span>→</span></button>');
+$("#viewport").insertAdjacentHTML(
+  "beforeend",
+  '<button class="mobile-entry" data-action="skip">进入档案 <span>→</span></button>',
+);
 
 type Mode = "boot" | "archive" | "detail";
 let mode: Mode = "boot",
@@ -139,7 +156,12 @@ if (reviewParams.get("review") === "1") {
 }
 let toastTimer: ReturnType<typeof setTimeout>;
 let previousFocus: HTMLElement | null = null;
-const detailTransition = new SurfaceTransition($("#detail-ui"), undefined, 180, 180);
+const detailTransition = new SurfaceTransition(
+  $("#detail-ui"),
+  undefined,
+  180,
+  180,
+);
 const tabTransition = new ContentTransition();
 let modalTransition: SurfaceTransition | undefined;
 let modalClosing = false;
@@ -154,28 +176,47 @@ function readLocal<T>(key: string, fallback: T): T {
   }
 }
 const saved = new Set<string>(readLocal<string[]>("rhine-saved", []));
-const storedPrefs = readLocal<Partial<{ sound: boolean; music: boolean; soundVolume: number; musicVolume: number; reduced: boolean; quality: boolean; rendering: RenderQuality; superPerformance: boolean; colorTheme: "light" | "dark"; motion: StoredMotion; motionPreset: MotionPreset }>>("rhine-settings", {});
+const storedPrefs = readLocal<
+  Partial<{
+    sound: boolean;
+    music: boolean;
+    soundVolume: number;
+    musicVolume: number;
+    reduced: boolean;
+    quality: boolean;
+    rendering: RenderQuality;
+    superPerformance: boolean;
+    colorTheme: "light" | "dark";
+    motion: StoredMotion;
+    motionPreset: MotionPreset;
+  }>
+>("rhine-settings", {});
 const initialMotion = createMotionPreferences(
   storedPrefs.motion,
-  storedPrefs.reduced ?? (storedPrefs.motion === undefined
-    ? matchMedia("(prefers-reduced-motion: reduce)").matches
-    : undefined),
+  storedPrefs.reduced ??
+    (storedPrefs.motion === undefined
+      ? matchMedia("(prefers-reduced-motion: reduce)").matches
+      : undefined),
 );
 const initialMotionPreset = motionPresetFor(initialMotion);
 const prefs = {
   sound: storedPrefs.sound ?? true,
   music: storedPrefs.music ?? storedPrefs.sound ?? true,
-  soundVolume: storedPrefs.soundVolume ?? .55,
-  musicVolume: storedPrefs.musicVolume ?? .5,
+  soundVolume: storedPrefs.soundVolume ?? 0.55,
+  musicVolume: storedPrefs.musicVolume ?? 0.5,
   motion: initialMotion,
   motionPreset: initialMotionPreset,
   quality: storedPrefs.quality ?? true,
   superPerformance: storedPrefs.superPerformance ?? false,
-  rendering: normalizeQuality(storedPrefs.rendering, storedPrefs.quality !== false),
+  rendering: normalizeQuality(
+    storedPrefs.rendering,
+    storedPrefs.quality !== false,
+  ),
   colorTheme: storedPrefs.colorTheme === "dark" ? "dark" : "light",
 };
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
-const motionIsReduced = () => Object.values(prefs.motion).every((value) => !value);
+const motionIsReduced = () =>
+  Object.values(prefs.motion).every((value) => !value);
 paintTheme(prefs.colorTheme === "dark" ? 1 : 0);
 const rollingMotion = {
   duration: 460,
@@ -215,7 +256,10 @@ const columnTitle = createRollingText($("#column-name"), {
   ...textOptions,
   text: $("#column-name").textContent ?? "",
 });
-const hoverTitle = createRollingText($("#hover-title"), { ...textOptions, text: "" });
+const hoverTitle = createRollingText($("#hover-title"), {
+  ...textOptions,
+  text: "",
+});
 const categoryTitle = createRollingText($("#archive-category"), {
   ...textOptions,
   text: $("#archive-category").textContent ?? "",
@@ -224,14 +268,25 @@ const clearanceTitle = createRollingText($("#selected-clearance"), {
   ...textOptions,
   text: $("#selected-clearance").textContent ?? "",
 });
-const rollingTitles = [selectionTitle, columnTitle, hoverTitle, categoryTitle, clearanceTitle];
+const rollingTitles = [
+  selectionTitle,
+  columnTitle,
+  hoverTitle,
+  categoryTitle,
+  clearanceTitle,
+];
 const selectedCode = createRollingNumber($("#selected-code"), codeOptions);
 const hoverCode = createRollingNumber($("#hover-code"), codeOptions);
 const audio = new TerminalAudio();
 let musicSuppressed = false;
-function configureAudio() { audio.configure({ ...prefs, music: prefs.music && !musicSuppressed }); }
+function configureAudio() {
+  audio.configure({ ...prefs, music: prefs.music && !musicSuppressed });
+}
 configureAudio();
-const reviewEntry = reviewParams.has("scene") || reviewParams.has("time") || reviewParams.get("review") === "1";
+const reviewEntry =
+  reviewParams.has("scene") ||
+  reviewParams.has("time") ||
+  reviewParams.get("review") === "1";
 let started = false;
 const loading = $("#loading");
 // The entry screen uses the actual viewport, including portrait phones; the
@@ -239,17 +294,24 @@ const loading = $("#loading");
 $("#viewport").append(loading);
 $("#stage").inert = true;
 $(".mobile-entry").inert = true;
-const entry = !isWallpaper && !reviewEntry && (prefs.sound || prefs.music) ? new StartupGate({
-  root: loading,
-  unlock: () => audio.unlock(),
-  cancel: () => audio.cancelEntry(),
-  start: silent => completeStartup(silent),
-}) : undefined;
+const entry =
+  !isWallpaper && !reviewEntry && (prefs.sound || prefs.music)
+    ? new StartupGate({
+        root: loading,
+        unlock: () => audio.unlock(),
+        cancel: () => audio.cancelEntry(),
+        start: (silent) => completeStartup(silent),
+      })
+    : undefined;
 if (entry) {
   audio.holdForEntry();
-  if (prefs.music) void audio.prepareMusic().catch(() => { /* Entry offers retry. */ });
+  if (prefs.music)
+    void audio.prepareMusic().catch(() => {
+      /* Entry offers retry. */
+    });
 }
-let audioPreview = false, audioPreviewRequest = 0;
+let audioPreview = false,
+  audioPreviewRequest = 0;
 let scene: ArchiveScene | undefined;
 let threeState: "on" | "closing" | "off" | "loading" = "on";
 let resumeCell: { lane: number; row: number } | undefined;
@@ -269,12 +331,22 @@ function saveAudioPrefs() {
   } catch {}
   configureAudio();
 }
-function superPerformanceEnabled() { return isWallpaper ? wallpaperHost()?.properties.superperformance?.value === true : prefs.superPerformance; }
-function effectiveRenderQuality() { return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering; }
+function superPerformanceEnabled() {
+  return isWallpaper
+    ? wallpaperHost()?.properties.superperformance?.value === true
+    : prefs.superPerformance;
+}
+function effectiveRenderQuality() {
+  return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering;
+}
 function savePrefs() {
   saveAudioPrefs();
-  if (!motionActive("rollingText")) rollingTitles.forEach(title => title.finish());
-  if (!motionActive("rollingNumbers")) [fileCounter, columnCounter, selectedCode, hoverCode].forEach(counter => counter.finish());
+  if (!motionActive("rollingText"))
+    rollingTitles.forEach((title) => title.finish());
+  if (!motionActive("rollingNumbers"))
+    [fileCounter, columnCounter, selectedCode, hoverCode].forEach((counter) =>
+      counter.finish(),
+    );
   if (!motionActive("surfaceTransitions")) {
     detailTransition.finish();
     modalTransition?.finish();
@@ -282,8 +354,18 @@ function savePrefs() {
     bookmarkFeedback?.cancel();
   }
   scene?.setMotion(prefs.motion);
-  scene?.setTheme(prefs.colorTheme === "dark", !motionActive("surfaceTransitions") || !started);
-  document.querySelectorAll<HTMLElement>("[data-color-theme]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.colorTheme === prefs.colorTheme)));
+  scene?.setTheme(
+    prefs.colorTheme === "dark",
+    !motionActive("surfaceTransitions") || !started,
+  );
+  document
+    .querySelectorAll<HTMLElement>("[data-color-theme]")
+    .forEach((button) =>
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.colorTheme === prefs.colorTheme),
+      ),
+    );
   scene?.setSuperPerformance(superPerformanceEnabled());
   viewer?.setSuperPerformance(superPerformanceEnabled());
   scene?.setQuality(effectiveRenderQuality());
@@ -291,13 +373,28 @@ function savePrefs() {
   viewer?.setMotion(prefs.motion);
   syncQualityUI(prefs.rendering);
   updateQualitySummary();
-  fileCounter.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
-  rollingTitles.forEach(title => title.update({ animated: motionActive("rollingText") && mode === "archive" }));
-  columnCounter.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
-  selectedCode.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
-  hoverCode.update({ animated: motionActive("rollingNumbers") && mode === "archive" });
+  fileCounter.update({
+    animated: motionActive("rollingNumbers") && mode === "archive",
+  });
+  rollingTitles.forEach((title) =>
+    title.update({
+      animated: motionActive("rollingText") && mode === "archive",
+    }),
+  );
+  columnCounter.update({
+    animated: motionActive("rollingNumbers") && mode === "archive",
+  });
+  selectedCode.update({
+    animated: motionActive("rollingNumbers") && mode === "archive",
+  });
+  hoverCode.update({
+    animated: motionActive("rollingNumbers") && mode === "archive",
+  });
   $("#stage").classList.toggle("reduce-motion", motionIsReduced());
-  $("#stage").classList.toggle("reduce-surfaces", !motionActive("surfaceTransitions"));
+  $("#stage").classList.toggle(
+    "reduce-surfaces",
+    !motionActive("surfaceTransitions"),
+  );
   workbench?.setMotion(prefs.motion);
   updateFooterClock(new Date(), motionActive("rollingNumbers"));
   syncWallpaperBackground();
@@ -307,30 +404,54 @@ function fit() {
   const stage = $("#stage");
   const viewport = $("#viewport");
   const coarse = matchMedia("(pointer: coarse)").matches;
-  const reference = reviewParams.has("time") || reviewParams.get("review") === "1";
-  const { width, height, scale, kind } = mode === "boot" && !reference
-    ? openingLayout(viewport.clientWidth, viewport.clientHeight)
-    : viewportLayout(viewport.clientWidth, viewport.clientHeight, coarse, mode === "boot");
+  const reference =
+    reviewParams.has("time") || reviewParams.get("review") === "1";
+  const { width, height, scale, kind } =
+    mode === "boot" && !reference
+      ? openingLayout(viewport.clientWidth, viewport.clientHeight)
+      : viewportLayout(
+          viewport.clientWidth,
+          viewport.clientHeight,
+          coarse,
+          mode === "boot",
+        );
   stage.style.width = `${width}px`;
   stage.style.height = `${height}px`;
   stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
   stage.dataset.layout = kind;
   stage.dataset.touch = String(coarse);
-  viewport.dataset.mobileBoot = String(mode === "boot" && (coarse || viewport.clientWidth < 1100));
+  viewport.dataset.mobileBoot = String(
+    mode === "boot" && (coarse || viewport.clientWidth < 1100),
+  );
   stage.style.setProperty("--stage-scale", String(scale));
   stage.style.setProperty("--opening-width", `${width}px`);
   stage.style.setProperty("--opening-height", `${height}px`);
-  stage.style.setProperty("--opening-scan-scale", String(Math.min(1, width / 1920)));
+  stage.style.setProperty(
+    "--opening-scan-scale",
+    String(Math.min(1, width / 1920)),
+  );
   stage.dataset.openingPortrait = String(width < height);
   // The software keyboard resizes dialogs without recomposing the 3D scene.
   const visible = window.visualViewport;
   const stageTop = (viewport.clientHeight - height * scale) / 2;
-  stage.style.setProperty("--modal-top", `${Math.max(0, (visible?.offsetTop ?? 0) - stageTop) / scale}px`);
-  stage.style.setProperty("--modal-height", `${Math.min(height, (visible?.height ?? viewport.clientHeight) / scale)}px`);
+  stage.style.setProperty(
+    "--modal-top",
+    `${Math.max(0, (visible?.offsetTop ?? 0) - stageTop) / scale}px`,
+  );
+  stage.style.setProperty(
+    "--modal-height",
+    `${Math.min(height, (visible?.height ?? viewport.clientHeight) / scale)}px`,
+  );
   $("#viewport").style.setProperty("--scale", String(scale));
   const marks = document.querySelector("#inspection-marks");
   marks?.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  const layoutKey = JSON.stringify([width, height, scale, kind, devicePixelRatio]);
+  const layoutKey = JSON.stringify([
+    width,
+    height,
+    scale,
+    kind,
+    devicePixelRatio,
+  ]);
   if (layoutKey !== previousLayout) {
     previousLayout = layoutKey;
     scene?.resize();
@@ -340,9 +461,12 @@ function fit() {
   // Re-measure line covers and tab underline after wrapping changes.
   requestAnimationFrame(() => {
     documentDecryption.refresh();
-    const tab = document.querySelector<HTMLElement>(".detail-tabs button.active");
+    const tab = document.querySelector<HTMLElement>(
+      ".detail-tabs button.active",
+    );
     const indicator = document.querySelector<HTMLElement>(".tab-indicator");
-    if (tab && indicator) indicator.style.transform = `translateX(${tab.offsetLeft}px) scaleX(${tab.offsetWidth})`;
+    if (tab && indicator)
+      indicator.style.transform = `translateX(${tab.offsetLeft}px) scaleX(${tab.offsetWidth})`;
   });
 }
 window.addEventListener("resize", fit);
@@ -351,18 +475,22 @@ window.visualViewport?.addEventListener("scroll", fit);
 matchMedia("(pointer: coarse)").addEventListener("change", fit);
 fit();
 $("#file-ticks").innerHTML = columnFiles(fileLocation(selected).lane)
-  .map(
-    (index) => `<button data-select="${index}"></button>`,
-  )
+  .map((index) => `<button data-select="${index}"></button>`)
   .join("");
-const fileTicks = [...$("#file-ticks").querySelectorAll<HTMLButtonElement>("button")];
+const fileTicks = [
+  ...$("#file-ticks").querySelectorAll<HTMLButtonElement>("button"),
+];
 
 function setMode(next: Mode) {
   if (workbench?.enabled && next === "detail") next = "archive";
   const previousMode = mode;
-  rollingTitles.forEach(title => title.update({ animated: motionActive("rollingText") && next === "archive" }));
+  rollingTitles.forEach((title) =>
+    title.update({
+      animated: motionActive("rollingText") && next === "archive",
+    }),
+  );
   if (next !== "archive") {
-    rollingTitles.forEach(title => title.finish());
+    rollingTitles.forEach((title) => title.finish());
     hoverCode.finish();
     $("#hover-label").hidden = true;
   }
@@ -380,17 +508,28 @@ function setMode(next: Mode) {
   if (previousMode !== next) fit();
   $("#boot").inert = next !== "boot";
   $("#boot").setAttribute("aria-hidden", String(next !== "boot"));
-  $("#archive-ui").inert = next !== "archive" || Boolean(modal) || Boolean(workbench?.enabled);
-  $("#archive-ui").setAttribute("aria-hidden", String(next !== "archive" || Boolean(workbench?.enabled)));
+  $("#archive-ui").inert =
+    next !== "archive" || Boolean(modal) || Boolean(workbench?.enabled);
+  $("#archive-ui").setAttribute(
+    "aria-hidden",
+    String(next !== "archive" || Boolean(workbench?.enabled)),
+  );
   $(".system-nav").inert = next === "boot" || Boolean(modal);
   $(".system-footer").inert = next === "boot" || Boolean(modal);
   if (next === "detail") {
-    if (previousMode !== "detail") detailTransition.show(!motionActive("surfaceTransitions"));
-  } else if (previousMode === "detail" || (next === "boot" && !$("#detail-ui").hidden)) {
+    if (previousMode !== "detail")
+      detailTransition.show(!motionActive("surfaceTransitions"));
+  } else if (
+    previousMode === "detail" ||
+    (next === "boot" && !$("#detail-ui").hidden)
+  ) {
     pendingDetailFocus = false;
     tabTransition.cancel();
-    detailTransition.hide(!motionActive("surfaceTransitions") || next === "boot");
-    if (!modal && next === "archive") $(".read-file").focus({ preventScroll: true });
+    detailTransition.hide(
+      !motionActive("surfaceTransitions") || next === "boot",
+    );
+    if (!modal && next === "archive")
+      $(".read-file").focus({ preventScroll: true });
   }
   $("#detail-ui").inert = next !== "detail" || Boolean(modal);
   scene?.setMode(next === "boot" ? "hidden" : next);
@@ -416,8 +555,12 @@ function select(index: number, navigation?: ArchiveNavigation) {
   activeTab = "overview";
   scene?.select(selected, navigation);
   updateSelection(navigation);
-  const columnMove = navigation && "axis" in navigation && navigation.axis === "lane";
-  audio.play(columnMove ? "column" : "tick", columnMove ? navigation.direction * .45 : 0);
+  const columnMove =
+    navigation && "axis" in navigation && navigation.axis === "lane";
+  audio.play(
+    columnMove ? "column" : "tick",
+    columnMove ? navigation.direction * 0.45 : 0,
+  );
 }
 function stepFile(direction: number) {
   const files = columnFiles(fileLocation(selected).lane);
@@ -436,9 +579,18 @@ function updateSelection(navigation?: ArchiveNavigation) {
   const r = records[selected];
   const { lane } = fileLocation(selected);
   const files = columnFiles(lane);
-  selectionTitle.update({ text: r.title, animated: motionActive("rollingText") && mode === "archive" });
-  clearanceTitle.update({ text: r.clearance, animated: motionActive("rollingText") && mode === "archive" });
-  categoryTitle.update({ text: r.category, animated: motionActive("rollingText") && mode === "archive" });
+  selectionTitle.update({
+    text: r.title,
+    animated: motionActive("rollingText") && mode === "archive",
+  });
+  clearanceTitle.update({
+    text: r.clearance,
+    animated: motionActive("rollingText") && mode === "archive",
+  });
+  categoryTitle.update({
+    text: r.category,
+    animated: motionActive("rollingText") && mode === "archive",
+  });
   const direction =
     navigation && "axis" in navigation
       ? navigation.direction > 0
@@ -467,11 +619,15 @@ function updateSelection(navigation?: ArchiveNavigation) {
         ? direction
         : "auto",
   });
-  columnTitle.update({ text: archiveColumns[lane], animated: motionActive("rollingText") && mode === "archive" });
+  columnTitle.update({
+    text: archiveColumns[lane],
+    animated: motionActive("rollingText") && mode === "archive",
+  });
   $<HTMLButtonElement>('[data-action="column-prev"]').disabled = false;
   $<HTMLButtonElement>('[data-action="column-next"]').disabled = false;
   fileTicks.forEach((button, slot) => {
-    const index = files[slot], record = records[index];
+    const index = files[slot],
+      record = records[index];
     button.dataset.select = String(index);
     button.setAttribute("aria-label", `选择档案 ${record.id} ${record.title}`);
     button.title = `${record.id} · ${record.title}`;
@@ -512,14 +668,17 @@ function toggleSaved() {
   $("#saved-count").textContent = String(saved.size).padStart(2, "0");
   const button = $<HTMLButtonElement>('[data-action="bookmark"]');
   const added = saved.has(id);
-  button.firstChild!.textContent = added ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE";
+  button.firstChild!.textContent = added
+    ? "− REMOVE FROM SAVED"
+    : "＋ SAVE ARCHIVE";
   button.querySelector("span")!.textContent = added ? "已收藏" : "收藏档案";
   button.setAttribute("aria-pressed", String(added));
   bookmarkFeedback?.cancel();
-  if (motionActive("surfaceTransitions")) bookmarkFeedback = button.animate(
-    [{ backgroundColor: "#67634c" }, { backgroundColor: "#252820" }],
-    { duration: 220, easing: "ease-out" },
-  );
+  if (motionActive("surfaceTransitions"))
+    bookmarkFeedback = button.animate(
+      [{ backgroundColor: "#67634c" }, { backgroundColor: "#252820" }],
+      { duration: 220, easing: "ease-out" },
+    );
   audio.play("confirm");
   notify(saved.has(id) ? "档案已加入收藏" : "已取消收藏");
 }
@@ -537,8 +696,16 @@ function renderDetail() {
   <div class="detail-actions"><button class="solid-button" data-action="bookmark">${saved.has(r.id) ? "− REMOVE FROM SAVED" : "＋ SAVE ARCHIVE"}<span>${saved.has(r.id) ? "已收藏" : "收藏档案"}</span></button><a class="export-button" href="${assetUrl(`archives/RHINE-LAB-${r.id}.txt`)}" download="RHINE-LAB-${r.id}.txt" aria-label="导出 ${r.id} 档案">EXPORT <span>↓</span></a></div>
   <div class="detail-footnote"><a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">设定参考 ↗</a><span>${String(selected + 1).padStart(3, "0")} / ${String(records.length).padStart(3, "0")}</span></div>`;
   $("#detail-content").setAttribute("tabindex", "-1");
-  $('[data-action="bookmark"]').setAttribute("aria-pressed", String(saved.has(r.id)));
-  documentDecryption.reset($("#detail-content"), !motionActive("documentReveal") || !scene || scene.decryptionFrame.phase === "clear");
+  $('[data-action="bookmark"]').setAttribute(
+    "aria-pressed",
+    String(saved.has(r.id)),
+  );
+  documentDecryption.reset(
+    $("#detail-content"),
+    !motionActive("documentReveal") ||
+      !scene ||
+      scene.decryptionFrame.phase === "clear",
+  );
   setTab(activeTab, false);
 }
 function overview() {
@@ -556,7 +723,8 @@ function setTab(tab: string, sound = true) {
   const r = records[selected];
   const tabButton = $<HTMLButtonElement>(`[data-tab="${tab}"]`);
   const indicator = $(".tab-indicator");
-  indicator.style.transition = sound && motionActive("surfaceTransitions") ? "" : "none";
+  indicator.style.transition =
+    sound && motionActive("surfaceTransitions") ? "" : "none";
   indicator.style.transform = `translateX(${tabButton.offsetLeft}px) scaleX(${tabButton.offsetWidth})`;
   $("#tab-panel").setAttribute("aria-labelledby", tabButton.id);
   $("#tab-panel").innerHTML =
@@ -593,7 +761,10 @@ function openModal(kind: NonNullable<typeof modal>) {
   if (!modal) {
     previousFocus = document.activeElement as HTMLElement;
     modalSiblings = [...$("#stage").children]
-      .filter((node): node is HTMLElement => node instanceof HTMLElement && node.id !== "modal-root")
+      .filter(
+        (node): node is HTMLElement =>
+          node instanceof HTMLElement && node.id !== "modal-root",
+      )
       .map((node) => ({ node, inert: node.inert }));
     modalSiblings.forEach(({ node }) => (node.inert = true));
   }
@@ -642,7 +813,8 @@ function renderModal() {
     });
   } else
     requestAnimationFrame(() => {
-      if (backdrop.isConnected && !modalClosing) $('[data-action="close-modal"]').focus();
+      if (backdrop.isConnected && !modalClosing)
+        $('[data-action="close-modal"]').focus();
     });
   $("#modal-root")
     .querySelector(".modal-backdrop")
@@ -675,9 +847,14 @@ function renderResults() {
 function updateQualitySummary() {
   const summary = document.querySelector("#quality-summary");
   if (!summary) return;
-  if (!scene) { summary.textContent = "3D 已关闭 · 三维模型与渲染资源已释放"; return; }
+  if (!scene) {
+    summary.textContent = "3D 已关闭 · 三维模型与渲染资源已释放";
+    return;
+  }
   const canvas = scene.renderer.domElement;
-  const metrics = JSON.parse(canvas.parentElement?.dataset.renderQuality ?? "{}");
+  const metrics = JSON.parse(
+    canvas.parentElement?.dataset.renderQuality ?? "{}",
+  );
   summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
 function motionPreferenceNoteMarkup() {
@@ -686,19 +863,27 @@ function motionPreferenceNoteMarkup() {
   return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} · 选择会保存在本站</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${audioSettingsMarkup(prefs)}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? '<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>' : '<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>'}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ''}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">JOYCE MOORE <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${themeSettingsMarkup(prefs.colorTheme === "dark")}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${audioSettingsMarkup(prefs)}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? "<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>" : "<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>"}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ""}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>POWERED BY RHINE LAB</span></div>`;
 }
 
 document.addEventListener("input", (e) => {
   const slider = e.target as HTMLInputElement;
   if (slider.dataset.quality) {
-    const output = document.querySelector<HTMLOutputElement>(`[data-quality-output="${slider.dataset.quality}"]`);
+    const output = document.querySelector<HTMLOutputElement>(
+      `[data-quality-output="${slider.dataset.quality}"]`,
+    );
     if (output) output.value = `${slider.value}%`;
   }
   const volume = e.target as HTMLInputElement;
-  if (volume.dataset.volume === "musicVolume" || volume.dataset.volume === "soundVolume") {
+  if (
+    volume.dataset.volume === "musicVolume" ||
+    volume.dataset.volume === "soundVolume"
+  ) {
     prefs[volume.dataset.volume] = Number(volume.value) / 100;
-    volume.closest("label")?.querySelector("output")?.replaceChildren(`${volume.value}%`);
+    volume
+      .closest("label")
+      ?.querySelector("output")
+      ?.replaceChildren(`${volume.value}%`);
     saveAudioPrefs();
   }
   if ((e.target as HTMLElement).id === "archive-search") {
@@ -713,13 +898,23 @@ document.addEventListener("change", (e) => {
     savePrefs();
   } else if (el.dataset.quality) {
     const key = el.dataset.quality as keyof RenderQuality;
-    prefs.rendering = normalizeQuality({ ...prefs.rendering, [key]: key === "antialias" ? el.value : Number(el.value) });
+    prefs.rendering = normalizeQuality({
+      ...prefs.rendering,
+      [key]: key === "antialias" ? el.value : Number(el.value),
+    });
     savePrefs();
   }
   if (el.dataset.pref) {
     const key = el.dataset.pref;
-    if (key === "sound" || key === "music" || key === "quality" || key === "superPerformance") prefs[key] = el.checked;
-    if (key === "sound" || key === "music") saveAudioPrefs(); else savePrefs();
+    if (
+      key === "sound" ||
+      key === "music" ||
+      key === "quality" ||
+      key === "superPerformance"
+    )
+      prefs[key] = el.checked;
+    if (key === "sound" || key === "music") saveAudioPrefs();
+    else savePrefs();
     audio.play("confirm");
   }
   if (el.dataset.motion) {
@@ -728,23 +923,45 @@ document.addEventListener("change", (e) => {
     prefs.motionPreset = motionPresetFor(prefs.motion);
     savePrefs();
     const motionRoot = $("#motion-settings");
-    const advancedOpen = motionRoot.querySelector<HTMLDetailsElement>(".motion-advanced")?.open ?? false;
+    const advancedOpen =
+      motionRoot.querySelector<HTMLDetailsElement>(".motion-advanced")?.open ??
+      false;
     const settingsPanel = motionRoot.closest<HTMLElement>(".settings-modal");
     const scrollTop = settingsPanel?.scrollTop ?? 0;
-    motionRoot.outerHTML = motionSettingsMarkup(prefs.motion, prefs.motionPreset);
+    motionRoot.outerHTML = motionSettingsMarkup(
+      prefs.motion,
+      prefs.motionPreset,
+    );
     $("#motion-preference-note").outerHTML = motionPreferenceNoteMarkup();
-    $("#motion-settings").querySelector<HTMLDetailsElement>(".motion-advanced")!.open = advancedOpen;
+    $("#motion-settings").querySelector<HTMLDetailsElement>(
+      ".motion-advanced",
+    )!.open = advancedOpen;
     requestAnimationFrame(() => {
       if (settingsPanel) settingsPanel.scrollTop = scrollTop;
-      document.querySelector<HTMLInputElement>(`[data-motion="${key}"]`)?.focus({ preventScroll: true });
+      document
+        .querySelector<HTMLInputElement>(`[data-motion="${key}"]`)
+        ?.focus({ preventScroll: true });
     });
-    notify(key === "boot" ? "开场设置将在下次重播时生效" : el.checked ? "已启用此动画" : "已关闭此动画");
+    notify(
+      key === "boot"
+        ? "开场设置将在下次重播时生效"
+        : el.checked
+          ? "已启用此动画"
+          : "已关闭此动画",
+    );
     audio.play("confirm");
   }
 });
 document.addEventListener("click", (e) => {
-  const themeButton = (e.target as Element).closest<HTMLElement>("[data-color-theme]");
-  if (themeButton) { prefs.colorTheme = themeButton.dataset.colorTheme === "dark" ? "dark" : "light"; savePrefs(); return; }
+  const themeButton = (e.target as Element).closest<HTMLElement>(
+    "[data-color-theme]",
+  );
+  if (themeButton) {
+    prefs.colorTheme =
+      themeButton.dataset.colorTheme === "dark" ? "dark" : "light";
+    savePrefs();
+    return;
+  }
   if (!started) return;
   if (modalClosing) return;
   const el = (e.target as Element).closest<HTMLElement>("button");
@@ -756,7 +973,13 @@ document.addEventListener("click", (e) => {
     prefs.motion = preset === "full" ? fullMotion() : reducedMotion();
     savePrefs();
     renderModal();
-    requestAnimationFrame(() => document.querySelector<HTMLButtonElement>(`[data-action="motion-preset"][data-preset="${prefs.motionPreset}"]`)?.focus({ preventScroll: true }));
+    requestAnimationFrame(() =>
+      document
+        .querySelector<HTMLButtonElement>(
+          `[data-action="motion-preset"][data-preset="${prefs.motionPreset}"]`,
+        )
+        ?.focus({ preventScroll: true }),
+    );
     audio.play("confirm");
     return;
   }
@@ -790,7 +1013,10 @@ document.addEventListener("click", (e) => {
     return;
   }
   const action = el.dataset.action;
-  if (action === "toggle-three") { void toggleThree(); return; }
+  if (action === "toggle-three") {
+    void toggleThree();
+    return;
+  }
   if (action === "sound-preview") audio.play("confirm");
   if (action === "skip") {
     setMode("archive");
@@ -806,7 +1032,14 @@ document.addEventListener("click", (e) => {
     // Safari does not always focus a button when it is tapped. Capture the
     // actual opener so closing the modal reliably restores the right control.
     el.focus({ preventScroll: true });
-    viewer ??= new ModelViewer($("#stage"), () => { audio.setScene(mode); audio.play("page-close"); }, (sound) => audio.play(sound === "tick" ? "ui-tick" : sound));
+    viewer ??= new ModelViewer(
+      $("#stage"),
+      () => {
+        audio.setScene(mode);
+        audio.play("page-close");
+      },
+      (sound) => audio.play(sound === "tick" ? "ui-tick" : sound),
+    );
     audio.setScene("viewer");
     viewer.setSuperPerformance(superPerformanceEnabled());
     viewer.setQuality(effectiveRenderQuality());
@@ -857,8 +1090,21 @@ document.addEventListener("keydown", (e) => {
   if (!started) return;
   if (viewer?.isOpen) return;
   if (playground?.active && !modal) {
-    if (e.key === "Escape") { e.preventDefault(); playground.stop(); }
-    else if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "Enter", "/"].includes(e.key) && !(e.target instanceof HTMLButtonElement)) e.preventDefault();
+    if (e.key === "Escape") {
+      e.preventDefault();
+      playground.stop();
+    } else if (
+      [
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowUp",
+        "ArrowDown",
+        "Enter",
+        "/",
+      ].includes(e.key) &&
+      !(e.target instanceof HTMLButtonElement)
+    )
+      e.preventDefault();
     return;
   }
   if (modalClosing) {
@@ -868,7 +1114,11 @@ document.addEventListener("keydown", (e) => {
   const typing = e.target instanceof HTMLInputElement;
   if (e.key === "Escape") {
     if (modal) closeModal();
-    else if (mode === "detail" || (mode === "boot" && ready)) { const sound = mode === "detail" ? "back" : "ui-tick"; setMode("archive"); audio.play(sound); }
+    else if (mode === "detail" || (mode === "boot" && ready)) {
+      const sound = mode === "detail" ? "back" : "ui-tick";
+      setMode("archive");
+      audio.play(sound);
+    }
     return;
   }
   if (modal && e.key === "Tab") {
@@ -877,7 +1127,12 @@ document.addEventListener("keydown", (e) => {
         'a[href],button:not(:disabled),input:not(:disabled),select:not(:disabled),summary,[tabindex="0"]',
       ),
     ];
-    const visible = focusables.filter(el => el.tabIndex >= 0 && !el.matches(":disabled") && el.getClientRects().length > 0);
+    const visible = focusables.filter(
+      (el) =>
+        el.tabIndex >= 0 &&
+        !el.matches(":disabled") &&
+        el.getClientRects().length > 0,
+    );
     const first = visible[0],
       last = visible.at(-1);
     if (e.shiftKey && document.activeElement === first) {
@@ -906,6 +1161,10 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     if (mode === "boot") setMode("archive");
     openModal("search");
+  }
+  if (e.key === "Home" && isGamepadEvent(e) && mode === "archive" && !modal) {
+    e.preventDefault();
+    openModal("saved");
   }
   if (e.key === "ArrowLeft" && mode !== "boot") {
     e.preventDefault();
@@ -943,16 +1202,29 @@ function bootFrame(t: number) {
     setMode("archive");
     return undefined;
   }
-  if (isWallpaper && frozenTime === null && t >= ARRAY_OPENING_END &&
-      !openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, !!workbench?.enabled)) {
+  if (
+    isWallpaper &&
+    frozenTime === null &&
+    t >= ARRAY_OPENING_END &&
+    !openingShowsDetail(
+      wallpaperHost()?.properties.openingdetail?.value,
+      !!workbench?.enabled,
+    )
+  ) {
     setMode("archive");
     return undefined;
   }
   audio.updateBoot(t, frozenTime !== null);
   const motion = bootSequence.update(t);
   if (workbench?.enabled && frozenTime === null) {
-    const end = openingShowsDetail(wallpaperHost()?.properties.openingdetail?.value, true) ? 35 : ARRAY_OPENING_END;
-    if (t > end - .35) $(".powered").style.opacity = String(1 - ease((t - end + .35) / .35));
+    const end = openingShowsDetail(
+      wallpaperHost()?.properties.openingdetail?.value,
+      true,
+    )
+      ? 35
+      : ARRAY_OPENING_END;
+    if (t > end - 0.35)
+      $(".powered").style.opacity = String(1 - ease((t - end + 0.35) / 0.35));
   }
   let step: string = motion.step;
   if (t >= 22) {
@@ -991,15 +1263,23 @@ const inspectionOverlay = new InspectionOverlay();
 const documentDecryption = new DocumentDecryption();
 // A newly opened archive can introduce another font shard. Re-measure its
 // redaction lines after font swap while retaining the current reveal progress.
-document.fonts.addEventListener("loadingdone", () => documentDecryption.refresh());
+document.fonts.addEventListener("loadingdone", () =>
+  documentDecryption.refresh(),
+);
 
 let lastTime = 0,
   frameCount = 0,
   frameStart = performance.now(),
   fps = 0;
 function frame(ms: number) {
-  if (!wallpaperFrame(ms)) { requestAnimationFrame(frame); return; }
-  if (document.hidden) { requestAnimationFrame(frame); return; }
+  if (!wallpaperFrame(ms)) {
+    requestAnimationFrame(frame);
+    return;
+  }
+  if (document.hidden) {
+    requestAnimationFrame(frame);
+    return;
+  }
   workbench?.tick();
   const time = ms / 1000;
   const theme = scene?.themeAmount ?? (prefs.colorTheme === "dark" ? 1 : 0);
@@ -1010,27 +1290,49 @@ function frame(ms: number) {
     mode === "boot" && ready
       ? bootFrame(frozenTime ?? time - bootStart)
       : undefined;
-  wallpaperEffects?.update(time, motionIsReduced(), motionActive("pointerParallax"));
+  wallpaperEffects?.update(
+    time,
+    motionIsReduced(),
+    motionActive("pointerParallax"),
+  );
   // The calibrated 2D opening fully covers the scene until array entry.
-  if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9)) scene?.update(time, cinema);
+  if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9))
+    scene?.update(time, cinema);
   viewer?.update(time);
   if (threeState === "closing" && scene?.presentationHidden) releaseThree();
   playground?.position();
   if (scene && mode === "detail") {
-    documentDecryption.update(time, scene.decryptionFrame, !motionActive("documentReveal"));
+    documentDecryption.update(
+      time,
+      scene.decryptionFrame,
+      !motionActive("documentReveal"),
+    );
     $("#detail-content").style.opacity = String(scene.detailVisibility);
     $("#detail-content").style.translate =
       `0 ${(1 - scene.detailVisibility) * 18}px`;
     $("#detail-content").inert = scene.detailVisibility < 0.1;
-    if (pendingDetailFocus && scene.detailVisibility >= 0.1 && !modal && !viewer?.isOpen) {
+    if (
+      pendingDetailFocus &&
+      scene.detailVisibility >= 0.1 &&
+      !modal &&
+      !viewer?.isOpen
+    ) {
       $("#detail-content").focus({ preventScroll: true });
       pendingDetailFocus = false;
     }
   }
-  $("#stage").style.setProperty("--detail-shade", String(mode === "boot" ? 0 : scene?.detailVisibility ?? 0));
+  $("#stage").style.setProperty(
+    "--detail-shade",
+    String(mode === "boot" ? 0 : (scene?.detailVisibility ?? 0)),
+  );
   const currentScene = scene;
-  if (currentScene) inspectionOverlay.render(currentScene.decryptionFrame,
-    (x, y) => currentScene.projectCard(x, y), Boolean(cinema), motionActive("modelDecryption"));
+  if (currentScene)
+    inspectionOverlay.render(
+      currentScene.decryptionFrame,
+      (x, y) => currentScene.projectCard(x, y),
+      Boolean(cinema),
+      motionActive("modelDecryption"),
+    );
   if (Math.floor(time) !== lastTime) {
     lastTime = Math.floor(time);
     updateFooterClock(new Date(), motionActive("rollingNumbers"));
@@ -1041,64 +1343,88 @@ function frame(ms: number) {
     frameStart = ms;
     frameCount = 0;
     $("#three-scene").dataset.fps = String(Math.round(fps));
-    $("#three-scene").dataset.renderStats = JSON.stringify(scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 });
+    $("#three-scene").dataset.renderStats = JSON.stringify(
+      scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 },
+    );
   }
   requestAnimationFrame(frame);
 }
 function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
-    scene.select(selected, cell ? { cell } : undefined);
-    scene.onSelect = (i, cell) => {
-      if (mode !== "archive" || modal || viewer?.isOpen) return;
-      select(i, cell ? { cell } : undefined);
-    };
-    scene.onNavigate = (axis, direction) => {
-      if (mode !== "archive" || modal || viewer?.isOpen) return;
-      if (axis === "lane") stepColumn(direction);
-      else stepFile(direction);
-    };
-    scene.onHover = (i) => {
-      const label = $("#hover-label");
-      if (i === null) {
-        label.hidden = true;
-        hoverCode.finish();
-        hoverTitle.finish();
-        return;
-      }
-      const animated = motionActive("rollingText") && mode === "archive";
-      const numbersAnimated = motionActive("rollingNumbers") && mode === "archive";
-      hoverCode.update({
-        value: Number(records[i].id.slice(2)),
-        animated: !label.hidden && numbersAnimated,
-      });
-      hoverTitle.update({ text: records[i].title, animated: !label.hidden && animated });
-      label.hidden = false;
-      // Prepare the first visible value so the next hover can animate immediately.
-      hoverCode.update({ animated: numbersAnimated });
-      hoverTitle.update({ animated });
-    };
+  scene.select(selected, cell ? { cell } : undefined);
+  scene.onSelect = (i, cell) => {
+    if (mode !== "archive" || modal || viewer?.isOpen) return;
+    select(i, cell ? { cell } : undefined);
+  };
+  scene.onNavigate = (axis, direction) => {
+    if (mode !== "archive" || modal || viewer?.isOpen) return;
+    if (axis === "lane") stepColumn(direction);
+    else stepFile(direction);
+  };
+  scene.onHover = (i) => {
+    const label = $("#hover-label");
+    if (i === null) {
+      label.hidden = true;
+      hoverCode.finish();
+      hoverTitle.finish();
+      return;
+    }
+    const animated = motionActive("rollingText") && mode === "archive";
+    const numbersAnimated =
+      motionActive("rollingNumbers") && mode === "archive";
+    hoverCode.update({
+      value: Number(records[i].id.slice(2)),
+      animated: !label.hidden && numbersAnimated,
+    });
+    hoverTitle.update({
+      text: records[i].title,
+      animated: !label.hidden && animated,
+    });
+    label.hidden = false;
+    // Prepare the first visible value so the next hover can animate immediately.
+    hoverCode.update({ animated: numbersAnimated });
+    hoverTitle.update({ animated });
+  };
 }
 function syncThreeButton() {
   $("#stage").dataset.threeState = threeState;
   syncWallpaperBackground();
-  const button = document.querySelector<HTMLButtonElement>('[data-action="toggle-three"]');
+  const button = document.querySelector<HTMLButtonElement>(
+    '[data-action="toggle-three"]',
+  );
   if (!button) return;
-  button.textContent = threeState === "loading" ? "3D 载入中…" : threeState === "closing" ? "3D 关闭中…" : threeState === "off" ? "3D 关闭" : "3D 开启";
+  button.textContent =
+    threeState === "loading"
+      ? "3D 载入中…"
+      : threeState === "closing"
+        ? "3D 关闭中…"
+        : threeState === "off"
+          ? "3D 关闭"
+          : "3D 开启";
   button.disabled = threeState === "loading";
   button.setAttribute("aria-pressed", String(threeState === "on"));
-  button.title = threeState === "off" ? "重新载入三维模型" : threeState === "closing" ? "取消关闭，恢复三维画面" : "卸载三维模型，保留 2D 界面";
+  button.title =
+    threeState === "off"
+      ? "重新载入三维模型"
+      : threeState === "closing"
+        ? "取消关闭，恢复三维画面"
+        : "卸载三维模型，保留 2D 界面";
 }
 function releaseThree() {
   if (!scene) return;
-  resumeCell = { ...scene.getStats().selectedCell }; resumeSelection = selected;
-  viewer?.dispose(); viewer = undefined;
-  scene.dispose(); scene = undefined;
+  resumeCell = { ...scene.getStats().selectedCell };
+  resumeSelection = selected;
+  viewer?.dispose();
+  viewer = undefined;
+  scene.dispose();
+  scene = undefined;
   if (mode === "detail") {
     $("#detail-content").style.opacity = "1";
     $("#detail-content").style.translate = "0 0";
     $("#detail-content").inert = false;
     documentDecryption.reset($("#detail-content"), true);
   }
-  threeState = "off"; syncThreeButton();
+  threeState = "off";
+  syncThreeButton();
   $("#hover-label").hidden = true;
   delete $("#three-scene").dataset.renderQuality;
   updateQualitySummary();
@@ -1107,16 +1433,20 @@ async function toggleThree() {
   if (!isWallpaper || !ready || threeState === "loading") return;
   if (threeState === "closing") {
     scene?.setPresentationVisible(true, !motionActive("surfaceTransitions"));
-    threeState = "on"; syncThreeButton(); return;
+    threeState = "on";
+    syncThreeButton();
+    return;
   }
   if (scene) {
     playground?.stop();
-    threeState = "closing"; syncThreeButton();
+    threeState = "closing";
+    syncThreeButton();
     scene.setPresentationVisible(false, !motionActive("surfaceTransitions"));
     if (!motionActive("surfaceTransitions")) releaseThree();
     return;
   }
-  threeState = "loading"; syncThreeButton();
+  threeState = "loading";
+  syncThreeButton();
   let next: ArchiveScene | undefined;
   try {
     next = new ArchiveScene($("#three-scene"));
@@ -1128,13 +1458,18 @@ async function toggleThree() {
     next.revealImmediately();
     scene = next;
     scene.setTheme(prefs.colorTheme === "dark", true);
-    scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    scene.setArchiveCoverage(
+      wallpaperHost()?.properties.archivecoverage?.value === "extra",
+    );
     savePrefs();
     scene.setPresentationVisible(true, !motionActive("surfaceTransitions"));
-    threeState = "on"; syncThreeButton();
+    threeState = "on";
+    syncThreeButton();
   } catch (error) {
-    next?.dispose(); scene = undefined;
-    threeState = "off"; syncThreeButton();
+    next?.dispose();
+    scene = undefined;
+    threeState = "off";
+    syncThreeButton();
     notify("三维模型载入失败，请点击 3D 关闭重试。");
     console.error(error);
   }
@@ -1143,10 +1478,15 @@ async function toggleThree() {
 async function start() {
   try {
     if (isWallpaper) await window.rhineWallpaperPropertiesReady;
-    if (!isWallpaper || wallpaperHost()?.properties.load3donstartup?.value !== false) {
+    if (
+      !isWallpaper ||
+      wallpaperHost()?.properties.load3donstartup?.value !== false
+    ) {
       scene = new ArchiveScene($("#three-scene"));
       scene.setTheme(prefs.colorTheme === "dark", true);
-      scene.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
+      scene.setArchiveCoverage(
+        wallpaperHost()?.properties.archivecoverage?.value === "extra",
+      );
     } else {
       threeState = "off";
       syncThreeButton();
@@ -1156,10 +1496,22 @@ async function start() {
       loadBootWebfonts(),
       // With unicode-range faces, preload the opening's actual characters,
       // not every font shard. Other archive text loads on demand.
-      document.fonts.load("300 20px MiSans", "ACCESS WELCOME TO INTERNAL DATABASE"),
-      document.fonts.load("400 20px MiSans", "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE"),
-      document.fonts.load("600 20px MiSans", "SYNTHESIZE INFORMATION ANALYSIS OS"),
-      document.fonts.load("700 20px MiSans", "RHINE LAB WELCOME TO INTERNAL DATABASE"),
+      document.fonts.load(
+        "300 20px MiSans",
+        "ACCESS WELCOME TO INTERNAL DATABASE",
+      ),
+      document.fonts.load(
+        "400 20px MiSans",
+        "身份信息确认请求已接收开始处理权限验证通过欢迎访问莱茵生命内部资料档案编号保密级别商业区选择档案：0123456789 JOYCE MOORE",
+      ),
+      document.fonts.load(
+        "600 20px MiSans",
+        "SYNTHESIZE INFORMATION ANALYSIS OS",
+      ),
+      document.fonts.load(
+        "700 20px MiSans",
+        "RHINE LAB WELCOME TO INTERNAL DATABASE",
+      ),
     ]);
     if (scene) bindScene(scene);
     savePrefs();
@@ -1169,7 +1521,10 @@ async function start() {
     else {
       if (isWallpaper) {
         // CEF allows automatic audio; never block the visual on audio policy or decoding.
-        await Promise.race([audio.unlock(), new Promise(resolve => setTimeout(resolve, 3000))]);
+        await Promise.race([
+          audio.unlock(),
+          new Promise((resolve) => setTimeout(resolve, 3000)),
+        ]);
       }
       completeStartup(false);
     }
@@ -1190,22 +1545,36 @@ function completeStartup(silent: boolean) {
   audio.releaseEntry();
   audio.restartBoot();
   const fade = motionActive("boot") ? 600 : 0;
-  bootStart = performance.now() / 1000 - (reviewParams.has("time") ? Number(reviewParams.get("time")) : 1.76);
+  bootStart =
+    performance.now() / 1000 -
+    (reviewParams.has("time") ? Number(reviewParams.get("time")) : 1.76);
   if (!reviewParams.has("time")) bootStart += fade / 1000;
   setMode("boot");
-  if (reviewParams.get("scene") === "archive" || (!motionActive("boot") && !reviewParams.has("time"))) setMode("archive");
+  if (
+    reviewParams.get("scene") === "archive" ||
+    (!motionActive("boot") && !reviewParams.has("time"))
+  )
+    setMode("archive");
   if (reviewParams.get("scene") === "detail") setMode("detail");
-  if (isWallpaper && wallpaperHost()?.properties.boot?.value === false) setMode("archive");
+  if (isWallpaper && wallpaperHost()?.properties.boot?.value === false)
+    setMode("archive");
   $("#stage").inert = false;
   $(".mobile-entry").inert = false;
   loading.classList.add("loaded");
   loading.inert = true;
   setTimeout(() => {
-    const restoreFocus = loading.contains(document.activeElement) || document.activeElement === document.body;
+    const restoreFocus =
+      loading.contains(document.activeElement) ||
+      document.activeElement === document.body;
     loading.remove();
     if (entry && restoreFocus) {
       const skip = $("#skip");
-      const target = mode === "boot" ? skip.getClientRects().length ? skip : $(".mobile-entry") : $(".read-file");
+      const target =
+        mode === "boot"
+          ? skip.getClientRects().length
+            ? skip
+            : $(".mobile-entry")
+          : $(".read-file");
       target.focus({ preventScroll: true });
     }
   }, fade);
@@ -1215,56 +1584,98 @@ function completeStartup(silent: boolean) {
   setTimeout(() => void initPwa(notify), 1500);
 }
 updateSelection();
-const customBackground = isWallpaper ? new WallpaperBackground($("#stage"), notify) : undefined;
+const customBackground = isWallpaper
+  ? new WallpaperBackground($("#stage"), notify)
+  : undefined;
 function syncWallpaperBackground(retry = false) {
-  customBackground?.update(wallpaperHost()?.properties ?? {}, mode !== "boot" && (threeState === "off" || threeState === "loading"), !motionActive("surfaceTransitions"), retry);
+  customBackground?.update(
+    wallpaperHost()?.properties ?? {},
+    mode !== "boot" && (threeState === "off" || threeState === "loading"),
+    !motionActive("surfaceTransitions"),
+    retry,
+  );
 }
 if (isWallpaper) {
   const apply = (properties: WallpaperProperties) => {
     const theme = properties.colortheme?.value;
     if (theme === "light" || theme === "dark") prefs.colorTheme = theme;
-    scene?.setArchiveCoverage(properties.archivecoverage?.value === "extra" || wallpaperHost()?.properties.archivecoverage?.value === "extra");
+    scene?.setArchiveCoverage(
+      properties.archivecoverage?.value === "extra" ||
+        wallpaperHost()?.properties.archivecoverage?.value === "extra",
+    );
     for (const key of ["sound", "music"] as const)
-      if (typeof properties[key]?.value === "boolean") prefs[key] = properties[key].value as boolean;
+      if (typeof properties[key]?.value === "boolean")
+        prefs[key] = properties[key].value as boolean;
     if (typeof properties.reduced?.value === "boolean") {
       prefs.motion = properties.reduced.value ? reducedMotion() : fullMotion();
       prefs.motionPreset = motionPresetFor(prefs.motion);
     }
     for (const key of ["soundVolume", "musicVolume"] as const) {
       const value = properties[key.toLowerCase()]?.value;
-      if (typeof value === "number" && Number.isFinite(value)) prefs[key] = Math.max(0, Math.min(1, value / 100));
+      if (typeof value === "number" && Number.isFinite(value))
+        prefs[key] = Math.max(0, Math.min(1, value / 100));
     }
     const qualityProperties = { ...wallpaperHost()?.properties, ...properties };
-    if (Object.keys(properties).some(key => key === "renderquality" || key.startsWith("quality")))
+    if (
+      Object.keys(properties).some(
+        (key) => key === "renderquality" || key.startsWith("quality"),
+      )
+    )
       prefs.rendering = wallpaperQuality(qualityProperties, prefs.rendering);
     savePrefs();
-    if (properties.customwallpaperfile || properties.customwallpaper?.value === true) syncWallpaperBackground(true);
-    if (properties.boot?.value === false && started && mode === "boot") setMode("archive");
+    if (
+      properties.customwallpaperfile ||
+      properties.customwallpaper?.value === true
+    )
+      syncWallpaperBackground(true);
+    if (properties.boot?.value === false && started && mode === "boot")
+      setMode("archive");
     // Keep an already-open settings surface in sync without replacing focused controls.
-    document.querySelectorAll<HTMLInputElement>("[data-pref]").forEach(input => {
-      const key = input.dataset.pref as "sound" | "music" | "quality" | "superPerformance";
-      if (key in prefs) input.checked = prefs[key];
-    });
-    document.querySelectorAll<HTMLInputElement>("[data-motion]").forEach(input => {
-      input.checked = prefs.motion[input.dataset.motion as MotionKey];
-    });
-    document.querySelectorAll<HTMLElement>('[data-action="motion-preset"]').forEach(button => {
-      button.setAttribute("aria-pressed", String(button.dataset.preset === prefs.motionPreset));
-    });
+    document
+      .querySelectorAll<HTMLInputElement>("[data-pref]")
+      .forEach((input) => {
+        const key = input.dataset.pref as
+          "sound" | "music" | "quality" | "superPerformance";
+        if (key in prefs) input.checked = prefs[key];
+      });
+    document
+      .querySelectorAll<HTMLInputElement>("[data-motion]")
+      .forEach((input) => {
+        input.checked = prefs.motion[input.dataset.motion as MotionKey];
+      });
+    document
+      .querySelectorAll<HTMLElement>('[data-action="motion-preset"]')
+      .forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.preset === prefs.motionPreset),
+        );
+      });
     const note = document.querySelector("#motion-preference-note");
     if (note) note.outerHTML = motionPreferenceNoteMarkup();
     for (const key of ["soundVolume", "musicVolume"] as const) {
-      const input = document.querySelector<HTMLInputElement>(`[data-volume="${key}"]`);
-      if (input) { input.value = String(Math.round(prefs[key] * 100)); input.closest("label")?.querySelector("output")?.replaceChildren(`${input.value}%`); }
+      const input = document.querySelector<HTMLInputElement>(
+        `[data-volume="${key}"]`,
+      );
+      if (input) {
+        input.value = String(Math.round(prefs[key] * 100));
+        input
+          .closest("label")
+          ?.querySelector("output")
+          ?.replaceChildren(`${input.value}%`);
+      }
     }
   };
-  window.addEventListener("rhine-wallpaper-properties", event => apply((event as CustomEvent<WallpaperProperties>).detail));
+  window.addEventListener("rhine-wallpaper-properties", (event) =>
+    apply((event as CustomEvent<WallpaperProperties>).detail),
+  );
   let pausedAt: number | undefined;
   const pause = () => {
     const paused = wallpaperHost()?.paused ?? false;
     if (paused && pausedAt === undefined) pausedAt = performance.now();
     if (!paused && pausedAt !== undefined) {
-      if (started && mode === "boot") bootStart += (performance.now() - pausedAt) / 1000;
+      if (started && mode === "boot")
+        bootStart += (performance.now() - pausedAt) / 1000;
       pausedAt = undefined;
     }
     audio.setHostPaused(paused);
@@ -1274,22 +1685,55 @@ if (isWallpaper) {
   pause();
 }
 if (isWallpaper) {
-  workbench = new Workbench($("#stage"), () => {
-    if (ready && mode !== "boot") setMode("archive");
-  }, lane => {
-    if (ready && !modal) select(columnMemory[lane]);
-  });
+  workbench = new Workbench(
+    $("#stage"),
+    () => {
+      if (ready && mode !== "boot") setMode("archive");
+    },
+    (lane) => {
+      if (ready && !modal) select(columnMemory[lane]);
+    },
+  );
   workbench.setMotion(prefs.motion);
-  playground = new ArchivePlayground($("#stage"), () => scene,
-    () => ({ enabled: !!workbench?.enabled && mode === "archive" && ready, paused: Boolean(modal) || modalClosing || Boolean(wallpaperHost()?.paused) || document.hidden, reduced: motionIsReduced() }),
-    value => { musicSuppressed = value; configureAudio(); }, () => audio.play("tick"));
+  playground = new ArchivePlayground(
+    $("#stage"),
+    () => scene,
+    () => ({
+      enabled: !!workbench?.enabled && mode === "archive" && ready,
+      paused:
+        Boolean(modal) ||
+        modalClosing ||
+        Boolean(wallpaperHost()?.paused) ||
+        document.hidden,
+      reduced: motionIsReduced(),
+    }),
+    (value) => {
+      musicSuppressed = value;
+      configureAudio();
+    },
+    () => audio.play("tick"),
+  );
   wallpaperEffects = new WallpaperEffects($("#stage"), () => scene);
-  document.addEventListener("click", event => {
-    const button = (event.target as Element).closest<HTMLElement>("[data-workbench-mode]");
-    if (button) closeModal(() => { workbench!.setEnabled(button.dataset.workbenchMode === "workbench"); });
+  document.addEventListener("click", (event) => {
+    const button = (event.target as Element).closest<HTMLElement>(
+      "[data-workbench-mode]",
+    );
+    if (button)
+      closeModal(() => {
+        workbench!.setEnabled(button.dataset.workbenchMode === "workbench");
+      });
   });
 }
 void start();
+enableGamepad();
+const ARCHIVE_HINT: Record<"keyboard" | "gamepad", string> = {
+  keyboard: `<kbd>←</kbd> <kbd>→</kbd> 切换列 <span>／</span> <kbd>↑</kbd> <kbd>↓</kbd> 前后档案 <span>／</span> <kbd>ENTER</kbd> 读取`,
+  gamepad: `<kbd>LS</kbd> <kbd>DP</kbd> 切换列 / 前后档案 <span>／</span> <kbd>A</kbd> 读取`,
+};
+onInputDevice((device) => {
+  const hint = document.querySelector(".archive-hint");
+  if (hint) hint.innerHTML = ARCHIVE_HINT[device];
+});
 // Deterministic review controls: the running application, never a video surrogate.
 Object.assign(window, {
   rhine: {
@@ -1323,9 +1767,14 @@ Object.assign(window, {
       fps: Math.round(fps),
       mode,
       ready,
-      startup: started ? "started" : entry?.phase ?? "loading",
+      startup: started ? "started" : (entry?.phase ?? "loading"),
       motion: { reduced: motionIsReduced(), preset: prefs.motionPreset },
-      bootTime: mode === "boot" ? started ? (frozenTime ?? performance.now() / 1000 - bootStart) + 5 : 6.76 : null,
+      bootTime:
+        mode === "boot"
+          ? started
+            ? (frozenTime ?? performance.now() / 1000 - bootStart) + 5
+            : 6.76
+          : null,
       selected: records[selected].id,
       saved: [...saved],
       audio: audio.stats(),
@@ -1334,4 +1783,3 @@ Object.assign(window, {
   },
 });
 if (import.meta.hot) import.meta.hot.dispose(() => audio.dispose());
-
